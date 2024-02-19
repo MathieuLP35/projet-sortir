@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,7 +20,7 @@ class Event
     #[ORM\Column(length: 30)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
-    #[Assert\Length(min:2, max:30, message: 'Le nom de l\évennement doit contenir 2 à 30 charactères !')]
+    #[Assert\Length(min:2, max:30, maxMessage: 'Ce champ peut contenir jusqu\'à 30 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -43,6 +45,29 @@ class Event
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $eventInfos = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Etat $etats = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Place $places = null;
+
+    #[ORM\ManyToOne(inversedBy: 'events')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Site $sites = null;
+
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'events')]
+    private Collection $isRegister;
+
+    #[ORM\ManyToOne(inversedBy: 'events')]
+    private ?User $organiser = null;
+
+    public function __construct()
+    {
+        $this->isRegister = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -117,6 +142,78 @@ class Event
     public function setEventInfos(string $eventInfos): static
     {
         $this->eventInfos = $eventInfos;
+
+        return $this;
+    }
+
+    public function getEtats(): ?Etat
+    {
+        return $this->etats;
+    }
+
+    public function setEtats(?Etat $etats): static
+    {
+        $this->etats = $etats;
+
+        return $this;
+    }
+
+    public function getPlaces(): ?Place
+    {
+        return $this->places;
+    }
+
+    public function setPlaces(?Place $places): static
+    {
+        $this->places = $places;
+
+        return $this;
+    }
+
+    public function getSites(): ?Site
+    {
+        return $this->sites;
+    }
+
+    public function setSites(?Site $sites): static
+    {
+        $this->sites = $sites;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getIsRegister(): Collection
+    {
+        return $this->isRegister;
+    }
+
+    public function addIsRegister(User $isRegister): static
+    {
+        if (!$this->isRegister->contains($isRegister)) {
+            $this->isRegister->add($isRegister);
+        }
+
+        return $this;
+    }
+
+    public function removeIsRegister(User $isRegister): static
+    {
+        $this->isRegister->removeElement($isRegister);
+
+        return $this;
+    }
+
+    public function getOrganiser(): ?User
+    {
+        return $this->organiser;
+    }
+
+    public function setOrganiser(?User $organiser): static
+    {
+        $this->organiser = $organiser;
 
         return $this;
     }
