@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\BooleanType;
 use Doctrine\ORM\Mapping as ORM;
 use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -37,24 +40,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 30)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ nom est obligatoire !')]
-    #[Assert\Length(min:2, max:30, message: 'Ce champ peut contenir entre 2 et 30 caractères !')]
+    #[Assert\Length(min:2, max:30, maxMessage: 'Ce champ peut contenir jusqu\'à 30 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
     private ?string $name = null;
 
     #[ORM\Column(length: 30)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ nom est obligatoire !')]
-    #[Assert\Length(min:2, max:30, message: 'Ce champ peut contenir entre 2 et 30 caractères !')]
+    #[Assert\Length(min:2, max:30, maxMessage: 'Ce champ peut contenir jusqu\'à 30 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 15)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ nom est obligatoire !')]
-    #[Assert\Length(min:2, max:30, message: 'Ce champ peut contenir entre 2 et 15 caractères !')]
+    #[Assert\Length(min:2, max:30, maxMessage: 'Ce champ peut contenir jusqu\'à 30 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
     private ?string $phone = null;
 
     #[ORM\Column]
-    #[Assert\Type(type: bool)]
     private ?bool $isActive = null;
+
+    #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'isRegister')]
+    private Collection $events;
+
+    public function __construct()
+    {
+        $this->events = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -170,6 +180,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): static
+    {
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+            $event->addIsRegister($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): static
+    {
+        if ($this->events->removeElement($event)) {
+            $event->removeIsRegister($this);
+        }
 
         return $this;
     }
