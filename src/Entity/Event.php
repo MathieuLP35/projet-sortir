@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\EventRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
@@ -15,18 +16,29 @@ class Event
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
+    #[Assert\Length(min:2, max:30, message: 'Le nom de l\évennement doit contenir 2 à 30 charactères !')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\DateTime]
+    #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
     private ?\DateTimeInterface $startDatetime = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $duration = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\DateTime(message: 'Une date et un heure est attendu !')]
+    #[Assert\NotBlank]
+    #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
     private ?\DateTimeInterface $limitRegisterDate = null;
 
     #[ORM\Column]
+    #[Assert\Positive]
+    #[Assert\NotBlank]
+    #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
     private ?int $maxRegisterQty = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

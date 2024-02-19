@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -16,6 +18,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull(message: 'Le champ email est obligatoire !')]
+    #[Assert\Email(message: 'Un email est attendu ici !')]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -25,18 +30,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\NotNull(message: 'Le champ password est obligatoire !')]
     private ?string $password = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull(message: 'Le champ nom est obligatoire !')]
+    #[Assert\Length(min:2, max:30, message: 'Ce champ peut contenir entre 2 et 30 caractères !')]
     private ?string $name = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull(message: 'Le champ nom est obligatoire !')]
+    #[Assert\Length(min:2, max:30, message: 'Ce champ peut contenir entre 2 et 30 caractères !')]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 15)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull(message: 'Le champ nom est obligatoire !')]
+    #[Assert\Length(min:2, max:30, message: 'Ce champ peut contenir entre 2 et 15 caractères !')]
     private ?string $phone = null;
 
     #[ORM\Column]
+    #[Assert\Type(type: bool)]
     private ?bool $isActive = null;
 
     public function getId(): ?int
