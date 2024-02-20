@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Form\EventFilterType;
 use App\Form\EventType;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,11 +17,19 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class EventController extends AbstractController
 {
     #[Route('/', name: 'app_event_index', methods: ['GET'])]
-    public function index(EventRepository $eventRepository): Response
+    public function index(Request $request, EventRepository $eventRepository): Response
     {
-        $event = $eventRepository->findAll();
+        $form = $this->createForm(EventFilterType::class);
+        $form->handleRequest($request);
+
+        dump($form);
+        dump($request);
+
+        $event = $eventRepository->findBy([]);
+
         return $this->render('event/index.html.twig', [
             'events' => $event,
+            'form_event_filter' => $form
         ]);
     }
 
@@ -89,7 +98,7 @@ class EventController extends AbstractController
         $now = new \DateTime();
         if ($now > $event->getLimitRegisterDate()) {
             // Rediriger l'utilisateur ou afficher un message d'erreur
-            $this->addFlash('error', 'The registration deadline has passed.');
+            $this->addFlash('danger', 'The registration deadline has passed.');
             return $this->redirectToRoute('app_event_index');
         }
 
