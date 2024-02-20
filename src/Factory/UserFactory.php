@@ -38,7 +38,7 @@ final class UserFactory extends ModelFactory
      *
      * @todo inject services if required
      */
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    public function __construct(private UserPasswordHasherInterface $passwordHasher)
     {
         $this->passwordHasher = $passwordHasher;
         parent::__construct();

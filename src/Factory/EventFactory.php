@@ -2,6 +2,9 @@
 
 namespace App\Factory;
 
+use App\DataFixtures\EtatFixtures;
+use App\DataFixtures\PlaceFixtures;
+use App\Entity\Etat;
 use App\Entity\Event;
 use App\Repository\EventRepository;
 use Zenstruck\Foundry\ModelFactory;
@@ -47,10 +50,14 @@ final class EventFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
+            
             'limitRegisterDate' => self::faker()->dateTime(),
             'maxRegisterQty' => self::faker()->randomNumber(),
             'name' => self::faker()->text(30),
             'startDatetime' => self::faker()->dateTime(),
+            'etat' => EtatFactory::random(),
+            'places' => PlaceFactory::random(),
+            'sites' => SiteFactory::random()
         ];
     }
 
@@ -68,4 +75,5 @@ final class EventFactory extends ModelFactory
     {
         return Event::class;
     }
+
 }
