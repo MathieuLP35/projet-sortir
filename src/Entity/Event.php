@@ -9,6 +9,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use function Symfony\Component\Clock\now;
+
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
@@ -24,7 +26,8 @@ class Event
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\DateTime]
+    #[Assert\Type("\DateTimeInterface")]
+    #[Assert\GreaterThanOrEqual('today')]
     #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
     private ?\DateTimeInterface $startDatetime = null;
 
@@ -32,8 +35,8 @@ class Event
     private ?int $duration = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Assert\DateTime(message: 'Une date et un heure est attendu !')]
-    #[Assert\NotBlank]
+    #[Assert\Type("\DateTimeInterface")]
+    #[Assert\LessThanOrEqual(propertyPath: 'startDatetime')]
     #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
     private ?\DateTimeInterface $limitRegisterDate = null;
 
@@ -48,7 +51,7 @@ class Event
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Etat $etat = null;
+    private ?Etat $etats = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -146,14 +149,14 @@ class Event
         return $this;
     }
 
-    public function getEtat(): ?Etat
+    public function getEtats(): ?Etat
     {
-        return $this->etat;
+        return $this->etats;
     }
 
-    public function setEtat(?Etat $etats): static
+    public function setEtats(?Etat $etats): static
     {
-        $this->etat = $etats;
+        $this->etats = $etats;
 
         return $this;
     }
