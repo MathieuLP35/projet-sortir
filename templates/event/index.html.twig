@@ -21,7 +21,7 @@
     </thead>
     <tbody>
         {% for event in events %}
-        <tr {% if event.etat.libelle == 'Cancelled' %}style="text-decoration: line-through;"{% endif %}>
+        <tr {% if event.etats and event.etats.libelle == 'Annulé' %}style="text-decoration: line-through;"{% endif %}>
             <td>{{ event.id }}</td>
             <td>{{ event.name }}</td>
             <td>{{ event.startDatetime ? event.startDatetime|date('Y-m-d H:i:s') : '' }}</td>
@@ -35,17 +35,17 @@
                 <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info">Show</a>
             </td>
             <td>
-                {% if event.etat.libelle != 'Cancelled' %}
+                {% if event.etats.libelle != 'Cancelled' %}
                 <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-warning">Edit</a>
                 {% endif %}
             </td>
             <td>
-                {% if app.user == event.organiser and event.etat.libelle != 'Cancelled' %}
+                {% if app.user == event.organiser and event.etats.libelle != 'Cancelled' %}
                 <a href="{{ path('app_cancel_event', {'id': event.id}) }}" class="btn btn-danger">Cancel Event</a>
                 {% endif %}
             </td>
             <td>
-                {% if event.etat.libelle != 'Cancelled' %}
+                {% if event.etats.libelle != 'Cancelled' %}
                 {% if not event.getIsRegister().contains(app.user) %}
                 <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary">Register</a>
                 {% else %}
