@@ -15,18 +15,18 @@ class UserController extends AbstractController
     #[Route('/profile', name: 'app_user_profile')]
     public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
-        $user = new User();
+        $user = $this->getUser();
+
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $user = $form->getData();
-            $user->setUserCreate($this->getUser());
-
             $entityManager->persist($user);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Profil mis à jour');
 
             return $this->redirectToRoute('app_user_profile', [], Response::HTTP_SEE_OTHER);
         }
