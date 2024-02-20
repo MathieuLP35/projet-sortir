@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello EventController!{% endblock %}
+
+{% block body %}
+    {% for event in events %}
+    {{dump(events)}}
+    {% endfor %}
+{% endblock %}
