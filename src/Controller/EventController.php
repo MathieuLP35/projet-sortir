@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
 use App\Entity\Event;
+use App\Form\CancelEventType;
 use App\Form\EventType;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Route('/event')]
@@ -105,5 +108,48 @@ class EventController extends AbstractController
 
         // Redirigez l'utilisateur vers la liste des événements
         return $this->redirectToRoute('app_event_index');
+    }
+
+    #[Route('/{id}/cancel', name: 'app_cancel_event', methods: ['GET', 'POST'])]
+    public function cancelEvent(int $id, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $event = $entityManager->getRepository(Event::class)->find($id);
+
+        if (!$event) {
+            throw $this->createNotFoundException('Event not found');
+        }
+
+        // Vérifier si l'utilisateur connecté est l'organisateur de l'événement
+        $currentUser = $this->getUser();
+        if ($event->getOrganiser() !== $currentUser) {
+            throw new AccessDeniedException('You are not the organizer of this event.');
+        }
+
+        // Créez le formulaire en passant l'événement en tant qu'option
+        $form = $this->createForm(CancelEventType::class, null, ['event' => $event]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Traitez le formulaire et effectuez l'annulation ici
+            $data = $form->getData();
+
+            // Mettez à jour les informations d'annulation de l'événement
+            $event->setEtat($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Cancelled']));
+            $event->setEventInfos(sprintf(
+                "Événement annulé par l'organisateur. Motif : %s",
+                $data['cancellationReason']
+            ));
+
+            $entityManager->flush();
+
+            // Redirigez l'utilisateur vers la page de l'événement annulé, ou une autre page de confirmation
+            return $this->redirectToRoute('app_event_index');
+        }
+
+        return $this->render('event/cancel_event.html.twig', [
+            'form' => $form->createView(),
+            'event' => $event,
+        ]);
     }
 }
