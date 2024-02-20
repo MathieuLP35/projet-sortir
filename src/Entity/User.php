@@ -37,19 +37,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 30)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ nom est obligatoire !')]
-    #[Assert\Length(min:2, max:30, message: 'Ce champ peut contenir entre 2 et 30 caractères !')]
     private ?string $name = null;
 
     #[ORM\Column(length: 30)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ nom est obligatoire !')]
-    #[Assert\Length(min:2, max:30, message: 'Ce champ peut contenir entre 2 et 30 caractères !')]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 15)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ nom est obligatoire !')]
-    #[Assert\Length(min:2, max:30, message: 'Ce champ peut contenir entre 2 et 15 caractères !')]
     private ?string $phone = null;
 
     #[ORM\Column]

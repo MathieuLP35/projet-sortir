@@ -1,0 +1,17 @@
+<div{{ attributes }} >
+
+    <div class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+        <div class="container d-inline-flex">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                <span class="fs-4">Sortir.com</span>
+            </a>
+
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="{{ path('app_home') }}" class="nav-link">Accueil</a></li>
+                <li class="nav-item"><a href="{{ path('app_login') }}" class="nav-link">Login</a></li>
+                <li class="nav-item"><a href="{{ path('app_user_profile') }}" class="nav-link">Profil</a></li>
+            </ul>
+        </div>
+    </div>
+
+</div>
