@@ -1,9 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello EventController!{% endblock %}
+{% block title %}Event index{% endblock %}
 
 {% block body %}
-    {% for event in events %}
-    {{dump(events)}}
-    {% endfor %}
+    <h1>Event index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>StartDatetime</th>
+                <th>Duration</th>
+                <th>LimitRegisterDate</th>
+                <th>MaxRegisterQty</th>
+                <th>EventInfos</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for event in events %}
+            <tr>
+                <td>{{ event.id }}</td>
+                <td>{{ event.name }}</td>
+                <td>{{ event.startDatetime ? event.startDatetime|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ event.duration }}</td>
+                <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ event.maxRegisterQty }}</td>
+                <td>{{ event.eventInfos }}</td>
+                <td>
+                    <a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
+                    <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_event_new') }}">Create new</a>
 {% endblock %}
