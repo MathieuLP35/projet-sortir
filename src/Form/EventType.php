@@ -25,7 +25,7 @@ class EventType extends AbstractType
             ->add('eventInfos')
             ->add('etats', EntityType::class, [
                 'class' => Etat::class,
-'choice_label' => 'id',
+                'choice_label' => 'id',
             ])
             ->add('places', EntityType::class, [
                 'class' => Place::class,
