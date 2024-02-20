@@ -55,9 +55,10 @@ final class EventFactory extends ModelFactory
             'maxRegisterQty' => self::faker()->randomNumber(),
             'name' => self::faker()->text(30),
             'startDatetime' => self::faker()->dateTime(),
-            'etat' => EtatFactory::random(),
+            'etats' => EtatFactory::random(),
             'places' => PlaceFactory::random(),
-            'sites' => SiteFactory::random()
+            'sites' => SiteFactory::random(),
+            'organiser' => UserFactory::random()
         ];
     }
 
