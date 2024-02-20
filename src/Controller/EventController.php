@@ -84,7 +84,15 @@ class EventController extends AbstractController
     #[Route('/{id}/register', name: 'app_register_for_event', methods: ['GET'])]
     public function registerForEvent(Event $event, EntityManagerInterface $entityManager, UserInterface $user): Response
     {
-        // Ajoutez ici le code pour gérer l'inscription de l'utilisateur à l'événement
+        // Vérifier si la date de clôture des inscriptions est dépassée
+        $now = new \DateTime();
+        if ($now > $event->getLimitRegisterDate()) {
+            // Rediriger l'utilisateur ou afficher un message d'erreur
+            $this->addFlash('error', 'The registration deadline has passed.');
+            return $this->redirectToRoute('app_event_index');
+        }
+
+        // code pour gérer l'inscription de l'utilisateur à l'événement
         if ($event->getIsRegister()->contains($user)) {
             // Si l'utilisateur est déjà inscrit, le désinscrire
             $event->removeIsRegister($user);
@@ -95,7 +103,7 @@ class EventController extends AbstractController
 
         $entityManager->flush();
 
-        // Redirigez l'utilisateur vers une page de confirmation, la liste des événements, etc.
+        // Redirigez l'utilisateur vers la liste des événements
         return $this->redirectToRoute('app_event_index');
     }
 }

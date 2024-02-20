@@ -5,7 +5,6 @@
 {% block body %}
     <h1>Inscription à l'événement "{{ event.name }}"</h1>
 
-    {# Ajoutez ici le formulaire d'inscription ou d'autres contenus nécessaires #}
     <form method="post" action="{{ path('app_handle_registration', {'id': event.id}) }}">
         <button type="submit" class="btn btn-success">S'inscrire à l'événement</button>
     </form>
