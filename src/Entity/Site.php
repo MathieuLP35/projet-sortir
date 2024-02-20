@@ -12,7 +12,7 @@ class Site
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name: "no_site", type: "integer")]
+    #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]

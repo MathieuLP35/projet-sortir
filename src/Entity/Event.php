@@ -48,7 +48,7 @@ class Event
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Etat $etats = null;
+    private ?Etat $etat = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -146,14 +146,14 @@ class Event
         return $this;
     }
 
-    public function getEtats(): ?Etat
+    public function getEtat(): ?Etat
     {
-        return $this->etats;
+        return $this->etat;
     }
 
-    public function setEtats(?Etat $etats): static
+    public function setEtat(?Etat $etats): static
     {
-        $this->etats = $etats;
+        $this->etat = $etats;
 
         return $this;
     }
