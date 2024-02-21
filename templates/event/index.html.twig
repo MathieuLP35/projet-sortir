@@ -63,12 +63,10 @@
                 <td>{{ event.maxRegisterQty }}</td>
                 <td>{{ event.eventInfos }}</td>
                 <td>
-                    <a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
-                    <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
-                </td>
-                <td>
+                    <a class="btn btn-success" href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
+                    <a class="btn btn-warning" href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
                     {% if not event.getIsRegister().contains(app.user) %}
-                        <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary">register</a>
+                        <a class="btn btn-success" href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary">register</a>
                     {% else %}
                         <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-danger">unsubscribe</a>
                     {% endif %}

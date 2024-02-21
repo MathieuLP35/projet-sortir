@@ -19,6 +19,7 @@ class EventController extends AbstractController
     #[Route('/', name: 'app_event_index', methods: ['GET', 'POST'])]
     public function index(Request $request, EventRepository $eventRepository): Response
     {
+
         $data = [];
         $event = $eventRepository->findByFilter($data);
         $form = $this->createForm(EventFilterType::class);
@@ -41,6 +42,7 @@ class EventController extends AbstractController
                 'form_event_filter' => $form->createView(),
             ]);
         }
+
 
         return $this->render('event/index.html.twig', [
             'events' => $event,
@@ -71,8 +73,11 @@ class EventController extends AbstractController
     #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
     public function show(Event $event): Response
     {
+        $participants = $event->getIsRegister();
+        
         return $this->render('event/show.html.twig', [
             'event' => $event,
+            'participants' => $participants
         ]);
     }
 

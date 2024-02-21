@@ -64,6 +64,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'isRegister')]
     private Collection $events;
 
+    #[ORM\Column(length: 255)]
+    private ?string $username = null;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
@@ -210,6 +213,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->events->removeElement($event)) {
             $event->removeIsRegister($this);
         }
+
+        return $this;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): static
+    {
+        $this->username = $username;
 
         return $this;
     }
