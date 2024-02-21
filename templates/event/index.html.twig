@@ -49,6 +49,7 @@
                 <th>MaxRegisterQty</th>
                 <th>EventInfos</th>
                 <th>actions</th>
+
             </tr>
         </thead>
         <tbody>
@@ -62,11 +63,11 @@
             <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('Y-m-d H:i:s') : '' }}</td>
             <td>{{ event.maxRegisterQty }}</td>
             <td>{{ event.eventInfos }}</td>
-
             <!-- Colonne Actions -->
             <td>
                 <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info">Show</a>
             </td>
+            {% if app.user %}
             <td>
                 {% if event.etats.libelle != 'Cancelled' %}
                 <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-warning">Edit</a>
@@ -88,6 +89,7 @@
             </td>
         </tr>
             
+        {% endif %}
         {% else %}
         <tr>
             <td colspan="8">no records found</td>
@@ -96,6 +98,6 @@
     </tbody>
 </table>
 
-<a href="{{ path('app_event_new') }}">Create new</a>
+<a class="btn btn-success" href="{{ path('app_event_new') }}">Create new</a>
 
 {% endblock %}

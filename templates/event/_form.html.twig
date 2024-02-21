@@ -1,28 +1,31 @@
-{{ form_start(form) }}
-    {{ form_errors(form) }}
-    <div class="row mb-3">
-    <div class="col-6">
-    {{ form_label(form.name)}}
-    {{ form_widget(form.name) }}
-    {{ form_label(form.startDatetime)}}
-    {{ form_widget(form.startDatetime) }}
-    {{ form_label(form.limitRegisterDate)}}
-    {{ form_widget(form.limitRegisterDate) }}
-    {{ form_label(form.maxRegisterQty)}}
-    {{ form_widget(form.maxRegisterQty) }}
-    {{ form_label(form.duration)}}
-    {{ form_widget(form.duration) }}
-    {{ form_label(form.eventInfos)}}
-    {{ form_widget(form.eventInfos) }}
-    </div>
-    <div class="col-6">
-    {{ form_label(form.sites)}}
-    {{ form_widget(form.sites) }}
-    {{ form_label(form.places)}}
-    {{ form_widget(form.places) }}
+
+{% if app.user %}
+    {{ form_start(form) }}
+        {{ form_errors(form) }}
+        <div class="row mb-3">
+        <div class="col-6">
+        {{ form_label(form.name)}}
+        {{ form_widget(form.name) }}
+        {{ form_label(form.startDatetime)}}
+        {{ form_widget(form.startDatetime) }}
+        {{ form_label(form.limitRegisterDate)}}
+        {{ form_widget(form.limitRegisterDate) }}
+        {{ form_label(form.maxRegisterQty)}}
+        {{ form_widget(form.maxRegisterQty) }}
+        {{ form_label(form.duration)}}
+        {{ form_widget(form.duration) }}
+        {{ form_label(form.eventInfos)}}
+        {{ form_widget(form.eventInfos) }}
+        </div>
+        <div class="col-6">
+        {{ form_label(form.sites)}}
+        {{ form_widget(form.sites) }}
+        {{ form_label(form.places)}}
+        {{ form_widget(form.places) }}
 
 
-    </div>
-    </div>
-    <button class="btn btn-success">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+        </div>
+        </div>
+        <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+{% endif %}

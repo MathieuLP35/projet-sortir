@@ -39,11 +39,13 @@
     </table>
     <div class="d-flex justify-content-between col-md-4">
         <a class="btn btn-dark" href="{{ path('app_event_index') }}">back to list</a>
-        <a class="btn btn-primary" href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
-        {{ include('event/_delete_form.html.twig') }}
+        {% if app.user %}
+            <a class="btn btn-primary" href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
+            {{ include('event/_delete_form.html.twig') }}
+        {% endif %}
     </div>
    
-    <div class="col-4 mt-3">
+    <div class="col-4 mt-5">
     {{ include('components/participantsEnvent.html.twig') }}
     </div>
 
