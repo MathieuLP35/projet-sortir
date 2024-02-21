@@ -4,8 +4,7 @@
 
 {% block body %}
 
-    <h1>Event index</h1>
-
+<h1>Event index</h1>
     {{ form_start(form_event_filter) }}
     <div class="my-custom-class-for-errors">
         {{ form_errors(form_event_filter) }}
@@ -53,33 +52,50 @@
             </tr>
         </thead>
         <tbody>
-        {% for event in events %}
-            <tr>
-                <td>{{ event.id }}</td>
-                <td>{{ event.name }}</td>
-                <td>{{ event.startDatetime ? event.startDatetime|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ event.duration }}</td>
-                <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ event.maxRegisterQty }}</td>
-                <td>{{ event.eventInfos }}</td>
-                <td>
-                    <a class="btn btn-success" href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
-                    <a class="btn btn-warning" href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
-                    {% if not event.getIsRegister().contains(app.user) %}
-                        <a class="btn btn-success" href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary">register</a>
-                    {% else %}
-                        <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-danger">unsubscribe</a>
-                    {% endif %}
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 
-    <a href="{{ path('app_event_new') }}">Create new</a>
+        {% for event in events %}
+        <tr {% if event.etats and event.etats.libelle == 'Annulé' %}style="text-decoration: line-through;"{% endif %}>
+            <td>{{ event.id }}</td>
+            <td>{{ event.name }}</td>
+            <td>{{ event.startDatetime ? event.startDatetime|date('Y-m-d H:i:s') : '' }}</td>
+            <td>{{ event.duration }}</td>
+            <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('Y-m-d H:i:s') : '' }}</td>
+            <td>{{ event.maxRegisterQty }}</td>
+            <td>{{ event.eventInfos }}</td>
+
+            <!-- Colonne Actions -->
+            <td>
+                <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info">Show</a>
+            </td>
+            <td>
+                {% if event.etats.libelle != 'Cancelled' %}
+                <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-warning">Edit</a>
+                {% endif %}
+            </td>
+            <td>
+                {% if app.user == event.organiser and event.etats.libelle != 'Cancelled' %}
+                <a href="{{ path('app_cancel_event', {'id': event.id}) }}" class="btn btn-danger">Cancel Event</a>
+                {% endif %}
+            </td>
+            <td>
+                {% if event.etats.libelle != 'Cancelled' %}
+                {% if not event.getIsRegister().contains(app.user) %}
+                <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary">Register</a>
+                {% else %}
+                <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-danger">Unsubscribe</a>
+                {% endif %}
+                {% endif %}
+            </td>
+        </tr>
+            
+        {% else %}
+        <tr>
+            <td colspan="8">no records found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ path('app_event_new') }}">Create new</a>
 
 {% endblock %}

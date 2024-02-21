@@ -10,7 +10,7 @@ class EtatFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        EtatFactory::createMany(2);
+        EtatFactory::createMany(4);
       
     }
 
