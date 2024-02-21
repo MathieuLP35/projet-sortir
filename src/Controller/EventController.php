@@ -16,20 +16,28 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[Route('/event')]
 class EventController extends AbstractController
 {
-    #[Route('/', name: 'app_event_index', methods: ['GET'])]
+    #[Route('/', name: 'app_event_index', methods: ['GET', 'POST'])]
     public function index(Request $request, EventRepository $eventRepository): Response
     {
+        $data = [];
+        $event = $eventRepository->findByFilter($data);
         $form = $this->createForm(EventFilterType::class);
         $form->handleRequest($request);
 
-        dump($form);
-        dump($request);
-
-        $event = $eventRepository->findBy([]);
+        if ($form->isSubmitted()) {
+            if ($form->get('sites')->getData()) { $data['sites'] = $form->get('sites')->getData(); }
+            if ($form->get('event')->getData()) { $data['name'] = $form->get('event')->getData(); }
+            if ($form->get('startDate')->getData()) { $data['start_datetime'] = $form->get('startDate')->getData(); }
+            if ($form->get('endDate')->getData()) { $data['limit_register_date'] = $form->get('endDate')->getData(); }
+            if ($form->get('organiser')->getData()) { $data['organiser'] = $this->getUser()->getId(); }
+            if ($form->get('isRegistered')->getData()) { $data['is_registered'] = $this->getUser()->getId(); }
+            if ($form->get('isNotRegistered')->getData()) { $data['is_not_registered'] = $this->getUser()->getId(); }
+            if ($form->get('oldEvent')->getData()) { $data['old_event'] = true; }
+        }
 
         return $this->render('event/index.html.twig', [
             'events' => $event,
-            'form_event_filter' => $form
+            'form_event_filter' => $form->createView(),
         ]);
     }
 
@@ -39,7 +47,6 @@ class EventController extends AbstractController
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
-        dump($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($event);

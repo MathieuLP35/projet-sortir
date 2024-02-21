@@ -20,10 +20,14 @@ class EventFilterType extends AbstractType
         $builder
             ->add('sites',EntityType::class,[
                 'class' => Site::class,
-                'choice_label' => 'name_site'
+                'choice_label' => 'name_site',
+                'required' => false,
+                'placeholder' => 'Choisir un site',
+
             ])
             ->add('event',TextType::class,[
                 'label' => 'Le nom de l\'event contient:',
+                'required' => false,
             ])
             ->add('startDate', DateTimeType::class,[
                 "widget"=>"single_text",
@@ -61,7 +65,7 @@ class EventFilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Event::class,
+            'data_class' => null,
         ]);
     }
 }
