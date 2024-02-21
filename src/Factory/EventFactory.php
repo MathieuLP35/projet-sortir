@@ -49,12 +49,13 @@ final class EventFactory extends ModelFactory
      */
     protected function getDefaults(): array
     {
+        $now = new \DateTime();
         return [
             
-            'limitRegisterDate' => self::faker()->dateTime(),
+            'limitRegisterDate' => self::faker()->dateTimeBetween($now, '+1 year'),
             'maxRegisterQty' => self::faker()->randomNumber(),
             'name' => self::faker()->text(30),
-            'startDatetime' => self::faker()->dateTime(),
+            'startDatetime' => self::faker()->dateTimeBetween('2023-01-01', '+2 years'),
             'etats' => EtatFactory::random(),
             'places' => PlaceFactory::random(),
             'sites' => SiteFactory::random(),

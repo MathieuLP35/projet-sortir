@@ -39,6 +39,8 @@ final class EtatFactory extends ModelFactory
         parent::__construct();
     }
 
+    private static array $libelles = ['Cancelled', 'Open', 'Closed', 'In Progress'];
+
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
      *
@@ -46,8 +48,13 @@ final class EtatFactory extends ModelFactory
      */
     protected function getDefaults(): array
     {
+        // Mélanger les libellés à chaque appel
+        shuffle(self::$libelles);
+
+        $libelle = array_pop(self::$libelles);
+
         return [
-            'libelle' => self::faker()->text(30),
+            'libelle' => $libelle,
         ];
     }
 

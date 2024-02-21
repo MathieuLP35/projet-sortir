@@ -61,7 +61,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $isActive = null;
 
-    #[ORM\Column(length: 100)]
+    /**
+     * @ORM\Column(length: 100, nullable=true)
+     */
     private ?string $profilePicture = null;
 
     /**
@@ -227,7 +229,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-<<<<<<< HEAD
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): static
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
     public function getProfilePicture(): ?string
     {
         return $this->profilePicture;
@@ -246,17 +259,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setProfilePictureFile(?File $profilePictureFile): void
     {
         $this->profilePictureFile = $profilePictureFile;
-=======
-    public function getUsername(): ?string
-    {
-        return $this->username;
-    }
-
-    public function setUsername(string $username): static
-    {
-        $this->username = $username;
-
-        return $this;
->>>>>>> 94cd51ca27848d75490cec5b57e4d55ebdb7ae6f
     }
 }
