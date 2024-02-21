@@ -164,7 +164,7 @@ class EventController extends AbstractController
             $data = $form->getData();
 
             // Mettez à jour les informations d'annulation de l'événement
-            $event->setEtat($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Cancelled']));
+            $event->setEtats($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Cancelled']));
             $event->setEventInfos(sprintf(
                 "Événement annulé par l'organisateur. Motif : %s",
                 $data['cancellationReason']
