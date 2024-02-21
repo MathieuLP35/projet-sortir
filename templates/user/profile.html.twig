@@ -3,7 +3,10 @@
 {% block title %}Hello UserController!{% endblock %}
 
 {% block body %}
-
     {{ form(form) }}
 
+    {# Affichage de la photo de profil s'il y en a une #}
+    {% if user.getProfilePicture() %}
+        <img src="{{ asset('uploads/user_profile_pictures/' ~ user.getProfilePicture()) }}" alt="Photo de profil">
+    {% endif %}
 {% endblock %}

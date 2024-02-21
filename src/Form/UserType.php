@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -24,6 +25,10 @@ class UserType extends AbstractType
                 'first_options'  => ['label' => 'Mot de passe', 'hash_property_path' => 'password'],
                 'second_options' => ['label' => 'Confirmer le nouveau mot de passe'],
                 'mapped' => false,
+                'required' => false,
+            ])
+            ->add('profilePictureFile', FileType::class, [
+                'label' => 'Photo de profil',
                 'required' => false,
             ])
             ->add('save', SubmitType::class)
