@@ -63,13 +63,14 @@ class EventRepository extends ServiceEntityRepository
             $query->leftJoin('e.isRegister', 'eu');
             foreach($query->getQuery()->getResult() as $event) {
                 foreach($event->getIsRegister() as $user) {
-                    if($user->getId() != $data['is_not_registered']) {
+                    if($user->getId() == $data['is_not_registered']) {
                         $query->andWhere('eu.id != :is_not_registered')
                             ->orWhere('e.isRegister IS EMPTY')
                             ->setParameter('is_not_registered', $data['is_not_registered']);
                     }
                 }
             }
+
         }
         if (isset($data['old_event'])) {
             // event is old if the limit register date is passed
