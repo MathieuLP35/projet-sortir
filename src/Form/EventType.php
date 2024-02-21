@@ -11,12 +11,11 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Required;
+
 
 class EventType extends AbstractType
 {
@@ -39,11 +38,11 @@ class EventType extends AbstractType
                 'required' => true
             ])
             ->add('eventInfos', TextareaType::class)
-            ->add('etats', EntityType::class, [
-                'class' => Etat::class,
-                'choice_label' => 'libelle',
-                'required' => true
-            ])
+            // ->add('etats', EntityType::class, [
+            //     'class' => Etat::class,
+            //     'choice_label' => 'libelle',
+            //     'required' => true
+            // ])
             ->add('places', EntityType::class, [
                 'class' => Place::class,
                 'choice_label' => 'name',
@@ -54,11 +53,11 @@ class EventType extends AbstractType
                 'choice_label' => 'nameSite',
                 'required' => true
             ])
-            ->add('organiser', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'name',
-                'required' => true
-            ])
+            // ->add('organiser', EntityType::class, [
+            //     'class' => User::class,
+            //     'choice_label' => 'name',
+            //     'required' => true
+            // ])
         ;
     }
 
