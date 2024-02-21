@@ -58,7 +58,8 @@ final class EventFactory extends ModelFactory
             'etats' => EtatFactory::random(),
             'places' => PlaceFactory::random(),
             'sites' => SiteFactory::random(),
-            'organiser' => UserFactory::random()
+            'organiser' => UserFactory::random(),
+
         ];
     }
 

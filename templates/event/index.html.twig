@@ -21,6 +21,7 @@
     </thead>
     <tbody>
         {% for event in events %}
+<<<<<<< HEAD
         <tr {% if event.etats and event.etats.libelle == 'Annulé' %}style="text-decoration: line-through;"{% endif %}>
             <td>{{ event.id }}</td>
             <td>{{ event.name }}</td>
@@ -54,6 +55,26 @@
                 {% endif %}
             </td>
         </tr>
+=======
+            <tr>
+                <td>{{ event.id }}</td>
+                <td>{{ event.name }}</td>
+                <td>{{ event.startDatetime ? event.startDatetime|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ event.duration }}</td>
+                <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ event.maxRegisterQty }}</td>
+                <td>{{ event.eventInfos }}</td>
+                <td>
+                    <a class="btn btn-success" href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
+                    <a class="btn btn-warning" href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
+                    {% if not event.getIsRegister().contains(app.user) %}
+                        <a class="btn btn-success" href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary">register</a>
+                    {% else %}
+                        <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-danger">unsubscribe</a>
+                    {% endif %}
+                </td>
+            </tr>
+>>>>>>> 94cd51ca27848d75490cec5b57e4d55ebdb7ae6f
         {% else %}
         <tr>
             <td colspan="8">no records found</td>

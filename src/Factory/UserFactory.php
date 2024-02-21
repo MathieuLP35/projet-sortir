@@ -58,6 +58,7 @@ final class UserFactory extends ModelFactory
             'firstname' => $faker->firstName(),
             'isActive' => $faker->boolean(),
             'name' => $faker->lastName(),
+            'username' => $faker->userName(),
             'password' => '1234',
             'phone' => $faker->e164PhoneNumber(),
             'roles' => [],
