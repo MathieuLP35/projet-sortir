@@ -25,8 +25,8 @@ class EventRepository extends ServiceEntityRepository
     public function findByFilter($data)
     {
         $query = $this->createQueryBuilder('e');
-//        $query->andWhere('e.startDatetime >= :date')
-//        ->setParameter('date', new \DateTime('-1 month'));
+        $query->andWhere('e.startDatetime >= :date')
+        ->setParameter('date', new \DateTime('-1 month'));
 
         if (isset($data['sites'])) {
             $query->andWhere('e.sites = :sites')

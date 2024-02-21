@@ -33,6 +33,13 @@ class EventController extends AbstractController
             if ($form->get('isRegistered')->getData()) { $data['is_registered'] = $this->getUser()->getId(); }
             if ($form->get('isNotRegistered')->getData()) { $data['is_not_registered'] = $this->getUser()->getId(); }
             if ($form->get('oldEvent')->getData()) { $data['old_event'] = true; }
+
+            $event = $eventRepository->findByFilter($data);
+
+            return $this->render('event/index.html.twig', [
+                'events' => $event,
+                'form_event_filter' => $form->createView(),
+            ]);
         }
 
         return $this->render('event/index.html.twig', [
