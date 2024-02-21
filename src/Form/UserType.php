@@ -30,6 +30,7 @@ class UserType extends AbstractType
             ->add('profilePictureFile', FileType::class, [
                 'label' => 'Photo de profil',
                 'required' => false,
+                'mapped' => false, // Ne pas inclure ce champ dans la sérialisation
             ])
             ->add('save', SubmitType::class)
         ;

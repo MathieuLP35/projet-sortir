@@ -26,26 +26,29 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Gestion du téléchargement de l'image de profil
             $profilePictureFile = $form->get('profilePictureFile')->getData();
 
             if ($profilePictureFile instanceof UploadedFile) {
+                // Générez un nom unique pour le fichier
                 $newFilename = $user->getId() . '-' . uniqid() . '.' . $profilePictureFile->guessExtension();
 
+                // Déplacez le fichier vers le répertoire configuré
                 try {
                     $profilePictureFile->move(
-                        $this->getParameter('profile_pictures_directory'),
+                        $this->getParameter('kernel.project_dir') . '/public/uploads/user_profile_pictures',
                         $newFilename
                     );
+                    // Mettez à jour le chemin du fichier dans l'entité User
+                    $user->setProfilePicture($newFilename);
                 } catch (FileException $e) {
-                    // Gérer les erreurs de téléchargement ici, par exemple, en affichant un message flash
                     $this->addFlash('error', 'Erreur lors du téléchargement de la photo de profil.');
                     return $this->redirectToRoute('app_user_profile');
                 }
 
+                // Mettez à jour le chemin du fichier dans l'entité User
                 $user->setProfilePicture($newFilename);
             }
-            
+
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -55,7 +58,8 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/profile.html.twig', [
-            'form' => $form,
+            'form' => $form->createView(),
+            'user' => $user,
         ]);
     }
 }
