@@ -39,11 +39,11 @@ class EventType extends AbstractType
                 'required' => true
             ])
             ->add('eventInfos', TextareaType::class)
-            ->add('etats', EntityType::class, [
-                'class' => Etat::class,
-                'choice_label' => 'libelle',
-                'required' => true
-            ])
+            // ->add('etats', EntityType::class, [
+            //     'class' => Etat::class,
+            //     'choice_label' => 'libelle',
+            //     'required' => true
+            // ])
             ->add('places', EntityType::class, [
                 'class' => Place::class,
                 'choice_label' => 'name',
@@ -54,11 +54,11 @@ class EventType extends AbstractType
                 'choice_label' => 'nameSite',
                 'required' => true
             ])
-            ->add('organiser', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'name',
-                'required' => true
-            ])
+            // ->add('organiser', EntityType::class, [
+            //     'class' => User::class,
+            //     'choice_label' => 'name',
+            //     'required' => true
+            // ])
         ;
     }
 
