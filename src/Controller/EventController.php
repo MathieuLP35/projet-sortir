@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Form\EventFilterType;
 use App\Form\EventType;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,12 +16,37 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[Route('/event')]
 class EventController extends AbstractController
 {
-    #[Route('/', name: 'app_event_index', methods: ['GET'])]
-    public function index(EventRepository $eventRepository): Response
+    #[Route('/', name: 'app_event_index', methods: ['GET', 'POST'])]
+    public function index(Request $request, EventRepository $eventRepository): Response
     {
-        $event = $eventRepository->findByDateField();
+
+        $data = [];
+        $event = $eventRepository->findByFilter($data);
+        $form = $this->createForm(EventFilterType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            if ($form->get('sites')->getData()) { $data['sites'] = $form->get('sites')->getData(); }
+            if ($form->get('event')->getData()) { $data['name'] = $form->get('event')->getData(); }
+            if ($form->get('startDate')->getData()) { $data['start_datetime'] = $form->get('startDate')->getData(); }
+            if ($form->get('endDate')->getData()) { $data['limit_register_date'] = $form->get('endDate')->getData(); }
+            if ($form->get('organiser')->getData()) { $data['organiser'] = $this->getUser()->getId(); }
+            if ($form->get('isRegistered')->getData()) { $data['is_registered'] = $this->getUser()->getId(); }
+            if ($form->get('isNotRegistered')->getData()) { $data['is_not_registered'] = $this->getUser()->getId(); }
+            if ($form->get('oldEvent')->getData()) { $data['old_event'] = true; }
+
+            $event = $eventRepository->findByFilter($data);
+
+            return $this->render('event/index.html.twig', [
+                'events' => $event,
+                'form_event_filter' => $form->createView(),
+            ]);
+        }
+
+
         return $this->render('event/index.html.twig', [
             'events' => $event,
+            'form_event_filter' => $form->createView(),
         ]);
     }
 
@@ -30,7 +56,6 @@ class EventController extends AbstractController
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
-        dump($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($event);
@@ -92,7 +117,7 @@ class EventController extends AbstractController
         $now = new \DateTime();
         if ($now > $event->getLimitRegisterDate()) {
             // Rediriger l'utilisateur ou afficher un message d'erreur
-            $this->addFlash('error', 'The registration deadline has passed.');
+            $this->addFlash('danger', 'The registration deadline has passed.');
             return $this->redirectToRoute('app_event_index');
         }
 
