@@ -7,6 +7,7 @@ use App\Entity\Event;
 use App\Form\CancelEventType;
 use App\Form\EventFilterType;
 use App\Form\EventType;
+use App\Repository\EtatRepository;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,11 +22,19 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class EventController extends AbstractController
 {
     #[Route('/', name: 'app_event_index', methods: ['GET', 'POST'])]
-    public function index(Request $request, EventRepository $eventRepository): Response
+    public function index(Request $request, EventRepository $eventRepository, EntityManagerInterface $entityManager): Response
     {
 
         $data = [];
         $event = $eventRepository->findByFilter($data);
+
+        foreach ($event as $e) {
+            if ($e->getStartDatetime() < new \DateTime()){
+                $e->setEtats($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Closed']));
+                $entityManager->flush();
+            }
+        }
+
         $form = $this->createForm(EventFilterType::class);
         $form->handleRequest($request);
 
