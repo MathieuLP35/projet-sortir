@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\EtatRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EtatRepository::class)]
 class Etat
@@ -14,6 +15,9 @@ class Etat
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
+    #[Assert\Length(min:2, max:30, maxMessage: 'Ce champ peut contenir jusqu\'à 30 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
     private ?string $libelle = null;
 
     public function getId(): ?int
