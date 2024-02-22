@@ -23,34 +23,45 @@ class EventType extends AbstractType
     {
         $builder
             ->add('name', TextType::class,[
+                'label' => 'Nom de la sortie',
                 'required' => true
             ])
             ->add('startDatetime', DateTimeType::class,[
                 "widget"=>"single_text",
+                'label' => 'Date et heure de la sortie',
                 'required' => true
             ])
-            ->add('duration', IntegerType::class)
+            ->add('duration', IntegerType::class,[
+                'label' => 'Durée (en minutes)',
+            ])
             ->add('limitRegisterDate', DateTimeType::class,[
                 "widget"=>"single_text",
+                'label' => 'Date limite d\'inscription',
                 'required' => true
             ])
             ->add('maxRegisterQty', IntegerType::class,[
+                'label' => 'Nombre de places',
                 'required' => true
             ])
-            ->add('eventInfos', TextareaType::class)
+            ->add('eventInfos', TextareaType::class,[
+                'label' => 'Description et infos',
+            ])
              ->add('etats', EntityType::class, [
                  'class' => Etat::class,
                  'choice_label' => 'libelle',
+                 'label' => 'Etat',
                  'required' => true
              ])
             ->add('places', EntityType::class, [
                 'class' => Place::class,
                 'choice_label' => 'name',
+                'label' => 'Lieu',
                 'required' => true
             ])
             ->add('sites', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'nameSite',
+                'label' => 'Site',
                 'required' => true
             ])
             // ->add('organiser', EntityType::class, [

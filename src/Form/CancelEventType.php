@@ -20,10 +20,12 @@ class CancelEventType extends AbstractType
             ->add('eventName', TextType::class, [
                 'data' => $event->getName(),
                 'disabled' => true,
+                'label' => 'Nom de la sortie',
             ])
             ->add('eventDate', DateTimeType::class, [
                 'data' => $event->getStartDatetime(),
                 'disabled' => true,
+                'label' => 'Date de la sortie',
             ])
             // Ajoutez d'autres champs et configurez-les en fonction de vos besoins
             ->add('cancellationReason', TextareaType::class, [

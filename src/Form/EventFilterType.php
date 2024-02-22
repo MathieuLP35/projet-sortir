@@ -31,26 +31,28 @@ class EventFilterType extends AbstractType
             ])
             ->add('startDate', DateTimeType::class,[
                 "widget"=>"single_text",
+                "label" => " ",
                 'required' => false,
             ])
             ->add('endDate', DateTimeType::class,[
                 "widget"=>"single_text",
+                "label" => " ",
                 'required' => false,
             ])
             ->add('organiser', CheckboxType::class, [
-                'label'    => 'Organiser',
+                'label'    => 'organisateur(trice)',
                 'required' => false,
             ])
             ->add('isRegistered', CheckboxType::class, [
-                'label'    => 'Registered',
+                'label'    => 'Inscrit(e)',
                 'required' => false,
             ])
             ->add('isNotRegistered', CheckboxType::class, [
-                'label'    => 'Not registered',
+                'label'    => 'Non inscrit(e)',
                 'required' => false,
             ])
             ->add('oldEvent', CheckboxType::class, [
-                'label'    => 'Old Event',
+                'label'    => 'Sorties passées',
                 'required' => false,
             ])
             ->add('save', SubmitType::class, [
