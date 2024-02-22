@@ -2,27 +2,17 @@
 
 {% block title %}Hello UserController!{% endblock %}
 
-{% block stylesheets %}
-    <style>
-        .user-profile-form {
-            display: flex;
-            align-items: flex-start; /* Alignez les éléments sur le côté supérieur du conteneur flex */
-        }
-
-        .form-container {
-            flex: 1; /* Faites en sorte que le formulaire occupe tout l'espace disponible */
-            margin-right: 20px; /* Ajoutez une marge entre le formulaire et la photo de profil */
-        }
-
-        .profile-picture {
-            max-width: 20%; /* Définissez la largeur maximale de la photo de profil */
-        }
-    </style>
-{% endblock %}
-
 {% block body %}
-    <div class="user-profile-form">
-        <div class="form-container">
+    <div class="row">
+        <div class="col">
+            {% if user.getProfilePicture() %}
+                <img src="{{ asset('uploads/user_profile_pictures/' ~ user.getProfilePicture()) }}" alt="Photo de profil" style="max-width: 66%;">
+            {% else %}
+                {# Afficher une image par défaut si l'utilisateur n'a pas de photo de profil #}
+                <img src="{{ asset('uploads/user_profile_pictures/default_profile_picture.png') }}" alt="Photo de profil par défaut" style="max-width: 20%;">
+            {% endif %}
+        </div>
+        <div class="col">
             {{ form_start(form) }}
 
             <div class="form-row">
@@ -69,16 +59,6 @@
             </div>
 
             {{ form_end(form) }}
-        </div>
-
-        {# Affichage de la photo de profil à droite #}
-        <div class="profile-picture">
-            {% if user.getProfilePicture() %}
-                <img src="{{ asset('uploads/user_profile_pictures/' ~ user.getProfilePicture()) }}" alt="Photo de profil" style="max-width: 66%;">
-            {% else %}
-                {# Afficher une image par défaut si l'utilisateur n'a pas de photo de profil #}
-                <img src="{{ asset('uploads/user_profile_pictures/default_profile_picture.png') }}" alt="Photo de profil par défaut" style="max-width: 20%;">
-            {% endif %}
         </div>
     </div>
 {% endblock %}
