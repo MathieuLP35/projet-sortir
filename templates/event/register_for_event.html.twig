@@ -3,11 +3,13 @@
 {% block title %}Inscription à l'événement{% endblock %}
 
 {% block body %}
-    <h1>Inscription à l'événement "{{ event.name }}"</h1>
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <h1>Inscription à l'événement "{{ event.name }}"</h1>
 
-    <form method="post" action="{{ path('app_handle_registration', {'id': event.id}) }}">
-        <button type="submit" class="btn btn-success">S'inscrire à l'événement</button>
-    </form>
+        <form method="post" action="{{ path('app_handle_registration', {'id': event.id}) }}">
+            <button type="submit" class="btn btn-success">S'inscrire à l'événement</button>
+        </form>
 
-    <a href="{{ path('app_event_index') }}" class="btn btn-secondary">Retour à la liste des événements</a>
+        <a href="{{ path('app_event_index') }}" class="btn btn-secondary">Retour à la liste des événements</a>
+    {% endif %}
 {% endblock %}

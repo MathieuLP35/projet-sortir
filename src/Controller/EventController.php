@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/event')]
 class EventController extends AbstractController
@@ -53,6 +54,7 @@ class EventController extends AbstractController
         ]);
     }
 
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -76,6 +78,7 @@ class EventController extends AbstractController
     #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
     public function show(Event $event): Response
     {
+        
         $participants = $event->getIsRegister();
         
         return $this->render('event/show.html.twig', [
@@ -84,6 +87,7 @@ class EventController extends AbstractController
         ]);
     }
 
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
@@ -102,6 +106,7 @@ class EventController extends AbstractController
         ]);
     }
 
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/{id}', name: 'app_event_delete', methods: ['POST'])]
     public function delete(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
@@ -113,6 +118,7 @@ class EventController extends AbstractController
         return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
     }
 
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/{id}/register', name: 'app_register_for_event', methods: ['GET'])]
     public function registerForEvent(Event $event, EntityManagerInterface $entityManager, UserInterface $user): Response
     {
@@ -139,6 +145,7 @@ class EventController extends AbstractController
         return $this->redirectToRoute('app_event_index');
     }
 
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/{id}/cancel', name: 'app_cancel_event', methods: ['GET', 'POST'])]
     public function cancelEvent(int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
