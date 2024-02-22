@@ -3,7 +3,7 @@
 {% block title %}Event index{% endblock %}
 
 {% block body %}
-    {% if app.user %}
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <h1>Annuler l'événement</h1>
 
         {{ form_start(form) }}

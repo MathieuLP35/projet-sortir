@@ -3,7 +3,7 @@
 {% block title %}Inscription à l'événement{% endblock %}
 
 {% block body %}
-    {% if app.user %}
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <h1>Inscription à l'événement "{{ event.name }}"</h1>
 
         <form method="post" action="{{ path('app_handle_registration', {'id': event.id}) }}">

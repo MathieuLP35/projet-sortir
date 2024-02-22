@@ -67,7 +67,7 @@
             <td>
                 <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info">Show</a>
             </td>
-            {% if app.user %}
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
             <td>
                 {% if event.etats.libelle != 'Cancelled' %}
                 <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-warning">Edit</a>

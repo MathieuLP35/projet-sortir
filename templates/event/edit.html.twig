@@ -3,7 +3,7 @@
 {% block title %}Edit Event{% endblock %}
 
 {% block body %}
-    {% if app.user %}
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <h1 class="mb-3">Edit Event</h1>
         {{ include('event/_form.html.twig', {'button_label': 'Update'}) }}
         <div class="d-flex justify-content-between col-2">
