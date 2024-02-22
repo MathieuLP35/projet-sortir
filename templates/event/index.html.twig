@@ -58,6 +58,7 @@
             {% if event.etats and event.etats.libelle == 'Annulé' %}style="text-decoration: line-through;"{% endif %}
             {% if event.getIsRegister().contains(app.user)%}class="table-success"{% endif %}
             {% if event.getEtats().getLibelle() == "Cancelled"%}class="table-danger"{% endif %}
+            {% if event.etats.libelle == "Closed"%}class="table-secondary"{% endif %}
             >
                 <td>{{ event.name }}</td>
                 <td>{{ event.startDatetime ? event.startDatetime|date('Y-m-d H:i:s') : '' }}</td>
@@ -66,6 +67,9 @@
                 <td>{{ event.getIsRegister() | length }}/{{event.maxRegisterQty}}</td>
                 <!-- Colonne Actions -->
                 <td>
+                {% if event.etats.libelle == "Closed"%}
+                    <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-secondary">Show</a>
+                    {% else %}
                     <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info">Show</a>
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
@@ -94,6 +98,7 @@
                         {% endif %}
 
                     {% endif %}
+                {% endif %}
                 </td>
             </tr>
         {% else %}
