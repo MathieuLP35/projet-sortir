@@ -6,6 +6,7 @@ use App\Repository\SiteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SiteRepository::class)]
 class Site
@@ -16,6 +17,9 @@ class Site
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
+    #[Assert\Length(min:2, max:30, maxMessage: 'Ce champ peut contenir jusqu\'à 30 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
     private ?string $name_site = null;
 
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'sites')]

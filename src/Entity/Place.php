@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PlaceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PlaceRepository::class)]
 class Place
@@ -14,15 +15,27 @@ class Place
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
+    #[Assert\Length(min:2, max:50, maxMessage: 'Ce champ peut contenir jusqu\'à 50 caractères !', minMessage: 'Ce champ peut contenir au minimum 2 caractères !')]
     private ?string $name = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank]
+    #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
+    #[Assert\Length(min:2, max:100, maxMessage: 'Ce champ peut contenir jusqu\'à 100 caractères !', minMessage: 'Ce champ peut contenir au minimum 2 caractères !')]
     private ?string $address = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
+    #[Assert\Positive]
     private ?float $latitude = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
+    #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
+    #[Assert\Positive]
     private ?float $longitude = null;
 
     #[ORM\ManyToOne(inversedBy: 'place')]
