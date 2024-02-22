@@ -9,7 +9,7 @@
             <ul class="nav nav-pills">
                 <li class="nav-item"><a href="{{ path('app_home') }}" class="nav-link">Accueil</a></li>
                 <li class="nav-item"><a href="{{ path('app_event_index') }}" class="nav-link">Event</a></li>
-                {% if app.user %}
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <li class="nav-item"><a href="{{ path('app_user_profile') }}" class="nav-link">Profil</a></li>
                     <li class="nav-item"><a href="{{ path('app_logout') }}" class="nav-link">Logout</a></li>
                 {% else %}

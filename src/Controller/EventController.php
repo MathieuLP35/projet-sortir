@@ -22,21 +22,23 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class EventController extends AbstractController
 {
     #[Route('/', name: 'app_event_index', methods: ['GET', 'POST'])]
-    public function index(Request $request, EventRepository $eventRepository, EntityManagerInterface $entityManager): Response
+
+    public function index(Request $request, EventRepository $eventRepository,EntityManagerInterface $entityManager): Response
     {
 
         $data = [];
-        $event = $eventRepository->findByFilter($data);
-
-        foreach ($event as $e) {
-            if ($e->getStartDatetime() < new \DateTime()){
-                $e->setEtats($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Closed']));
+        $events = $eventRepository->findByFilter($data);
+        $etats = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Closed']);
+        $form = $this->createForm(EventFilterType::class);
+        $form->handleRequest($request);
+      
+        foreach( $events as $event){
+            if($event->getStartDatetime() < new \Datetime()){
+                $event->setEtats($etats);
                 $entityManager->flush();
             }
         }
 
-        $form = $this->createForm(EventFilterType::class);
-        $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             if ($form->get('sites')->getData()) { $data['sites'] = $form->get('sites')->getData(); }
@@ -48,17 +50,17 @@ class EventController extends AbstractController
             if ($form->get('isNotRegistered')->getData()) { $data['is_not_registered'] = $this->getUser()->getId(); }
             if ($form->get('oldEvent')->getData()) { $data['old_event'] = true; }
 
-            $event = $eventRepository->findByFilter($data);
+            $events = $eventRepository->findByFilter($data);
 
             return $this->render('event/index.html.twig', [
-                'events' => $event,
+                'events' => $events,
                 'form_event_filter' => $form->createView(),
             ]);
         }
 
 
         return $this->render('event/index.html.twig', [
-            'events' => $event,
+            'events' => $events,
             'form_event_filter' => $form->createView(),
         ]);
     }
@@ -67,11 +69,14 @@ class EventController extends AbstractController
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $etats = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Open']);
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
+            $event->setOrganiser($this->getUser());
+            $event->setEtats($etats);
             $entityManager->persist($event);
             $entityManager->flush();
 
@@ -159,7 +164,6 @@ class EventController extends AbstractController
     public function cancelEvent(int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
         $event = $entityManager->getRepository(Event::class)->find($id);
-
         if (!$event) {
             throw $this->createNotFoundException('Event not found');
         }
@@ -185,7 +189,6 @@ class EventController extends AbstractController
                 "Événement annulé par l'organisateur. Motif : %s",
                 $data['cancellationReason']
             ));
-
             $entityManager->flush();
 
             // Redirigez l'utilisateur vers la page de l'événement annulé, ou une autre page de confirmation

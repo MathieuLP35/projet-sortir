@@ -53,6 +53,7 @@
         <tbody>
 
         {% for event in events %}
+
             <tr {% if event.etats and event.etats.libelle == 'Annulé' %}style="text-decoration: line-through;"{% endif %}>
                 <td>{{ event.id }}</td>
                 <td>{{ event.name }}</td>
