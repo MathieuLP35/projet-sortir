@@ -139,7 +139,7 @@ class EventController extends AbstractController
         $now = new \DateTime();
         if ($now > $event->getLimitRegisterDate()) {
             // Rediriger l'utilisateur ou afficher un message d'erreur
-            $this->addFlash('danger', 'The registration deadline has passed.');
+            $this->addFlash('danger', 'La date limite d\'inscription est dépassée.');
             return $this->redirectToRoute('app_event_index');
         }
 
@@ -163,7 +163,7 @@ class EventController extends AbstractController
         $now = new \DateTime();
         if ($now > $event->getLimitRegisterDate()) {
             // Rediriger l'utilisateur ou afficher un message d'erreur
-            $this->addFlash('danger', 'The registration deadline has passed.');
+            $this->addFlash('danger', 'La date limite de désinscription est dépassée.');
             return $this->redirectToRoute('app_event_index');
         }
 
@@ -185,13 +185,15 @@ class EventController extends AbstractController
     {
         $event = $entityManager->getRepository(Event::class)->find($id);
         if (!$event) {
-            throw $this->createNotFoundException('Event not found');
+            $this->addFlash('danger', 'Cette sortie n\'existe pas.');
+            return $this->redirectToRoute('app_event_index');
         }
 
         // Vérifier si l'utilisateur connecté est l'organisateur de l'événement
         $currentUser = $this->getUser();
         if ($event->getOrganiser() !== $currentUser) {
-            throw new AccessDeniedException('You are not the organizer of this event.');
+            $this->addFlash('danger', 'Vous n\'êtes pas autorisé à annuler cette sortie.');
+            return $this->redirectToRoute('app_event_index');
         }
 
         // Créez le formulaire en passant l'événement en tant qu'option
