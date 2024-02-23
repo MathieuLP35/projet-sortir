@@ -1,32 +1,48 @@
-
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
     {{ form_start(form) }}
-        {{ form_errors(form) }}
-        <div class="row mb-3">
+    {{ form_errors(form) }}
+    <div class="row mb-3">
         <div class="col-6">
-        {{ form_label(form.name)}}
-        {{ form_widget(form.name) }}
-        {{ form_label(form.startDatetime)}}
-        {{ form_widget(form.startDatetime) }}
-        {{ form_label(form.limitRegisterDate)}}
-        {{ form_widget(form.limitRegisterDate) }}
-        {{ form_label(form.maxRegisterQty)}}
-        {{ form_widget(form.maxRegisterQty) }}
-        {{ form_label(form.duration)}}
-        {{ form_widget(form.duration) }}
-        {{ form_label(form.eventInfos)}}
-        {{ form_widget(form.eventInfos) }}
+            <div class="mb-3">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(form.startDatetime) }}
+                {{ form_widget(form.startDatetime) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(form.limitRegisterDate) }}
+                {{ form_widget(form.limitRegisterDate) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(form.maxRegisterQty) }}
+                {{ form_widget(form.maxRegisterQty) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(form.duration) }}
+                {{ form_widget(form.duration) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(form.eventInfos) }}
+                {{ form_widget(form.eventInfos) }}
+            </div>
         </div>
         <div class="col-6">
-        {{ form_label(form.sites)}}
-        {{ form_widget(form.sites) }}
-        {{ form_label(form.places)}}
-        {{ form_widget(form.places) }}
-        {{ form_label(form.etats)}}
-        {{ form_widget(form.etats) }}
-
+            <div class="mb-3">
+                {{ form_label(form.sites) }}
+                {{ form_widget(form.sites) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(form.places) }}
+                {{ form_widget(form.places) }}
+            </div>
+            <div class="mb-3">
+                {{ form_label(form.etats) }}
+                {{ form_widget(form.etats) }}
+            </div>
         </div>
-        </div>
-        <button class="btn btn-success">{{ button_label|default('Sauvegarder') }}</button>
+    </div>
+    <button class="btn btn-success">{{ button_label|default('Sauvegarder') }}</button>
     {{ form_end(form) }}
 {% endif %}

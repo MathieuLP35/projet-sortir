@@ -51,16 +51,14 @@ final class UserFactory extends ModelFactory
      */
     protected function getDefaults(): array
     {
-        $faker = Factory::create('fr_FR');
-
         return [
-            'email' => $faker->email(),
-            'firstname' => $faker->firstName(),
-            'isActive' => $faker->boolean(),
-            'name' => $faker->lastName(),
-            'username' => $faker->userName(),
+            'email' => self::faker()->unique()->email(),
+            'firstname' => self::faker()->unique()->firstName(),
+            'isActive' => self::faker()->boolean(),
+            'name' => self::faker()->unique()->lastName(),
+            'username' => self::faker()->unique()->userName(),
             'password' => '1234',
-            'phone' => $faker->e164PhoneNumber(),
+            'phone' => self::faker()->unique()->e164PhoneNumber(),
             'roles' => ['ROLE_USER'],
         ];
     }
