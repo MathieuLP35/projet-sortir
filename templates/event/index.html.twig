@@ -58,7 +58,7 @@
             {% if event.etats and event.etats.libelle == 'Annulé' %}style="text-decoration: line-through;"{% endif %}
             {% if event.getIsRegister().contains(app.user)%}class="table-success"{% endif %}
             {% if event.getEtats().getLibelle() == "Cancelled"%}class="table-danger"{% endif %}
-            {% if event.etats.libelle == "Closed"%}class="table-secondary"{% endif %}
+            {% if event.etats.libelle == "Closed"%}class="table-light"{% endif %}
             >
                 <td>{{ event.name }}</td>
                 <td>{{ event.startDatetime ? event.startDatetime|date('Y-m-d H:i:s') : '' }}</td>
