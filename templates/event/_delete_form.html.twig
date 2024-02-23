@@ -2,6 +2,6 @@
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
     <form method="post" action="{{ path('app_event_delete', {'id': event.id}) }}" onsubmit="return confirm('Êtes-vous sûr de bien vouloir supprimer cet élément?');">
         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
-        <button class="btn btn-danger">Delete</button>
+        <button class="btn btn-danger">Supprimer</button>
     </form>
 {% endif %}

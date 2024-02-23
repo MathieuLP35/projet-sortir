@@ -3,7 +3,7 @@
 {% block title %}Event{% endblock %}
 
 {% block body %}
-    <h1>Sortie</h1>
+    <h1>Afficher une sortie</h1>
 
     <div class="row mt-3">
         <div class="col">
@@ -71,8 +71,29 @@
 
     <hr class="mt-5 mb-5 bg-dark">
 
-    <div class="col-4 mt-5">
-        {{ include('components/participantsEnvent.html.twig') }}
-    </div>
+    <h2 class="mb-4">Liste des participants inscrits :</h2>
+    {% if participants is not empty %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Pseudo</th>
+                <th>Nom</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for participant in participants %}
+                <tr>
+                    <td>{{ participant.username }}</td>
+                    <td>{{ participant.firstname }}
+                        {{ participant.name }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="mt-3">
+            <b>Aucun participant enregistré !</b>
+        </p>
+    {% endif %}
 
 {% endblock %}
