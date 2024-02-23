@@ -1,3 +1,51 @@
 body{
     font-family: 'Roboto', sans-serif;
 }
+
+.bg-eni{
+    background-color: rgb(36, 48, 80);
+}
+
+.bg-filter-eni{
+    background-color: rgba(36, 48, 80, 0.15);
+}
+
+.btn-primary{
+    background-color: rgb(36, 48, 80);
+    border-color: rgb(36, 48, 80);
+}
+
+.btn-primary:hover{
+    background-color: rgb(50, 66, 110);
+    border-color: rgb(50, 66, 110);
+}
+
+.btn-info{
+    background-color: rgb(86, 174, 255);
+    border-color: rgb(86, 174, 255);
+    color: rgb(230, 255, 255);
+}
+
+.btn-info:hover{
+    background-color: rgba(86, 174, 255, 0.9);
+    border-color: rgba(86, 174, 255, 0.9);
+    color: rgb(230, 255, 255);
+}
+
+.bg-light{
+    background-color: rgba(36, 48, 80, 0.08);
+}
+
+.table-light{
+    --bs-table-bg: rgba(36, 48, 80, 0.08);
+}
+
+.nav-link{
+    color: #F5F5F5;
+    transition: color 0.2s;
+}
+
+.nav-link:hover{
+    color: rgba(192, 216, 227, 0.53);
+    transition: color 0.2s;
+}
