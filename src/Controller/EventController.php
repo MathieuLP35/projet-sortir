@@ -91,7 +91,7 @@ class EventController extends AbstractController
     #[Route('/{id}', name: 'app_event_show', methods: ['GET'])]
     public function show(Event $event): Response
     {
-        
+
         $participants = $event->getIsRegister();
         
         return $this->render('event/show.html.twig', [
@@ -104,6 +104,14 @@ class EventController extends AbstractController
     #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
+        
+        // Vérifier si l'utilisateur connecté est l'organisateur de l'événement
+        $currentUser = $this->getUser();
+        if ($event->getOrganiser() !== $currentUser) {
+            $this->addFlash('danger', 'Vous n\'êtes pas autorisé à modifier cette sortie.');
+            return $this->redirectToRoute('app_event_index');
+        }
+
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
 
@@ -123,6 +131,13 @@ class EventController extends AbstractController
     #[Route('/{id}', name: 'app_event_delete', methods: ['POST'])]
     public function delete(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
+
+        $currentUser = $this->getUser();
+        if ($event->getOrganiser() !== $currentUser) {
+            $this->addFlash('danger', 'Vous n\'êtes pas autorisé à supprimer cette sortie.');
+            return $this->redirectToRoute('app_event_index');
+        } 
+
         if ($this->isCsrfTokenValid('delete' . $event->getId(), $request->request->get('_token'))) {
             $entityManager->remove($event);
             $entityManager->flush();
@@ -135,6 +150,7 @@ class EventController extends AbstractController
     #[Route('/{id}/register', name: 'app_register_for_event', methods: ['GET'])]
     public function registerForEvent(Event $event, EntityManagerInterface $entityManager, UserInterface $user): Response
     {
+
         // Vérifier si la date de clôture des inscriptions est dépassée
         $now = new \DateTime();
         if ($now > $event->getLimitRegisterDate()) {
@@ -159,6 +175,7 @@ class EventController extends AbstractController
     #[Route('/{id}/unregister', name: 'app_unregister_for_event', methods: ['GET'])]
     public function unregisterForEvent(Event $event, EntityManagerInterface $entityManager, UserInterface $user): Response
     {
+
         // Vérifier si la date de clôture des inscriptions est dépassée
         $now = new \DateTime();
         if ($now > $event->getLimitRegisterDate()) {
