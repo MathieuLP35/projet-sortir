@@ -1,9 +1,9 @@
 <div{{ attributes }} >
-    <nav class="navbar navbar-expand-sm navbar-light bg-light py-3 mb-4 border-bottom">
+    <nav class="navbar navbar-expand-sm bg-eni py-3 mb-4 border-bottom">
         <div class="container">
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
                 <!-- Logo -->
-                <img src="{{ asset('uploads/images/logo.png') }}" alt="Logo" width="80" height="80">
+                <img class="logo" src="{{ asset('uploads/images/logo.png') }}" alt="Logo" width="80" height="80">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
                 <span class="navbar-toggler-icon"></span>
@@ -11,7 +11,7 @@
             <div class="collapse navbar-collapse" id="mynavbar">
                 <ul class="navbar-nav me-auto"></ul>
                 <div class="d-flex">
-                    <ul class="navbar-nav me-auto">
+                    <ul class="navbar-nav me-auto text-light">
                         <li class="nav-item"><a href="{{ path('app_home') }}" class="nav-link fs-5">Accueil</a></li>
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                             <li class="nav-item"><a href="{{ path('app_event_index') }}" class="nav-link fs-5">Événement</a></li>

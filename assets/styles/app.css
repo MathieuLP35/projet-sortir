@@ -1,3 +1,20 @@
 body{
     font-family: 'Roboto', sans-serif;
 }
+
+.logo{
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
+}
+
+.bg-eni{
+    background-color: rgb(36, 48, 80);
+}
+
+.nav-link{
+    color: #F5F5F5;
+}
+
+.nav-link:hover{
+    color: rgba(192, 216, 227, 0.53);
+}

@@ -4,12 +4,13 @@
 
 {% block body %}
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <h1>Annuler l'événement</h1>
+        <h1 class="mb-3">Annuler l'événement</h1>
 
         {{ form_start(form) }}
         {{ form_widget(form) }}
-        <button type="submit">Enregistrer</button>
-        <a href="{{ path('app_event_index') }}">Annuler</a>
+
+        <button class="btn btn-success" type="submit">Enregistrer</button>
+        <a class="btn btn-danger" href="{{ path('app_event_index') }}">Annuler</a>
         {{ form_end(form) }}
     {% endif %}
 {% endblock %}
