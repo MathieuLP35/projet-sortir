@@ -3,46 +3,76 @@
 {% block title %}Event{% endblock %}
 
 {% block body %}
-    <h1>Event</h1>
+    <h1>Sortie</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Nom de la sortie</th>
-                <td>{{ event.name }}</td>
-            </tr>
-            <tr>
-                <th>Date et heure de la sortie</th>
-                <td>{{ event.startDatetime ? event.startDatetime|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Durée</th>
-                <td>{{ event.duration }}</td>
-            </tr>
-            <tr>
-                <th>Date limite d'inscription</th>
-                <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Nombre de places</th>
-                <td>{{ event.maxRegisterQty }}</td>
-            </tr>
-            <tr>
-                <th>Description et infos</th>
-                <td>{{ event.eventInfos }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="d-flex justify-content-between col-md-4">
-        <a class="btn btn-dark" href="{{ path('app_event_index') }}">retour à la liste</a>
+    <div class="row mt-3">
+        <div class="col">
+            <div class="mb-3">
+                <label for="eventName" class="form-label fw-bold">Nom:</label>
+                {{ event.name }}
+            </div>
+            <div class="mb-3">
+                <label for="startDatetime" class="form-label fw-bold">Date et heure:</label>
+                {{ event.startDatetime ? event.startDatetime|date('Y-m-d H:i:s') : '' }}
+            </div>
+            <div class="mb-3">
+                <label for="limitRegisterDate" class="form-label fw-bold">Date limite d'inscription:</label>
+                {{ event.limitRegisterDate ? event.limitRegisterDate|date('Y-m-d H:i:s') : '' }}
+            </div>
+            <div class="mb-3">
+                <label for="maxRegisterQty" class="form-label fw-bold">Nombre de place:</label>
+                {{ event.maxRegisterQty }}
+            </div>
+            <div class="mb-3">
+                <label for="duration" class="form-label fw-bold">Durée:</label>
+                {{ event.duration }} minutes
+            </div>
+            <div class="mb-3">
+                <label for="eventInfos" class="form-label fw-bold">Event Infos:</label>
+                {{ event.eventInfos }}
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label for="eventInfos" class="form-label fw-bold">Ville organisatrice:</label>
+                {{ event.places.city.name }}
+            </div>
+            <div class="mb-3">
+                <label for="eventInfos" class="form-label fw-bold">Lieu:</label>
+                {{ event.places.name }}
+            </div>
+            <div class="mb-3">
+                <label for="eventInfos" class="form-label fw-bold">Addresse:</label>
+                {{ event.places.address }}
+            </div>
+            <div class="mb-3">
+                <label for="eventInfos" class="form-label fw-bold">Code Postal:</label>
+                {{ event.places.city.postalCode }}
+            </div>
+            <div class="mb-3">
+                <label for="eventInfos" class="form-label fw-bold">Latitude:</label>
+                {{ event.places.latitude }}
+            </div>
+            <div class="mb-3">
+                <label for="eventInfos" class="form-label fw-bold">Longitude:</label>
+                {{ event.places.longitude }}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="d-flex justify-content-center gap-2 mt-4">
+        <a class="btn btn-dark" href="{{ path('app_event_index') }}">Retour à la liste</a>
         {% if app.user == event.organiser %}
-            <a class="btn btn-primary" href="{{ path('app_event_edit', {'id': event.id}) }}">modifier</a>
+            <a class="btn btn-primary" href="{{ path('app_event_edit', {'id': event.id}) }}">Modifier</a>
             {{ include('event/_delete_form.html.twig') }}
         {% endif %}
     </div>
-   
+
+    <hr class="mt-5 mb-5 bg-dark">
+
     <div class="col-4 mt-5">
-    {{ include('components/participantsEnvent.html.twig') }}
+        {{ include('components/participantsEnvent.html.twig') }}
     </div>
 
 {% endblock %}

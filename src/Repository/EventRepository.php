@@ -50,26 +50,16 @@ class EventRepository extends ServiceEntityRepository
         }
         if (isset($data['is_registered'])) {
             $query->leftJoin('e.isRegister', 'eu');
-            foreach($query->getQuery()->getResult() as $event) {
-                foreach($event->getIsRegister() as $user) {
-                    if($user->getId() == $data['is_registered']) {
-                        $query->andWhere('eu.id = :is_registered')
-                            ->setParameter('is_registered', $data['is_registered']);
-                    }
-                }
-            }
+            $query->andWhere('eu.id = :is_registered')
+                ->setParameter('is_registered', $data['is_registered']);
         }
         if (isset($data['is_not_registered'])) {
-            $query->leftJoin('e.isRegister', 'eu');
-            foreach($query->getQuery()->getResult() as $event) {
-                foreach($event->getIsRegister() as $user) {
-                    if($user->getId() == $data['is_not_registered']) {
-                        $query->andWhere('eu.id != :is_not_registered')
-                            ->orWhere('e.isRegister IS EMPTY')
-                            ->setParameter('is_not_registered', $data['is_not_registered']);
-                    }
-                }
+            if (!isset($data['is_registered'])) {
+                $query->leftJoin('e.isRegister', 'eu');
             }
+            $query->andWhere('eu.id != :is_not_registered')
+                ->orWhere('e.isRegister IS EMPTY')
+                ->setParameter('is_not_registered', $data['is_not_registered']);
 
         }
         if (isset($data['old_event'])) {

@@ -61,7 +61,7 @@ final class UserFactory extends ModelFactory
             'username' => $faker->userName(),
             'password' => '1234',
             'phone' => $faker->e164PhoneNumber(),
-            'roles' => [],
+            'roles' => ['ROLE_USER'],
         ];
     }
 

@@ -22,7 +22,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class EventController extends AbstractController
 {
     #[Route('/', name: 'app_event_index', methods: ['GET', 'POST'])]
-
     public function index(Request $request, EventRepository $eventRepository,EntityManagerInterface $entityManager): Response
     {
 
@@ -145,12 +144,33 @@ class EventController extends AbstractController
         }
 
         // code pour gérer l'inscription de l'utilisateur à l'événement
+        if (!$event->getIsRegister()->contains($user)) {
+            // Sinon, l'inscrire à l'événement
+            $event->addIsRegister($user);
+        }
+
+        $entityManager->flush();
+
+        // Redirigez l'utilisateur vers la liste des événements
+        return $this->redirectToRoute('app_event_index');
+    }
+
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[Route('/{id}/unregister', name: 'app_unregister_for_event', methods: ['GET'])]
+    public function unregisterForEvent(Event $event, EntityManagerInterface $entityManager, UserInterface $user): Response
+    {
+        // Vérifier si la date de clôture des inscriptions est dépassée
+        $now = new \DateTime();
+        if ($now > $event->getLimitRegisterDate()) {
+            // Rediriger l'utilisateur ou afficher un message d'erreur
+            $this->addFlash('danger', 'The registration deadline has passed.');
+            return $this->redirectToRoute('app_event_index');
+        }
+
+        // code pour gérer l'inscription de l'utilisateur à l'événement
         if ($event->getIsRegister()->contains($user)) {
             // Si l'utilisateur est déjà inscrit, le désinscrire
             $event->removeIsRegister($user);
-        } else {
-            // Sinon, l'inscrire à l'événement
-            $event->addIsRegister($user);
         }
 
         $entityManager->flush();
