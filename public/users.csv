@@ -1,0 +1,5 @@
+email,password,name,firstname,phone,is_active,username
+john.doe@doe.com,Pa$$w0rd,doe,john,123456789,1,john.doe
+jane.smith@smith.com,1234,smith, jane, 987654321, 1, jane.smith
+
+
