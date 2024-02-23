@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -42,6 +43,22 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToCrud('The Label', 'fas fa-list', User::class);
+        yield MenuItem::linkToCrud('User', 'fas fa-list', User::class);
+    }
+
+    public function configureCrud(): Crud
+    {
+        return Crud::new()
+            // ...
+
+            // the first argument is the "template name", which is the same as the
+            // Twig path but without the `@EasyAdmin/` prefix
+            ->overrideTemplate('crud/field/array', 'admin/my-dashboard.html.twig')
+
+            // ->overrideTemplates([
+            //     'crud/index' => '@EasyAdmin/admin/pages/index.html.twig',
+            //     'crud/field/textarea' => 'admin/fields/dynamic_textarea.html.twig',
+            // ])
+        ;
     }
 }
