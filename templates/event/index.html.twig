@@ -4,7 +4,6 @@
 
 {% block body %}
 
-    <h1>Event index</h1>
     {{ form_start(form_event_filter) }}
     <div class="my-custom-class-for-errors">
         {{ form_errors(form_event_filter) }}
@@ -67,17 +66,18 @@
                 <td>{{ event.getIsRegister() | length }}/{{event.maxRegisterQty}}</td>
                 <!-- Colonne Actions -->
                 <td>
+
                 {% if event.etats.libelle == "Closed"%}
-                    <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-secondary">Show</a>
+                    <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-secondary">Afficher</a>
                     {% else %}
-                    <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info">Show</a>
+                    <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info">Afficher</a>
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
                         {% if event.etats.libelle != 'Cancelled' %}
                             {% if not event.getIsRegister().contains(app.user) %}
-                                <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary">Register</a>
+                                <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary">S'inscrire</a>
                             {% else %}
-                                <a href="{{ path('app_unregister_for_event', {'id': event.id}) }}" class="btn btn-danger">Unsubscribe</a>
+                                <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-danger">Se désister</a>
                             {% endif %}
                         {% endif %}
 
@@ -86,12 +86,12 @@
                             {% if event.etats.libelle != 'Cancelled' %}
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Manage
+                                        Gérer
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a href="{{ path('app_event_edit', {'id': event.id}) }}" class="dropdown-item">Edit</a></li>
+                                        <li><a href="{{ path('app_event_edit', {'id': event.id}) }}" class="dropdown-item">Modifier</a></li>
                                         <li><hr class="dropdown-divider"></li>
-                                        <li><a href="{{ path('app_cancel_event', {'id': event.id}) }}" class="dropdown-item">Cancel event</a></li>
+                                        <li><a href="{{ path('app_cancel_event', {'id': event.id}) }}" class="dropdown-item">Annuler l'événement</a></li>
                                     </ul>
                                 </div>
                             {% endif %}
@@ -103,12 +103,12 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="8">no records found</td>
+                <td colspan="8">Aucun enregistrement trouvé</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a class="btn btn-success" href="{{ path('app_event_new') }}">Create new</a>
+    <a class="btn btn-success" href="{{ path('app_event_new') }}">Créer une sortie</a>
 
 {% endblock %}

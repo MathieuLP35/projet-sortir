@@ -16,10 +16,10 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
-            ->add('name')
-            ->add('firstname')
-            ->add('phone')
+            ->add('email', null, ['label' => 'Email'])
+            ->add('name', null, ['label' => 'Nom'])
+            ->add('firstname', null, ['label' => 'Prénom'])
+            ->add('phone', null, ['label' => 'Numéro de téléphone'])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options'  => ['label' => 'Mot de passe', 'hash_property_path' => 'password'],
@@ -32,8 +32,7 @@ class UserType extends AbstractType
                 'required' => false,
                 'mapped' => false, // Ne pas inclure ce champ dans la sérialisation
             ])
-            ->add('save', SubmitType::class)
-        ;
+            ->add('save', SubmitType::class, ['label' => 'Enregistrer']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
