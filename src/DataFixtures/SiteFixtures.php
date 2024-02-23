@@ -10,6 +10,10 @@ class SiteFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        SiteFactory::createMany(10);;
+        SiteFactory::createOne(['name_site' => 'ENI Nantes']);
+        SiteFactory::createOne(['name_site' => 'ENI Rennes']);
+        SiteFactory::createOne(['name_site' => 'ENI NIORT']);
+        SiteFactory::createOne(['name_site' => 'ENI LA ROCHE-SUR-YON']);
+        SiteFactory::createOne(['name_site' => 'ENI ANGERS']);
     }
 }

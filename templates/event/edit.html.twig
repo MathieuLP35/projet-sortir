@@ -5,7 +5,9 @@
 {% block body %}
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <h1 class="mb-3">Modifier l'événement</h1>
-        {{ include('event/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        <div class="bg-filter-eni p-4">
+            {{ include('event/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+        </div>
 
         <div class="d-flex justify-content-center gap-2 mt-4">
             <a class="btn btn-dark" href="{{ path('app_event_index') }}">Retour à la liste</a>
