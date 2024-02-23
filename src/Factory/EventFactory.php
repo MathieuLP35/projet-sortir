@@ -88,10 +88,14 @@ final class EventFactory extends ModelFactory
         // Définir l'état en fonction de la probabilité
         $etat = $isClosed ? 'Fermé' : ($faker->boolean(10) ? 'Annulé' : 'Ouvert');
 
+        // Générer une durée aléatoire
+        $duration = $faker->numberBetween(10, 600);// entre 10 minutes et 10 heures en minutes
+
         return [
             'limitRegisterDate' => $limitRegisterDate,
-            'maxRegisterQty' => $faker->randomNumber(),
+            'maxRegisterQty' => $faker->numberBetween(1, 99),
             'name' => $faker->randomElement($activityNames),
+            'duration'  => $duration,
             'startDatetime' => $startDatetime,
             'etats' => EtatFactory::random(['libelle' => $etat]),
             'places' => PlaceFactory::random(),

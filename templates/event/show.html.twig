@@ -25,7 +25,11 @@
             </div>
             <div class="mb-3">
                 <label for="duration" class="form-label fw-bold">Durée:</label>
-                {{ event.duration }} minutes
+                {% if event.duration < 60 %}
+                    {{ event.duration }} minutes
+                {% else %}
+                    {{ event.duration // 60 }} heures {{ event.duration % 60 }} minutes
+                {% endif %}
             </div>
             <div class="mb-3">
                 <label for="eventInfos" class="form-label fw-bold">Event Infos:</label>
