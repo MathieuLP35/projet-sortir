@@ -31,12 +31,12 @@ class EventFilterType extends AbstractType
             ])
             ->add('startDate', DateTimeType::class,[
                 "widget"=>"single_text",
-                "label" => " ",
+                "label" => "Date de début:",
                 'required' => false,
             ])
             ->add('endDate', DateTimeType::class,[
                 "widget"=>"single_text",
-                "label" => " ",
+                "label" => "Date de fin:",
                 'required' => false,
             ])
             ->add('organiser', CheckboxType::class, [
@@ -58,7 +58,7 @@ class EventFilterType extends AbstractType
             ->add('save', SubmitType::class, [
                 'label' => 'Envoyer',
                 'attr' => [
-                    'class' => 'p-5 bg-primary text-white',
+                    'class' => 'p-5 btn btn-primary'
                 ]
             ])
         ;

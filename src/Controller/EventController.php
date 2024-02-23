@@ -10,6 +10,7 @@ use App\Form\EventType;
 use App\Repository\EtatRepository;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use MobileDetectBundle\DeviceDetector\MobileDetectorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,8 +67,14 @@ class EventController extends AbstractController
 
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, MobileDetectorInterface $mobileDetector): Response
     {
+
+        if ($mobileDetector->isMobile()) {
+            $this->addFlash('danger', 'Vous ne pouvez pas créer une sortie depuis un mobile.');
+            return $this->redirectToRoute('app_event_index');
+        }
+
         $etats = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Open']);
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);

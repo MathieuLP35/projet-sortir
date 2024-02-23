@@ -24,9 +24,11 @@ class CancelEventType extends AbstractType
             ])
             ->add('eventDate', DateTimeType::class, [
                 'data' => $event->getStartDatetime(),
+                "widget"=>"single_text",
                 'disabled' => true,
                 'label' => 'Date de la sortie',
             ])
+
             // Ajoutez d'autres champs et configurez-les en fonction de vos besoins
             ->add('cancellationReason', TextareaType::class, [
                 'label' => 'Motif d\'annulation',
