@@ -4,15 +4,15 @@
 
 {% block body %}
     <div class="row">
-        <div class="col">
+        <div class="col-12 col-md-6 d-flex justify-content-center">
             {% if user.getProfilePicture() %}
-                <img src="{{ asset('uploads/user_profile_pictures/' ~ user.getProfilePicture()) }}" alt="Photo de profil" style="max-width: 66%;">
+                <img src="{{ asset('uploads/user_profile_pictures/' ~ user.getProfilePicture()) }}" class="img-fluid" alt="Photo de profil">
             {% else %}
                 {# Afficher une image par défaut si l'utilisateur n'a pas de photo de profil #}
-                <img src="{{ asset('uploads/user_profile_pictures/default_profile_picture.png') }}" alt="Photo de profil par défaut" style="max-width: 20%;">
+                <img src="{{ asset('uploads/user_profile_pictures/default_profile_picture.png') }}" class="img-fluid" alt="Photo de profil par défaut">
             {% endif %}
         </div>
-        <div class="col">
+        <div class="col-12 col-md-6">
             {{ form_start(form) }}
 
             <div class="form-row">
