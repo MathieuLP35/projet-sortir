@@ -7,6 +7,7 @@ use App\DataFixtures\PlaceFixtures;
 use App\Entity\Etat;
 use App\Entity\Event;
 use App\Repository\EventRepository;
+use Faker\Factory;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
@@ -49,18 +50,40 @@ final class EventFactory extends ModelFactory
      */
     protected function getDefaults(): array
     {
+        $faker = Factory::create('fr_FR');
         $now = new \DateTime();
+        $activityNames = [
+            'Randonnée en montagne',
+            'Séance de méditation',
+            'Atelier d\'art floral',
+            'Cours de poterie',
+            'Soirée jeux de société',
+            'Conférence sur l\'histoire de l\'art',
+            'Tour en montgolfière',
+            'Atelier de dégustation de vin',
+            'Visite guidée du vieux quartier',
+            'Tour en kayak sur la rivière',
+            'Cours de danse salsa',
+            'Balade à cheval',
+            'Projection de film en plein air',
+            'Excursion en bateau',
+            'Initiation à la cuisine italienne',
+            'Séance de peinture en plein air',
+            'Tour en hélicoptère',
+            'Journée découverte de la nature',
+            'Concert acoustique',
+            'Atelier de création de bijoux',
+        ];
+
         return [
-            
-            'limitRegisterDate' => self::faker()->dateTimeBetween($now, '+1 year'),
-            'maxRegisterQty' => self::faker()->randomNumber(),
-            'name' => self::faker()->text(30),
-            'startDatetime' => self::faker()->dateTimeBetween('2023-01-01', '+2 years'),
+            'limitRegisterDate' => $faker->dateTimeBetween($now, '+1 year'),
+            'maxRegisterQty' => $faker->randomNumber(),
+            'name' => $faker->randomElement($activityNames),
+            'startDatetime' => $faker->dateTimeBetween('2023-01-01', '+2 years'),
             'etats' => EtatFactory::random(),
             'places' => PlaceFactory::random(),
             'sites' => SiteFactory::random(),
             'organiser' => UserFactory::random(),
-
         ];
     }
 
