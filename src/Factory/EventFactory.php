@@ -93,7 +93,7 @@ final class EventFactory extends ModelFactory
 
         return [
             'limitRegisterDate' => $limitRegisterDate,
-            'maxRegisterQty' => $faker->randomNumber(),
+            'maxRegisterQty' => $faker->numberBetween(1, 99),
             'name' => $faker->randomElement($activityNames),
             'duration'  => $duration,
             'startDatetime' => $startDatetime,
