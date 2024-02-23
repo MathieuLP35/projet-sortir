@@ -28,7 +28,7 @@ class EventController extends AbstractController
 
         $data = [];
         $events = $eventRepository->findByFilter($data);
-        $etats = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Closed']);
+        $etats = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Fermé']);
         $form = $this->createForm(EventFilterType::class);
         $form->handleRequest($request);
       
@@ -213,7 +213,7 @@ class EventController extends AbstractController
             $data = $form->getData();
 
             // Mettez à jour les informations d'annulation de l'événement
-            $event->setEtats($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Cancelled']));
+            $event->setEtats($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Annulé']));
             $event->setEventInfos(sprintf(
                 "Événement annulé par l'organisateur. Motif : %s",
                 $data['cancellationReason']

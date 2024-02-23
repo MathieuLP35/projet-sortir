@@ -10,7 +10,9 @@ class EtatFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        EtatFactory::createMany(4);
+        EtatFactory::createOne(['libelle' => 'Annulé']);
+        EtatFactory::createOne(['libelle' => 'Ouvert']);
+        EtatFactory::createOne(['libelle' => 'Fermé']);
       
     }
 

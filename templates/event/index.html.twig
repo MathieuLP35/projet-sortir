@@ -66,8 +66,8 @@
                 <tr
                 {% if event.etats and event.etats.libelle == 'Annulé' %}style="text-decoration: line-through;"{% endif %}
                 {% if event.getIsRegister().contains(app.user)%}class="table-success "{% endif %}
-                {% if event.getEtats().getLibelle() == "Cancelled"%}class="table-danger"{% endif %}
-                {% if event.etats.libelle == "Closed"%}class="table-light"{% endif %}
+                {% if event.getEtats().getLibelle() == "Annulé"%}class="table-danger"{% endif %}
+                {% if event.etats.libelle == "Fermé"%}class="table-light"{% endif %}
                 >
                     <td>{{ event.name }}</td>
                     <td>{{ event.startDatetime ? event.startDatetime|date('d/m/Y H:i:s') : '' }}</td>
@@ -77,13 +77,13 @@
                     <!-- Colonne Actions -->
                     <td>
 
-                    {% if event.etats.libelle == "Closed"%}
+                    {% if event.etats.libelle == "Fermé"%}
                         <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-secondary">Afficher</a>
                         {% else %}
                         <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info">Afficher</a>
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
-                            {% if event.etats.libelle != 'Cancelled' %}
+                            {% if event.etats.libelle != 'Annulé' %}
                                 {% if not event.getIsRegister().contains(app.user) %}
                                     <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary">S'inscrire</a>
                                 {% else %}
@@ -93,7 +93,7 @@
 
 
                             {% if app.user == event.organiser %}
-                                {% if event.etats.libelle != 'Cancelled' %}
+                                {% if event.etats.libelle != 'Annulé' %}
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                             Gérer
