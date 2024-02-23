@@ -8,107 +8,116 @@
     <div class="my-custom-class-for-errors">
         {{ form_errors(form_event_filter) }}
     </div>
-    <div class="text-bg-light p-3">
-    <div class="row">
-        <div class="col-6">
-            <h2 class="fs-5">Filtrer les sorties:</h2>
-            {{ form_row(form_event_filter.sites) }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            {{ form_row(form_event_filter.event) }}
-            <div class="d-flex justify-content-between align-items-center">
-                <span>Entre: </span>
-                {{ form_row(form_event_filter.startDate) }}
-                <span> et </span>
-                {{ form_row(form_event_filter.endDate) }}
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <h2 class="fs-5">Filtrer les sorties:</h2>
+                {{ form_row(form_event_filter.sites) }}
             </div>
         </div>
-        <div class="col-4 d-flex flex-column justify-content-between ps-5">
-            {{ form_row(form_event_filter.organiser) }}
-            {{ form_row(form_event_filter.isRegistered) }}
-            {{ form_row(form_event_filter.isNotRegistered) }}
-            {{ form_row(form_event_filter.oldEvent) }}
+        <div class="row">
+            <div class="col-12 col-md-6">
+                {{ form_row(form_event_filter.event) }}
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        {{ form_row(form_event_filter.startDate) }}
+                    </div>
+                    <div class="col-12 col-md-6">
+                        {{ form_row(form_event_filter.endDate) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-12 col-md-5">
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        {{ form_row(form_event_filter.organiser) }}
+                        {{ form_row(form_event_filter.isRegistered) }}
+                        {{ form_row(form_event_filter.isNotRegistered) }}
+                        {{ form_row(form_event_filter.oldEvent) }}
+                    </div>
+                    <div class="col-12 col-md-6 p-2">
+                        {{ form_row(form_event_filter.save) }}
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-2">
-            {{ form_row(form_event_filter.save) }}
-        </div>
-    </div>
     </div>
     {{ form_end(form_event_filter) }}
 
-    <table class="table mt-3">
-        <thead>
-        <tr>
-            <th>Nom de la sortie</th>
-            <th>Date de la sortie</th>
-            <th>Clôture</th>
-            <th>Oganisateur</th>
-            <th>Inscrits/Places</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for event in events %}
-
-
-            <tr 
-            {% if event.etats and event.etats.libelle == 'Annulé' %}style="text-decoration: line-through;"{% endif %}
-            {% if event.getIsRegister().contains(app.user)%}class="table-success"{% endif %}
-            {% if event.getEtats().getLibelle() == "Cancelled"%}class="table-danger"{% endif %}
-            {% if event.etats.libelle == "Closed"%}class="table-light"{% endif %}
-            >
-                <td>{{ event.name }}</td>
-                <td>{{ event.startDatetime ? event.startDatetime|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ event.organiser.firstname }} {{ event.organiser.name }}</td>
-                <td>{{ event.getIsRegister() | length }}/{{event.maxRegisterQty}}</td>
-                <!-- Colonne Actions -->
-                <td>
-
-                {% if event.etats.libelle == "Closed"%}
-                    <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-secondary">Afficher</a>
-                    {% else %}
-                    <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info">Afficher</a>
-                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-
-                        {% if event.etats.libelle != 'Cancelled' %}
-                            {% if not event.getIsRegister().contains(app.user) %}
-                                <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary">S'inscrire</a>
-                            {% else %}
-                                <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-danger">Se désister</a>
-                            {% endif %}
-                        {% endif %}
-
-
-                        {% if app.user == event.organiser %}
-                            {% if event.etats.libelle != 'Cancelled' %}
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Gérer
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="{{ path('app_event_edit', {'id': event.id}) }}" class="dropdown-item">Modifier</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a href="{{ path('app_cancel_event', {'id': event.id}) }}" class="dropdown-item">Annuler l'événement</a></li>
-                                    </ul>
-                                </div>
-                            {% endif %}
-                        {% endif %}
-
-                    {% endif %}
-                {% endif %}
-                </td>
-            </tr>
-        {% else %}
+    <div class="table-responsive">
+        <table class="table align-middle mt-3">
+            <thead>
             <tr>
-                <td colspan="8">Aucun enregistrement trouvé</td>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Clôture</th>
+                <th>Oganisateur</th>
+                <th>Inscrits/Places</th>
+                <th>Actions</th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for event in events %}
+                <tr
+                {% if event.etats and event.etats.libelle == 'Annulé' %}style="text-decoration: line-through;"{% endif %}
+                {% if event.getIsRegister().contains(app.user)%}class="table-success"{% endif %}
+                {% if event.getEtats().getLibelle() == "Cancelled"%}class="table-danger"{% endif %}
+                {% if event.etats.libelle == "Closed"%}class="table-light"{% endif %}
+                >
+                    <td>{{ event.name }}</td>
+                    <td>{{ event.startDatetime ? event.startDatetime|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ event.organiser.firstname }} {{ event.organiser.name }}</td>
+                    <td>{{ event.getIsRegister() | length }}/{{event.maxRegisterQty}}</td>
+                    <!-- Colonne Actions -->
+                    <td>
 
-    <a class="btn btn-success" href="{{ path('app_event_new') }}">Créer une sortie</a>
+                    {% if event.etats.libelle == "Closed"%}
+                        <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-secondary">Afficher</a>
+                        {% else %}
+                        <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info">Afficher</a>
+                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+                            {% if event.etats.libelle != 'Cancelled' %}
+                                {% if not event.getIsRegister().contains(app.user) %}
+                                    <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary">S'inscrire</a>
+                                {% else %}
+                                    <a href="{{ path('app_unregister_for_event', {'id': event.id}) }}" class="btn btn-danger">Se désister</a>
+                                {% endif %}
+                            {% endif %}
+
+
+                            {% if app.user == event.organiser %}
+                                {% if event.etats.libelle != 'Cancelled' %}
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Gérer
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="{{ path('app_event_edit', {'id': event.id}) }}" class="dropdown-item">Modifier</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a href="{{ path('app_cancel_event', {'id': event.id}) }}" class="dropdown-item">Annuler l'événement</a></li>
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+
+                        {% endif %}
+                    {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">Aucun enregistrement trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if not is_mobile() %}
+        <a class="btn btn-success" href="{{ path('app_event_new') }}">Créer une sortie</a>
+    {% endif %}
 
 {% endblock %}
