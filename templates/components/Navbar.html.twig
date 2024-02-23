@@ -5,9 +5,11 @@
                 <!-- Logo -->
                 <img class="logo" src="{{ asset('uploads/images/logo.png') }}" alt="Logo" width="80" height="80">
             </a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="mynavbar">
                 <ul class="navbar-nav me-auto"></ul>
                 <div class="d-flex">
@@ -20,9 +22,13 @@
                         {% else %}
                             <li class="nav-item"><a href="{{ path('app_login') }}" class="nav-link fs-5">Se connecter</a></li>
                         {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                          <li class="nav-item"><a href="#" class="nav-link fs-5">Administration</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
+
         </div>
     </nav>
 </div>

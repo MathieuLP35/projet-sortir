@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\User1Type;
 use App\Form\UserType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -13,11 +15,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+
 class UserController extends AbstractController
 {
+
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/profile', name: 'app_user_profile')]
-    public function index(EntityManagerInterface $entityManager, Request $request): Response
+    public function profile(EntityManagerInterface $entityManager, Request $request): Response
     {
         /** @var $user User */
         $user = $this->getUser();
