@@ -74,13 +74,26 @@ final class EventFactory extends ModelFactory
             'Concert acoustique',
             'Atelier de création de bijoux',
         ];
+        // Générer une date de début aléatoire
+        $startDatetime = $faker->dateTimeBetween('2023-01-01', '+1 years');
+
+        // Générer une date de clôture un mois avant la date de début
+        $limitRegisterDate = clone $startDatetime;
+        $limitRegisterDate->modify('-1 month');
+
+
+        // Vérifier si la date de clôture est dans le passé
+        $isClosed = ($limitRegisterDate < $now);
+
+        // Définir l'état en fonction de la probabilité
+        $etat = $isClosed ? 'Fermé' : ($faker->boolean(10) ? 'Annulé' : 'Ouvert');
 
         return [
-            'limitRegisterDate' => $faker->dateTimeBetween($now, '+1 year'),
+            'limitRegisterDate' => $limitRegisterDate,
             'maxRegisterQty' => $faker->randomNumber(),
             'name' => $faker->randomElement($activityNames),
-            'startDatetime' => $faker->dateTimeBetween('2023-01-01', '+2 years'),
-            'etats' => EtatFactory::random(),
+            'startDatetime' => $startDatetime,
+            'etats' => EtatFactory::random(['libelle' => $etat]),
             'places' => PlaceFactory::random(),
             'sites' => SiteFactory::random(),
             'organiser' => UserFactory::random(),
@@ -101,5 +114,4 @@ final class EventFactory extends ModelFactory
     {
         return Event::class;
     }
-
 }
