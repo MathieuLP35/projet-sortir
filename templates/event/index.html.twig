@@ -9,7 +9,7 @@
     <div class="my-custom-class-for-errors">
         {{ form_errors(form_event_filter) }}
     </div>
-
+    <div class="text-bg-light p-3">
     <div class="row">
         <div class="col-6">
             <h2 class="fs-5">Filtrer les sorties:</h2>
@@ -36,33 +36,40 @@
             {{ form_row(form_event_filter.save) }}
         </div>
     </div>
+    </div>
     {{ form_end(form_event_filter) }}
 
-    <table class="table">
+    <table class="table mt-3">
         <thead>
         <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>StartDatetime</th>
-            <th>Duration</th>
-            <th>LimitRegisterDate</th>
-            <th>MaxRegisterQty</th>
+            <th>Nom de la sortie</th>
+            <th>Date de la sortie</th>
+            <th>Clôture</th>
+            <th>Oganisateur</th>
+            <th>Inscrits/Places</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
-
         {% for event in events %}
 
-            <tr {% if event.etats and event.etats.libelle == 'Annulé' %}style="text-decoration: line-through;"{% endif %}>
-                <td>{{ event.id }}</td>
+
+            <tr 
+            {% if event.etats and event.etats.libelle == 'Annulé' %}style="text-decoration: line-through;"{% endif %}
+            {% if event.getIsRegister().contains(app.user)%}class="table-success"{% endif %}
+            {% if event.getEtats().getLibelle() == "Cancelled"%}class="table-danger"{% endif %}
+            {% if event.etats.libelle == "Closed"%}class="table-light"{% endif %}
+            >
                 <td>{{ event.name }}</td>
                 <td>{{ event.startDatetime ? event.startDatetime|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ event.duration }}</td>
                 <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ event.maxRegisterQty }}</td>
+                <td>{{ event.organiser.firstname }} {{ event.organiser.name }}</td>
+                <td>{{ event.getIsRegister() | length }}/{{event.maxRegisterQty}}</td>
                 <!-- Colonne Actions -->
                 <td>
+                {% if event.etats.libelle == "Closed"%}
+                    <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-secondary">Show</a>
+                    {% else %}
                     <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info">Show</a>
                     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
@@ -91,6 +98,7 @@
                         {% endif %}
 
                     {% endif %}
+                {% endif %}
                 </td>
             </tr>
         {% else %}

@@ -22,7 +22,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class EventController extends AbstractController
 {
     #[Route('/', name: 'app_event_index', methods: ['GET', 'POST'])]
-
     public function index(Request $request, EventRepository $eventRepository,EntityManagerInterface $entityManager): Response
     {
 
