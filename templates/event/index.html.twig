@@ -4,70 +4,74 @@
 
 {% block body %}
 
-    {{ form_start(form_event_filter) }}
-    <div class="my-custom-class-for-errors">
-        {{ form_errors(form_event_filter) }}
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-12 col-md-6">
-                <h2 class="fs-5">Filtrer les sorties:</h2>
-                {{ form_row(form_event_filter.sites) }}
-            </div>
+    <div class="bg-filter-eni p-4">
+        {{ form_start(form_event_filter) }}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(form_event_filter) }}
         </div>
-        <div class="row">
-            <div class="col-12 col-md-6">
-                {{ form_row(form_event_filter.event) }}
-                <div class="row">
-                    <div class="col-12 col-md-6">
-                        {{ form_row(form_event_filter.startDate) }}
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <h2 class="fs-5">Filtrer les sorties:</h2>
+                    {{ form_row(form_event_filter.sites) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    {{ form_row(form_event_filter.event) }}
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            {{ form_row(form_event_filter.startDate) }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            {{ form_row(form_event_filter.endDate) }}
+                        </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        {{ form_row(form_event_filter.endDate) }}
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-12 col-md-5">
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            {{ form_row(form_event_filter.organiser) }}
+                            {{ form_row(form_event_filter.isRegistered) }}
+                            {{ form_row(form_event_filter.isNotRegistered) }}
+                            {{ form_row(form_event_filter.oldEvent) }}
+                        </div>
+                        <div class="col-12 col-md-6 p-2">
+                            {{ form_row(form_event_filter.save) }}
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-1"></div>
-            <div class="col-12 col-md-5">
-                <div class="row">
-                    <div class="col-12 col-md-6">
-                        {{ form_row(form_event_filter.organiser) }}
-                        {{ form_row(form_event_filter.isRegistered) }}
-                        {{ form_row(form_event_filter.isNotRegistered) }}
-                        {{ form_row(form_event_filter.oldEvent) }}
-                    </div>
-                    <div class="col-12 col-md-6 p-2">
-                        {{ form_row(form_event_filter.save) }}
-                    </div>
-                </div>
-            </div>
         </div>
+        {{ form_end(form_event_filter) }}
     </div>
-    {{ form_end(form_event_filter) }}
+
+    <hr>
 
     <div class="table-responsive">
         <table class="table align-middle mt-3">
             <thead>
-            <tr>
-                <th>Nom de la sortie</th>
-                <th>Date de la sortie</th>
-                <th>Clôture</th>
-                <th>Oganisateur</th>
-                <th>Inscrits/Places</th>
-                <th>Actions</th>
-            </tr>
+                <tr>
+                    <th>Nom de la sortie</th>
+                    <th>Date de la sortie</th>
+                    <th>Clôture</th>
+                    <th>Oganisateur</th>
+                    <th>Inscrits/Places</th>
+                    <th>Actions</th>
+                </tr>
             </thead>
             <tbody>
             {% for event in events %}
                 <tr
                 {% if event.etats and event.etats.libelle == 'Annulé' %}style="text-decoration: line-through;"{% endif %}
-                {% if event.getIsRegister().contains(app.user)%}class="table-success"{% endif %}
+                {% if event.getIsRegister().contains(app.user)%}class="table-success "{% endif %}
                 {% if event.getEtats().getLibelle() == "Cancelled"%}class="table-danger"{% endif %}
                 {% if event.etats.libelle == "Closed"%}class="table-light"{% endif %}
                 >
                     <td>{{ event.name }}</td>
-                    <td>{{ event.startDatetime ? event.startDatetime|date('Y-m-d H:i:s') : '' }}</td>
-                    <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ event.startDatetime ? event.startDatetime|date('d/m/Y H:i:s') : '' }}</td>
+                    <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('d/m/Y H:i:s') : '' }}</td>
                     <td>{{ event.organiser.firstname }} {{ event.organiser.name }}</td>
                     <td>{{ event.getIsRegister() | length }}/{{event.maxRegisterQty}}</td>
                     <!-- Colonne Actions -->
@@ -91,7 +95,7 @@
                             {% if app.user == event.organiser %}
                                 {% if event.etats.libelle != 'Cancelled' %}
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                             Gérer
                                         </button>
                                         <ul class="dropdown-menu">

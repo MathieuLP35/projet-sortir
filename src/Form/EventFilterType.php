@@ -58,7 +58,7 @@ class EventFilterType extends AbstractType
             ->add('save', SubmitType::class, [
                 'label' => 'Envoyer',
                 'attr' => [
-                    'class' => 'p-5 bg-primary text-white',
+                    'class' => 'p-5 btn btn-primary'
                 ]
             ])
         ;
