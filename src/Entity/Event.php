@@ -52,15 +52,15 @@ class Event
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Etat $etats = null;
+    private ?Etat $etat = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Place $places = null;
+    private ?Place $place = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Site $sites = null;
+    private ?Site $site = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'events')]
     private Collection $registeredUser;
@@ -150,38 +150,38 @@ class Event
         return $this;
     }
 
-    public function getEtats(): ?Etat
+    public function getEtat(): ?Etat
     {
-        return $this->etats;
+        return $this->etat;
     }
 
-    public function setEtats(?Etat $etats): static
+    public function setEtat(?Etat $etat): static
     {
-        $this->etats = $etats;
+        $this->etat = $etat;
 
         return $this;
     }
 
-    public function getPlaces(): ?Place
+    public function getPlace(): ?Place
     {
-        return $this->places;
+        return $this->place;
     }
 
-    public function setPlaces(?Place $places): static
+    public function setPlace(?Place $place): static
     {
-        $this->places = $places;
+        $this->place = $place;
 
         return $this;
     }
 
-    public function getSites(): ?Site
+    public function getSite(): ?Site
     {
-        return $this->sites;
+        return $this->site;
     }
 
-    public function setSites(?Site $sites): static
+    public function setSite(?Site $site): static
     {
-        $this->sites = $sites;
+        $this->site = $site;
 
         return $this;
     }
