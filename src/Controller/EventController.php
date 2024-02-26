@@ -75,7 +75,7 @@ class EventController extends AbstractController
             return $this->redirectToRoute('app_event_index');
         }
 
-        $etats = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Open']);
+        $etats = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouvert']);
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
@@ -99,7 +99,7 @@ class EventController extends AbstractController
     public function show(Event $event): Response
     {
 
-        $participants = $event->getIsRegister();
+        $participants = $event->getRegisteredUser();
         
         return $this->render('event/show.html.twig', [
             'event' => $event,
@@ -167,9 +167,9 @@ class EventController extends AbstractController
         }
 
         // code pour gérer l'inscription de l'utilisateur à l'événement
-        if (!$event->getIsRegister()->contains($user)) {
+        if (!$event->getRegisteredUser()->contains($user)) {
             // Sinon, l'inscrire à l'événement
-            $event->addIsRegister($user);
+            $event->addRegisteredUser($user);
         }
 
         $entityManager->flush();
@@ -192,9 +192,9 @@ class EventController extends AbstractController
         }
 
         // code pour gérer l'inscription de l'utilisateur à l'événement
-        if ($event->getIsRegister()->contains($user)) {
+        if ($event->getRegisteredUser()->contains($user)) {
             // Si l'utilisateur est déjà inscrit, le désinscrire
-            $event->removeIsRegister($user);
+            $event->removeRegisteredUser($user);
         }
 
         $entityManager->flush();
