@@ -49,16 +49,16 @@ class EventRepository extends ServiceEntityRepository
                 ->setParameter('limit_register_date', $data['limit_register_date']);
         }
         if (isset($data['is_registered'])) {
-            $query->leftJoin('e.isRegister', 'eu');
+            $query->leftJoin('e.registeredUser', 'eu');
             $query->andWhere('eu.id = :is_registered')
                 ->setParameter('is_registered', $data['is_registered']);
         }
         if (isset($data['is_not_registered'])) {
             if (!isset($data['is_registered'])) {
-                $query->leftJoin('e.isRegister', 'eu');
+                $query->leftJoin('e.registeredUser', 'eu');
             }
             $query->andWhere('eu.id != :is_not_registered')
-                ->orWhere('e.isRegister IS EMPTY')
+                ->orWhere('e.registeredUser IS EMPTY')
                 ->setParameter('is_not_registered', $data['is_not_registered']);
 
         }
