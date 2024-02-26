@@ -69,8 +69,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @Vich\UploadableField(mapping="user_profile_pictures", fileNameProperty="profilePicture")
-     * @Assert\File(maxSize="5M", mimeTypes={"image/jpeg", "image/png", "image/gif"})
      */
+    #[Assert\File(maxSize:"5M", mimeTypes:"image/jpeg, image/png, image/gif")]
     private ?File $profilePictureFile = null;
 
 
