@@ -66,12 +66,18 @@
                 <tr>
                     <td>
                         <small
-                                {% if event.etats.libelle == "Ouvert" %}
+                                {% if event.etats.libelle == constant('App\\Entity\\Etat::OPEN') %}
                                     class="badge rounded-pill text-bg-success"
-                                {% elseif event.etats.libelle == "Fermé" %}
+                                {% elseif event.etats.libelle == constant('App\\Entity\\Etat::CLOSED') %}
                                     class="badge rounded-pill text-bg-secondary"
-                                {% elseif event.etats.libelle == "Annulé" %}
+                                {% elseif event.etats.libelle == constant('App\\Entity\\Etat::CANCELLED') %}
                                     class="badge rounded-pill text-bg-danger"
+                                {% elseif event.etats.libelle == constant('App\\Entity\\Etat::IN_PROGRESS') %}
+                                    class="badge rounded-pill text-bg-warning"
+                                {% elseif event.etats.libelle == constant('App\\Entity\\Etat::PAST') %}
+                                    class="badge rounded-pill text-bg-info"
+                                {% elseif event.etats.libelle == constant('App\\Entity\\Etat::CREATED') %}
+                                    class="badge rounded-pill text-bg-primary"
                                 {% endif %}
                         >
                             {{ event.etats.libelle }}
