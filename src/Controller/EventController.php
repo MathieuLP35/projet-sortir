@@ -231,7 +231,9 @@ class EventController extends AbstractController
             $this->addFlash('danger', 'Cette sortie n\'existe pas.');
             return $this->redirectToRoute('app_event_index');
         }
-        if($event->getEtat()->getLibelle() != Etat::OPEN || $event->getEtat()->getLibelle() != Etat::CLOSED){
+     
+  
+        if($event->getEtat()->getLibelle() != Etat::OPEN && $event->getEtat()->getLibelle() != Etat::CLOSED){
             $this->addFlash('danger', 'Impossible d\'annulé une sortie ouvert ou clotûré');
             return $this->redirectToRoute('app_event_index');
         }
