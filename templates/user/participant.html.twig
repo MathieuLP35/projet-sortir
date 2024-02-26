@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+<h1>Profil de {{participantProfil.username}}</h1>
+<div class='row'>
+    <div class="col-12 col-md-6 d-flex justify-content-center">
+            {% if participantProfil.getProfilePicture() %}
+                <img src="{{ asset('uploads/user_profile_pictures/' ~ participantProfil.getProfilePicture()) }}" class="img-fluid" alt="Photo de profil">
+            {% else %}
+                {# Afficher une image par défaut si l'utilisateur n'a pas de photo de profil #}
+                <img src="{{ asset('uploads/user_profile_pictures/default_profile_picture.png') }}" class="img-fluid" alt="Photo de profil par défaut">
+            {% endif %}
+    </div>
+    <div class='col-12 col-md-6 bg-filter-eni p-4'>
+        <p><b>Nom:</b> {{participantProfil.name}}</p>
+        <p><b>Prénom:</b> {{participantProfil.firstname}}</p>
+        <p><b>Email:</b> {{participantProfil.email}}</p>
+        <p><b>Télephone:</b> {{participantProfil.phone}}</p>
+
+    </div>
+</div>
+{% endblock %}

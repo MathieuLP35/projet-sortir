@@ -25,7 +25,6 @@ class UserController extends AbstractController
     {
         /** @var $user User */
         $user = $this->getUser();
-        dump($user);
 
         $form = $this->createForm(UserType::class, $user);
 
@@ -66,6 +65,20 @@ class UserController extends AbstractController
         return $this->render('user/profile.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
+        ]);
+    }
+
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[Route('/profile/{id}', name: 'app_participant_profile')]
+    public function show(int $id, UserRepository $user): Response
+    {
+
+        $participantProfil = $user->find($id);
+
+
+
+        return $this->render('user/participant.html.twig', [
+            'participantProfil' => $participantProfil,
         ]);
     }
 }
