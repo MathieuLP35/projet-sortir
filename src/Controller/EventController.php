@@ -38,7 +38,7 @@ class EventController extends AbstractController
 
             if($event->getRegisteredUser()->count() >= $event->getMaxRegisterQty()){
                 $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
-                $event->setEtats($etat);
+                $event->setEtat($etat);
                 $entityManager->flush();
             }
         }
