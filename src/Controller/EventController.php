@@ -31,14 +31,13 @@ class EventController extends AbstractController
     }
 
     #[Route('/', name: 'app_event_index', methods: ['GET', 'POST'])]
-    public function index(Request $request, EventRepository $eventRepository, EntityManagerInterface $entityManager): Response
+    public function index(Request $request, EventRepository $eventRepository, EntityManagerInterface $entityManager, EventManagerService $eventManagerService): Response
     {
 
         $data = [];
         $events = $eventRepository->findByFilter($data);
 
         // Appel de la méthode pour mettre à jour les états des événements
-        $eventManagerService = new EventManagerService($entityManager);
         $eventManagerService->updateEventStates($events);
 
         $form = $this->createForm(EventFilterType::class);

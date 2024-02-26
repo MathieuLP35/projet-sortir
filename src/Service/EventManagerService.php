@@ -38,9 +38,13 @@ class EventManagerService
         $startDatetime = $event->getStartDatetime();
         $duration = $event->getDuration(); // En minutes
 
-        $newDatetime = (clone $startDatetime)->modify('+' . $duration . ' minutes');
+        $eventEndTime = (clone $startDatetime)->modify('+' . $duration . ' minutes');
+        // if ($event->getName() === 'En cours') {
+        //     var_dump([$startDatetime, $now, $eventEndTime]);
+        // }
 
-        if ($now < $newDatetime && $now > $startDatetime) {
+        if ($now > $startDatetime && $now < $eventEndTime) {
+            // var_dump('yeaaah ça marche');
             return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Activité en cours']);
         }
 

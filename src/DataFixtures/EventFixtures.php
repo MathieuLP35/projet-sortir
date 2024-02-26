@@ -34,6 +34,14 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             'registeredUser' => UserFactory::new()->createMany(10),
             'etat' => $etat
         ]);
+        // Event en cours
+        $dateDebut = EventFactory::faker()->dateTimeBetween('-1hour', 'now');
+        EventFactory::createOne([
+            'name' => 'En cours',
+            'startDateTime' => $dateDebut,
+            'limitRegisterDate' => (clone $dateDebut)->modify('-1month'),
+            'duration' => 3000
+        ]);
     }
     public function getDependencies()
     {
