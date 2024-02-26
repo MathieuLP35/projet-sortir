@@ -71,7 +71,7 @@ class Event
     // CONSTANTE
     public const CREATED = 'Créée';
     public const OPEN = 'Ouvert';
-    public const CLOSED = 'Cloturée';
+    public const CLOSED = 'Clôturée';
     public const IN_PROGRESS = 'Activité en cours';
     public const PAST = 'Passée';
     public const CANCELLED = 'Annulée';
