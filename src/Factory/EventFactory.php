@@ -108,9 +108,9 @@ final class EventFactory extends ModelFactory
             'name' => $faker->randomElement($activityNames),
             'duration'  => $duration,
             'startDatetime' => $startDatetime,
-            'etats' => EtatFactory::random(['libelle' => $etat]),
-            'places' => PlaceFactory::random(),
-            'sites' => SiteFactory::random(),
+            'etat' => EtatFactory::random(['libelle' => $etat]),
+            'place' => PlaceFactory::random(),
+            'site' => SiteFactory::random(),
             'organiser' => UserFactory::random(),
             'registeredUser' => UserFactory::randomRange(0, $maxRegisterQty),
         ];
