@@ -46,13 +46,13 @@ class EventType extends AbstractType
             ->add('eventInfos', TextareaType::class,[
                 'label' => 'Description et infos',
             ])
-            ->add('places', EntityType::class, [
+            ->add('place', EntityType::class, [
                 'class' => Place::class,
                 'choice_label' => 'name',
                 'label' => 'Lieu',
                 'required' => true
             ])
-            ->add('sites', EntityType::class, [
+            ->add('site', EntityType::class, [
                 'class' => Site::class,
                 'choice_label' => 'nameSite',
                 'label' => 'Site',
