@@ -33,7 +33,7 @@ class EventController extends AbstractController
 
         foreach($events as $event){
             if($event->getStartDatetime() < new \Datetime()){
-                $event->setEtats($event->PAST);
+                $event->setEtat($event->PAST);
                 $entityManager->flush();
             }
         }
@@ -97,7 +97,7 @@ class EventController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $event->setOrganiser($this->getUser());
-            $event->setEtats($etats);
+            $event->setEtat($etats);
             $entityManager->persist($event);
             $entityManager->flush();
 
@@ -234,7 +234,7 @@ class EventController extends AbstractController
             $data = $form->getData();
 
             // Mettez à jour les informations d'annulation de l'événement
-            $event->setEtats($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Annulé']));
+            $event->setEtat($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Annulé']));
             $event->setEventInfos(sprintf(
                 "Événement annulé par l'organisateur. Motif : %s",
                 $data['cancellationReason']
