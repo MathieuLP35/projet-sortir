@@ -28,13 +28,12 @@ class EventController extends AbstractController
 
         $data = [];
         $events = $eventRepository->findByFilter($data);
-        $etats = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Fermé']);
         $form = $this->createForm(EventFilterType::class);
         $form->handleRequest($request);
       
-        foreach( $events as $event){
+        foreach($events as $event){
             if($event->getStartDatetime() < new \Datetime()){
-                $event->setEtats($etats);
+                $event->setEtats($event->PAST);
                 $entityManager->flush();
             }
         }
