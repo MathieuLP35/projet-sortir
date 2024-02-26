@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Etat;
 use App\Factory\EtatFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -10,12 +11,12 @@ class EtatFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        EtatFactory::createOne(['libelle' => 'Créée']);
-        EtatFactory::createOne(['libelle' => 'Ouvert']);
-        EtatFactory::createOne(['libelle' => 'Clôturée']);
-        EtatFactory::createOne(['libelle' => 'Activité en cours']);
-        EtatFactory::createOne(['libelle' => 'Passée']);
-        EtatFactory::createOne(['libelle' => 'Annulée']);
+        EtatFactory::createOne(['libelle' => Etat::CREATED]);
+        EtatFactory::createOne(['libelle' => Etat::OPEN]);
+        EtatFactory::createOne(['libelle' => Etat::CLOSED]);
+        EtatFactory::createOne(['libelle' => Etat::IN_PROGRESS]);
+        EtatFactory::createOne(['libelle' => Etat::PAST]);
+        EtatFactory::createOne(['libelle' => Etat::CANCELLED]);
     }
 
 }
