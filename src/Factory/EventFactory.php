@@ -92,9 +92,12 @@ final class EventFactory extends ModelFactory
         // Générer une durée aléatoire
         $duration = $faker->numberBetween(10, 600);// entre 10 minutes et 10 heures en minutes
 
+        // Maximum de participants
+        $maxRegisterQty = $faker->numberBetween(1, 21);
+
         return [
             'limitRegisterDate' => $limitRegisterDate,
-            'maxRegisterQty' => $faker->numberBetween(1, 99),
+            'maxRegisterQty' => $maxRegisterQty,
             'name' => $faker->randomElement($activityNames),
             'duration'  => $duration,
             'startDatetime' => $startDatetime,
@@ -102,7 +105,7 @@ final class EventFactory extends ModelFactory
             'places' => PlaceFactory::random(),
             'sites' => SiteFactory::random(),
             'organiser' => UserFactory::random(),
-            'registeredUser' => UserFactory::randomRange(0, 10),
+            'registeredUser' => UserFactory::randomRange(0, $maxRegisterQty),
         ];
     }
 

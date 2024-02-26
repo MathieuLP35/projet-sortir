@@ -68,10 +68,6 @@ class Event
     #[ORM\ManyToOne(inversedBy: 'events')]
     private ?User $organiser = null;
 
-    public const OPEN = 'Ouvert';
-    public const CLOSED = 'Cloturé';
-    public const CANCELLED = 'Annulé';
-
     public function __construct()
     {
         $this->registeredUser = new ArrayCollection();
@@ -206,10 +202,6 @@ class Event
 
         if (!$this->registeredUser->contains($registeredUser)) {
             $this->registeredUser->add($registeredUser);
-            // Passer l'event en statut Cloturé
-            if ($this->registeredUser->count() >= $this->maxRegisterQty) {
-                $this->etats = EtatRepository::class::find(self::CLOSED);
-            }
         }
 
         return $this;
