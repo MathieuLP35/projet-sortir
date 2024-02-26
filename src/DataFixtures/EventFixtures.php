@@ -32,7 +32,7 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             'limitRegisterDate' => $limitDate,
             'maxRegisterQty' => 10,
             'registeredUser' => UserFactory::new()->createMany(10),
-            'etats' => $etat
+            'etat' => $etat
         ]);
     }
     public function getDependencies()
