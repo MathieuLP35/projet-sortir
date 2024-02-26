@@ -71,11 +71,6 @@ class EventController extends AbstractController
             }
 
             $events = $eventRepository->findByFilter($data);
-
-            return $this->render('event/index.html.twig', [
-                'events' => $events,
-                'form_event_filter' => $form->createView(),
-            ]);
         }
 
 
@@ -95,7 +90,7 @@ class EventController extends AbstractController
             return $this->redirectToRoute('app_event_index');
         }
 
-        $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
+        $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CREATED]);
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
@@ -139,6 +134,11 @@ class EventController extends AbstractController
             return $this->redirectToRoute('app_event_index');
         }
 
+        if($event->getEtat() != Etat::CREATED){
+            $this->addFlash('danger', 'Impossible de modifier une sortie publier');
+            return $this->redirectToRoute('app_event_index');
+        }
+
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
 
@@ -147,6 +147,7 @@ class EventController extends AbstractController
 
             return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
         }
+       
 
         return $this->render('event/edit.html.twig', [
             'event' => $event,
@@ -218,6 +219,10 @@ class EventController extends AbstractController
         $event = $entityManager->getRepository(Event::class)->find($id);
         if (!$event) {
             $this->addFlash('danger', 'Cette sortie n\'existe pas.');
+            return $this->redirectToRoute('app_event_index');
+        }
+        if($event->getEtat() != Etat::OPEN || $event->getEtat() != Etat::CLOSED){
+            $this->addFlash('danger', 'Impossible d\'annulé une sortie ouvert ou clotûré');
             return $this->redirectToRoute('app_event_index');
         }
 
