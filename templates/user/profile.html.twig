@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Mon Profil{% endblock %}
 
 {% block body %}
     <h1 class="mb-3">Mon Profil</h1>
@@ -14,7 +14,7 @@
                 <img src="{{ asset('uploads/user_profile_pictures/default_profile_picture.png') }}" class="img-fluid" alt="Photo de profil par défaut">
             {% endif %}
         </div>
-        <div class="col-12 col-md-6 bg-filter-eni p-4">
+        <div class="col-12 col-md-4 bg-filter-eni p-4">
             {{ form_start(form) }}
 
             <div class="form-row">
