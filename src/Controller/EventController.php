@@ -23,14 +23,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class EventController extends AbstractController
 {
     #[Route('/', name: 'app_event_index', methods: ['GET', 'POST'])]
-    public function index(Request $request, EventRepository $eventRepository,EntityManagerInterface $entityManager): Response
+    public function index(Request $request, EventRepository $eventRepository, EntityManagerInterface $entityManager): Response
     {
 
         $data = [];
         $events = $eventRepository->findByFilter($data);
         $form = $this->createForm(EventFilterType::class);
         $form->handleRequest($request);
-      
+
         foreach($events as $event){
             if($event->getStartDatetime() < new \Datetime()){
                 $event->setEtats($event->PAST);
@@ -40,14 +40,30 @@ class EventController extends AbstractController
 
 
         if ($form->isSubmitted()) {
-            if ($form->get('sites')->getData()) { $data['sites'] = $form->get('sites')->getData(); }
-            if ($form->get('event')->getData()) { $data['name'] = $form->get('event')->getData(); }
-            if ($form->get('startDate')->getData()) { $data['start_datetime'] = $form->get('startDate')->getData(); }
-            if ($form->get('endDate')->getData()) { $data['limit_register_date'] = $form->get('endDate')->getData(); }
-            if ($form->get('organiser')->getData()) { $data['organiser'] = $this->getUser()->getId(); }
-            if ($form->get('isRegistered')->getData()) { $data['is_registered'] = $this->getUser()->getId(); }
-            if ($form->get('isNotRegistered')->getData()) { $data['is_not_registered'] = $this->getUser()->getId(); }
-            if ($form->get('oldEvent')->getData()) { $data['old_event'] = true; }
+            if ($form->get('sites')->getData()) {
+                $data['sites'] = $form->get('sites')->getData();
+            }
+            if ($form->get('event')->getData()) {
+                $data['name'] = $form->get('event')->getData();
+            }
+            if ($form->get('startDate')->getData()) {
+                $data['start_datetime'] = $form->get('startDate')->getData();
+            }
+            if ($form->get('endDate')->getData()) {
+                $data['limit_register_date'] = $form->get('endDate')->getData();
+            }
+            if ($form->get('organiser')->getData()) {
+                $data['organiser'] = $this->getUser()->getId();
+            }
+            if ($form->get('isRegistered')->getData()) {
+                $data['is_registered'] = $this->getUser()->getId();
+            }
+            if ($form->get('isNotRegistered')->getData()) {
+                $data['is_not_registered'] = $this->getUser()->getId();
+            }
+            if ($form->get('oldEvent')->getData()) {
+                $data['old_event'] = true;
+            }
 
             $events = $eventRepository->findByFilter($data);
 
@@ -78,7 +94,7 @@ class EventController extends AbstractController
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $event->setOrganiser($this->getUser());
             $event->setEtats($etats);
@@ -99,7 +115,7 @@ class EventController extends AbstractController
     {
 
         $participants = $event->getRegisteredUser();
-        
+
         return $this->render('event/show.html.twig', [
             'event' => $event,
             'participants' => $participants
@@ -110,7 +126,7 @@ class EventController extends AbstractController
     #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
-        
+
         // Vérifier si l'utilisateur connecté est l'organisateur de l'événement
         $currentUser = $this->getUser();
         if ($event->getOrganiser() !== $currentUser) {
@@ -133,8 +149,6 @@ class EventController extends AbstractController
         ]);
     }
 
-
-
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/{id}/register', name: 'app_register_for_event', methods: ['GET'])]
     public function registerForEvent(Event $event, EntityManagerInterface $entityManager, UserInterface $user): Response
@@ -145,6 +159,13 @@ class EventController extends AbstractController
         if ($now > $event->getLimitRegisterDate()) {
             // Rediriger l'utilisateur ou afficher un message d'erreur
             $this->addFlash('danger', 'La date limite d\'inscription est dépassée.');
+            return $this->redirectToRoute('app_event_index');
+        }
+
+        // Vérifier si le nombre maximum d'inscrits est atteint
+        if ($event->getRegisteredUser()->count() >= $event->getMaxRegisterQty()) {
+            // Maximum atteint, afficher un message d'erreur
+            $this->addFlash('danger', 'Le nombre maximum d\'inscrits est atteint pour cet événement.');
             return $this->redirectToRoute('app_event_index');
         }
 

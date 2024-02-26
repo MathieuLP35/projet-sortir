@@ -16,7 +16,6 @@ class EtatFixtures extends Fixture
         EtatFactory::createOne(['libelle' => 'Activité en cours']);
         EtatFactory::createOne(['libelle' => 'Passée']);
         EtatFactory::createOne(['libelle' => 'Annulée']);
-      
     }
 
 }
