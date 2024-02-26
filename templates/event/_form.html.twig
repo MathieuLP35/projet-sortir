@@ -6,36 +6,44 @@
             <div class="mb-3">
                 {{ form_label(form.name) }}
                 {{ form_widget(form.name) }}
+                {{ form_errors(form.name)}}
             </div>
             <div class="mb-3">
                 {{ form_label(form.startDatetime) }}
                 {{ form_widget(form.startDatetime) }}
+                {{ form_errors(form.startDatetime)}}
             </div>
             <div class="mb-3">
                 {{ form_label(form.limitRegisterDate) }}
                 {{ form_widget(form.limitRegisterDate) }}
+                {{ form_errors(form.limitRegisterDate)}}
             </div>
             <div class="mb-3">
                 {{ form_label(form.maxRegisterQty) }}
                 {{ form_widget(form.maxRegisterQty) }}
+                {{ form_errors(form.maxRegisterQty)}}
             </div>
             <div class="mb-3">
                 {{ form_label(form.duration) }}
                 {{ form_widget(form.duration) }}
+                {{ form_errors(form.duration)}}
             </div>
             <div class="mb-3">
                 {{ form_label(form.eventInfos) }}
                 {{ form_widget(form.eventInfos) }}
+                {{ form_errors(form.eventInfos)}}
             </div>
         </div>
         <div class="col-6">
             <div class="mb-3">
                 {{ form_label(form.sites) }}
                 {{ form_widget(form.sites) }}
+                {{ form_errors(form.sites)}}
             </div>
             <div class="mb-3">
                 {{ form_label(form.places) }}
                 {{ form_widget(form.places) }}
+                {{ form_errors(form.places)}}
             </div>
         </div>
     </div>
