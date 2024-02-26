@@ -215,7 +215,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->events->contains($event)) {
             $this->events->add($event);
-            $event->addIsRegister($this);
+            $event->addRegisteredUser($this);
         }
 
         return $this;

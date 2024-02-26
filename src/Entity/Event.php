@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\EtatRepository;
 use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -62,14 +63,18 @@ class Event
     private ?Site $sites = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'events')]
-    private Collection $isRegister;
+    private Collection $registeredUser;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     private ?User $organiser = null;
 
+    public const OPEN = 'Ouvert';
+    public const CLOSED = 'Cloturé';
+    public const CANCELLED = 'Annulé';
+
     public function __construct()
     {
-        $this->isRegister = new ArrayCollection();
+        $this->registeredUser = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -188,23 +193,31 @@ class Event
     /**
      * @return Collection<int, User>
      */
-    public function getIsRegister(): Collection
+    public function getRegisteredUser(): Collection
     {
-        return $this->isRegister;
+        return $this->registeredUser;
     }
 
-    public function addIsRegister(User $isRegister): static
+    public function addRegisteredUser(User $registeredUser): static
     {
-        if (!$this->isRegister->contains($isRegister)) {
-            $this->isRegister->add($isRegister);
+        if ($this->registeredUser->count() >= $this->maxRegisterQty) {
+            throw new \Exception('Le nombre maximum d\'inscrit est atteint !');
+        }
+
+        if (!$this->registeredUser->contains($registeredUser)) {
+            $this->registeredUser->add($registeredUser);
+            // Passer l'event en statut Cloturé
+            if ($this->registeredUser->count() >= $this->maxRegisterQty) {
+                $this->etats = EtatRepository::class::find(self::CLOSED);
+            }
         }
 
         return $this;
     }
 
-    public function removeIsRegister(User $isRegister): static
+    public function removeRegisteredUser(User $registeredUser): static
     {
-        $this->isRegister->removeElement($isRegister);
+        $this->registeredUser->removeElement($registeredUser);
 
         return $this;
     }

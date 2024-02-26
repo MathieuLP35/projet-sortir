@@ -6,6 +6,7 @@ use App\DataFixtures\EtatFixtures;
 use App\DataFixtures\PlaceFixtures;
 use App\Entity\Etat;
 use App\Entity\Event;
+use App\Entity\User;
 use App\Repository\EventRepository;
 use Faker\Factory;
 use Zenstruck\Foundry\ModelFactory;
@@ -101,6 +102,7 @@ final class EventFactory extends ModelFactory
             'places' => PlaceFactory::random(),
             'sites' => SiteFactory::random(),
             'organiser' => UserFactory::random(),
+            'registeredUser' => UserFactory::randomRange(0, 10),
         ];
     }
 
@@ -110,7 +112,7 @@ final class EventFactory extends ModelFactory
     protected function initialize(): self
     {
         return $this
-            // ->afterInstantiate(function(Event $event): void {})
+            ->afterInstantiate(function(Event $event): void {})
         ;
     }
 
