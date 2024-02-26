@@ -56,7 +56,8 @@
                     <th>Informations de la sortie</th>
                     <th>Date de la sortie</th>
                     <th>Clôture</th>
-                    <th>Oganisateur</th>
+                    <th>Etat</th>
+                    <th>Organisateur</th>
                     <th>Inscrits/Places</th>
                     <th>Actions</th>
                 </tr>
@@ -64,6 +65,12 @@
             <tbody>
             {% for event in events %}
                 <tr>
+                    <td>
+                        {{ event.name }}
+                    </td>
+                    <td>{{ event.startDatetime ? event.startDatetime|date('d/m/Y H:i:s') : '' }}</td>
+                    <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('d/m/Y H:i:s') : '' }}</td>
+                    <td><a href="{{path('app_participant_profile', {'id': event.organiser.id})}}">{{ event.organiser.firstname }} {{ event.organiser.name }}</a></td>
                     <td>
                         <small
                                 {% if event.etat.libelle == constant('App\\Entity\\Etat::OPEN') %}
@@ -82,14 +89,8 @@
                         >
                             {{ event.etat.libelle }}
                         </small>
-
-                        {{ event.name }}
                     </td>
-                    <td>{{ event.startDatetime ? event.startDatetime|date('d/m/Y H:i:s') : '' }}</td>
-                    <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('d/m/Y H:i:s') : '' }}</td>
-                    <td><a href="{{path('app_participant_profile', {'id': event.organiser.id})}}">{{ event.organiser.firstname }} {{ event.organiser.name }}</a></td>
                     <td>{{ event.getRegisteredUser() | length }}/{{event.maxRegisterQty}}</td>
-                    <!-- Colonne Actions -->
                     <td>
 
                     {% if event.etat.libelle == "Fermé"%}

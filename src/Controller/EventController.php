@@ -36,7 +36,7 @@ class EventController extends AbstractController
                 $entityManager->flush();
             }
 
-            if($event->getRegisteredUser()->count() >= $event->getMaxRegisterQty()){
+            if($event->getRegisteredUser()->count() >= $event->getMaxRegisterQty()) {
                 $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
                 $event->setEtat($etat);
                 $entityManager->flush();
@@ -178,6 +178,11 @@ class EventController extends AbstractController
         if (!$event->getRegisteredUser()->contains($user)) {
             // Sinon, l'inscrire à l'événement
             $event->addRegisteredUser($user);
+
+            if ($event->getRegisteredUser()->count() >= $event->getMaxRegisterQty()) {
+                $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
+                $event->setEtat($etat);
+            }
         }
 
         $entityManager->flush();
@@ -195,7 +200,7 @@ class EventController extends AbstractController
         $now = new \DateTime();
         if ($now > $event->getLimitRegisterDate()) {
             // Rediriger l'utilisateur ou afficher un message d'erreur
-            $this->addFlash('danger', 'La date limite de désinscription est dépassée.');
+            $this->addFlash('danger', 'La date limite de désinscription est passcode.');
             return $this->redirectToRoute('app_event_index');
         }
 
@@ -203,6 +208,11 @@ class EventController extends AbstractController
         if ($event->getRegisteredUser()->contains($user)) {
             // Si l'utilisateur est déjà inscrit, le désinscrire
             $event->removeRegisteredUser($user);
+
+            if ($event->getRegisteredUser()->count() < $event->getMaxRegisterQty()) {
+                $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
+                $event->setEtat($etat);
+            }
         }
 
         $entityManager->flush();
