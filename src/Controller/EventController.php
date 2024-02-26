@@ -7,41 +7,47 @@ use App\Entity\Event;
 use App\Form\CancelEventType;
 use App\Form\EventFilterType;
 use App\Form\EventType;
+use App\Repository\EtatRepository;
 use App\Repository\EventRepository;
+use App\Service\EventManagerService;
 use Doctrine\ORM\EntityManagerInterface;
 use MobileDetectBundle\DeviceDetector\MobileDetectorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/event')]
 class EventController extends AbstractController
 {
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     #[Route('/', name: 'app_event_index', methods: ['GET', 'POST'])]
     public function index(Request $request, EventRepository $eventRepository, EntityManagerInterface $entityManager): Response
     {
 
         $data = [];
         $events = $eventRepository->findByFilter($data);
+
+        // Appel de la méthode pour mettre à jour les états des événements
+        $eventManagerService = new EventManagerService($entityManager);
+        $eventManagerService->updateEventStates($events);
+
         $form = $this->createForm(EventFilterType::class);
         $form->handleRequest($request);
+        // if($event->getStartDatetime() < new \Datetime()){
+        //     $event->setEtats($event->PAST);
+        //     $entityManager->flush();
+        // }
 
-        foreach($events as $event){
-            if($event->getStartDatetime() < new \Datetime()){
-                $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::PAST]);
-                $event->setEtat($etat);
-                $entityManager->flush();
-            }
-
-            if($event->getRegisteredUser()->count() >= $event->getMaxRegisterQty()){
-                $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
-                $event->setEtat($etat);
-                $entityManager->flush();
-            }
-        }
 
 
         if ($form->isSubmitted()) {
@@ -95,14 +101,14 @@ class EventController extends AbstractController
             return $this->redirectToRoute('app_event_index');
         }
 
-        $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
+        $etats = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouvert']);
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $event->setOrganiser($this->getUser());
-            $event->setEtat($etat);
+            $event->setEtat($etats);
             $entityManager->persist($event);
             $entityManager->flush();
 
@@ -228,7 +234,7 @@ class EventController extends AbstractController
             return $this->redirectToRoute('app_event_index');
         }
 
-        
+
         // Créez le formulaire en passant l'événement en tant qu'option
         $form = $this->createForm(CancelEventType::class, null, ['event' => $event]);
 
@@ -239,7 +245,7 @@ class EventController extends AbstractController
             $data = $form->getData();
 
             // Mettez à jour les informations d'annulation de l'événement
-            $event->setEtat($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CANCELLED]));
+            $event->setEtats($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Annulé']));
             $event->setEventInfos(sprintf(
                 "Événement annulé par l'organisateur. Motif : %s",
                 $data['cancellationReason']
