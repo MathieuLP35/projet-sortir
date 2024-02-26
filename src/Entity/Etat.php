@@ -20,6 +20,14 @@ class Etat
     #[Assert\Length(min:2, max:30, maxMessage: 'Ce champ peut contenir jusqu\'à 30 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
     private ?string $libelle = null;
 
+    // CONSTANTE
+    public const CREATED = 'Créée';
+    public const OPEN = 'Ouvert';
+    public const CLOSED = 'Clôturée';
+    public const IN_PROGRESS = 'Activité en cours';
+    public const PAST = 'Passée';
+    public const CANCELLED = 'Annulée';
+
     public function getId(): ?int
     {
         return $this->id;

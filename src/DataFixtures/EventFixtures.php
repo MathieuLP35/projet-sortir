@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Etat;
 use App\Factory\EventFactory;
 use App\Factory\UserFactory;
 use App\Repository\EtatRepository;
@@ -20,6 +21,8 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
         $limitDate = new \DateTime();
         $limitDate->modify('+9 day');
 
+        $etat = $manager->getRepository(Etat::class)->findOneBy(['libelle' => ETAT::CLOSED]);
+
         EventFactory::createMany(50);
 
         // création d'un event avec 10 participants max et on y inscrit 5 participants
@@ -29,6 +32,7 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             'limitRegisterDate' => $limitDate,
             'maxRegisterQty' => 10,
             'registeredUser' => UserFactory::new()->createMany(10),
+            'etats' => $etat
         ]);
     }
     public function getDependencies()

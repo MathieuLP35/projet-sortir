@@ -68,14 +68,6 @@ class Event
     #[ORM\ManyToOne(inversedBy: 'events')]
     private ?User $organiser = null;
 
-    // CONSTANTE
-    public const CREATED = 'Créée';
-    public const OPEN = 'Ouvert';
-    public const CLOSED = 'Clôturée';
-    public const IN_PROGRESS = 'Activité en cours';
-    public const PAST = 'Passée';
-    public const CANCELLED = 'Annulée';
-
     public function __construct()
     {
         $this->registeredUser = new ArrayCollection();
@@ -206,6 +198,10 @@ class Event
     {
         if ($this->registeredUser->count() >= $this->maxRegisterQty) {
             throw new \Exception('Le nombre maximum d\'inscrit est atteint !');
+        }
+
+        if (!$this->registeredUser->contains($registeredUser)) {
+            $this->registeredUser->add($registeredUser);
         }
 
         return $this;
