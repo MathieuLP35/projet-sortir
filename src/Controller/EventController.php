@@ -134,24 +134,6 @@ class EventController extends AbstractController
         ]);
     }
 
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    #[Route('/{id}', name: 'app_event_delete', methods: ['POST'])]
-    public function delete(Request $request, Event $event, EntityManagerInterface $entityManager): Response
-    {
-
-        $currentUser = $this->getUser();
-        if ($event->getOrganiser() !== $currentUser) {
-            $this->addFlash('danger', 'Vous n\'êtes pas autorisé à supprimer cette sortie.');
-            return $this->redirectToRoute('app_event_index');
-        } 
-
-        if ($this->isCsrfTokenValid('delete' . $event->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($event);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
-    }
 
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/{id}/register', name: 'app_register_for_event', methods: ['GET'])]
@@ -220,6 +202,7 @@ class EventController extends AbstractController
             return $this->redirectToRoute('app_event_index');
         }
 
+        
         // Créez le formulaire en passant l'événement en tant qu'option
         $form = $this->createForm(CancelEventType::class, null, ['event' => $event]);
 
