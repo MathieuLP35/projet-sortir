@@ -185,9 +185,9 @@ class EventController extends AbstractController
                 $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
                 $event->setEtat($etat);
             }
+            $entityManager->flush();
         }
 
-        $entityManager->flush();
 
         // Redirigez l'utilisateur vers la liste des événements
         return $this->redirectToRoute('app_event_index');
@@ -215,9 +215,8 @@ class EventController extends AbstractController
                 $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
                 $event->setEtat($etat);
             }
+            $entityManager->flush();
         }
-
-        $entityManager->flush();
 
         // Redirigez l'utilisateur vers la liste des événements
         return $this->redirectToRoute('app_event_index');

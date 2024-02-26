@@ -27,7 +27,7 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
 
         // création d'un event avec 10 participants max et on y inscrit 5 participants
         EventFactory::createOne([
-            'name' => 'Randonnée en montagne',
+            'name' => 'Randonnée dans les bois',
             'startDateTime' => $date,
             'limitRegisterDate' => $limitDate,
             'maxRegisterQty' => 10,
