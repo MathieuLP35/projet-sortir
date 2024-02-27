@@ -23,6 +23,7 @@ class Etat
     // CONSTANTE
     public const CREATED = 'Créée';
     public const OPEN = 'Ouvert';
+    public const MYOPEN = 'Ouvert';
     public const CLOSED = 'Clôturée';
     public const IN_PROGRESS = 'Activité en cours';
     public const PAST = 'Passée';

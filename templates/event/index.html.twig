@@ -116,7 +116,7 @@
 												{% endif %}
 												{% if event.etat.libelle == constant('App\\Entity\\Etat::OPEN') %}
 													<li>
-														<a href="{{ path('app_cancel_edit', {'id': event.id}) }}" class="dropdown-item">Annuler l'événement</a>
+														<a href="{{ path('app_cancel_event', {'id': event.id}) }}" class="dropdown-item">Annuler l'événement</a>
 													</li>
 												{% endif %}
 											</ul>

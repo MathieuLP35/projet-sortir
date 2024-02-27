@@ -7,6 +7,7 @@ use App\Entity\Event;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class EventManagerService
 {
@@ -17,13 +18,13 @@ class EventManagerService
         $this->entityManager = $entityManager;
     }
 
-    public function updateEventStates(array $events): void
+    public function updateEventStates(array $events, UserInterface $currentUser): void
     {
         foreach ($events as $event) {
             // Copie de l'objet event
             $originalEvent = clone $event;
 
-            $newEtat = $this->calculateEventState($event);
+            $newEtat = $this->calculateEventState($event, $currentUser);
 
             // Si l'état actuel est CANCELLED, ne permettez pas la modification
             if ($originalEvent->getEtat() !== null && $originalEvent->getEtat()->getLibelle() === Etat::CANCELLED) {
@@ -39,12 +40,12 @@ class EventManagerService
         $this->entityManager->flush();
     }
 
-    private function calculateEventState(Event $event): Etat
+    private function calculateEventState(Event $event, UserInterface $currentUser): Etat
     {
         $now = new \DateTime();
         //var_dump('Current Time: ' . $now->format('Y-m-d H:i:s'));
 
-        if ($event->getStartDatetime() > $now) {
+        if ($event->getStartDatetime() > $now && $event->getOrganiser() === $currentUser) {
             //var_dump('Event name: ' . $event->getName());
             //var_dump('Event Start Time: ' . $event->getStartDatetime()->format('Y-m-d H:i:s'));
             return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CREATED]);
@@ -59,6 +60,10 @@ class EventManagerService
             return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::IN_PROGRESS]);
         }
 
+        if ($event->getStartDatetime() > $event->getLimitRegisterDate() && $event->getOrganiser() === $currentUser) {
+            //var_dump('Event is open for registration.');
+            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::MYOPEN]);
+        }
         if ($event->getStartDatetime() > $event->getLimitRegisterDate()) {
             //var_dump('Event is open for registration.');
             return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);

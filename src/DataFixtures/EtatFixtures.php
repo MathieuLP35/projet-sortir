@@ -13,6 +13,7 @@ class EtatFixtures extends Fixture
     {
         EtatFactory::createOne(['libelle' => Etat::CREATED]);
         EtatFactory::createOne(['libelle' => Etat::OPEN]);
+        EtatFactory::createOne(['libelle' => Etat::MYOPEN]);
         EtatFactory::createOne(['libelle' => Etat::CLOSED]);
         EtatFactory::createOne(['libelle' => Etat::IN_PROGRESS]);
         EtatFactory::createOne(['libelle' => Etat::PAST]);
