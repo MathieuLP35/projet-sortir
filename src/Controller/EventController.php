@@ -131,7 +131,7 @@ class EventController extends AbstractController
         }
 
 
-        if($event->getEtat()->getLibelle() !== Etat::CREATED){
+        if ($event->getEtat()->getLibelle() !== Etat::CREATED) {
             $this->addFlash('danger', 'Impossible de modifier une sortie publier');
             return $this->redirectToRoute('app_event_index');
         }
@@ -144,7 +144,7 @@ class EventController extends AbstractController
 
             return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
         }
-       
+
 
         return $this->render('event/edit.html.twig', [
             'event' => $event,
@@ -166,7 +166,7 @@ class EventController extends AbstractController
         }
 
 
-        if($event->getEtat()->getLibelle() !== Etat::CREATED){
+        if ($event->getEtat()->getLibelle() !== Etat::CREATED) {
             $this->addFlash('danger', 'Impossible de publier une sortie publier');
             return $this->redirectToRoute('app_event_index');
         }
@@ -253,9 +253,9 @@ class EventController extends AbstractController
             $this->addFlash('danger', 'Cette sortie n\'existe pas.');
             return $this->redirectToRoute('app_event_index');
         }
-     
-  
-        if($event->getEtat()->getLibelle() != Etat::OPEN && $event->getEtat()->getLibelle() != Etat::CREATED){
+
+
+        if ($event->getEtat()->getLibelle() != Etat::OPEN && $event->getEtat()->getLibelle() != Etat::CREATED) {
             $this->addFlash('danger', 'Impossible d\'annulé une sortie ouverte ou créée');
             return $this->redirectToRoute('app_event_index');
         }
@@ -293,5 +293,30 @@ class EventController extends AbstractController
             'form' => $form->createView(),
             'event' => $event,
         ]);
+    }
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[Route('/{id}/delete', name: 'app_delete_event', methods: ['GET'])]
+    public function deleteEvent(Event $event, EntityManagerInterface $entityManager): Response
+    {
+        // Vérifier si l'utilisateur connecté est l'organisateur de l'événement
+        $currentUser = $this->getUser();
+        if ($event->getOrganiser() !== $currentUser) {
+            $this->addFlash('danger', 'Vous n\'êtes pas autorisé à supprimer cette sortie.');
+            return $this->redirectToRoute('app_event_index');
+        }
+
+        // Vérifier l'état de l'événement
+        if ($event->getEtat()->getLibelle() !== Etat::CREATED) {
+            $this->addFlash('danger', 'Impossible de supprimer une sortie publiée ou annulée.');
+            return $this->redirectToRoute('app_event_index');
+        }
+
+        // Supprimer l'événement
+        $entityManager->remove($event);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'La sortie a été supprimée avec succès.');
+
+        return $this->redirectToRoute('app_event_index');
     }
 }
