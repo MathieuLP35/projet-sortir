@@ -42,7 +42,6 @@ class EventManagerService
     private function calculateEventState(Event $event): Etat
     {
         $now = new \DateTime();
-<<<<<<< HEAD
         //var_dump('Current Time: ' . $now->format('Y-m-d H:i:s'));
 
         if ($event->getStartDatetime() > $now) {
@@ -82,7 +81,6 @@ class EventManagerService
 
         var_dump('Event is cancelled.');
         return $cancelledState;
-=======
 
         $startDatetime = $event->getStartDatetime();
         $duration = $event->getDuration(); // En minutes
@@ -99,7 +97,5 @@ class EventManagerService
             return $event->getEtat();
         }
 
-
->>>>>>> 0c189584f87a5b5bd9f9b401b491d178f9bd80f3
     }
 }
