@@ -31,37 +31,21 @@ class EventManagerService
     {
         $now = new \DateTime();
 
-        if ($event->getStartDatetime() > $now) {
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CREATED]);
-        }
-
         $startDatetime = $event->getStartDatetime();
         $duration = $event->getDuration(); // En minutes
 
         $eventEndTime = (clone $startDatetime)->modify('+' . $duration . ' minutes');
 
         if ($now > $startDatetime && $now < $eventEndTime) {
-            // var_dump('yeaaah ça marche');
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::IN_PROGRESS]);
+            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Activité en cours']);
+        } else if ($now > $event->getStartDatetime()->modify('+' . $event->getDuration() . ' minutes')){
+            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Passée']);
+        } else if ($now > $event->getLimitRegisterDate()) {
+            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Clôturée']);
+        } else{
+            return $event->getEtat();
         }
 
-        if ($event->getStartDatetime() > $event->getLimitRegisterDate()) {
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
-        }
 
-        if ($now > $event->getStartDatetime()->modify('+' . $event->getDuration() . ' minutes')) {
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::PAST]);
-        }
-
-        if ($now > $event->getLimitRegisterDate()) {
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
-        }
-
-        $cancelledState = $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CANCELLED]);
-        if ($cancelledState === null) {
-            throw new \RuntimeException("L'état 'CANCELLED' n'a pas été trouvé en base de données.");
-        }
-
-        return $cancelledState;
     }
 }
