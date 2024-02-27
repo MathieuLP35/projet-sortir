@@ -32,36 +32,32 @@ class EventManagerService
         $now = new \DateTime();
 
         if ($event->getStartDatetime() > $now) {
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Créée']);
+            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CREATED]);
         }
 
         $startDatetime = $event->getStartDatetime();
         $duration = $event->getDuration(); // En minutes
 
         $eventEndTime = (clone $startDatetime)->modify('+' . $duration . ' minutes');
-        // if ($event->getName() === 'En cours') {
-        //     var_dump([$startDatetime, $now, $eventEndTime]);
-        // }
 
         if ($now > $startDatetime && $now < $eventEndTime) {
             // var_dump('yeaaah ça marche');
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Activité en cours']);
+            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::IN_PROGRESS]);
         }
 
         if ($event->getStartDatetime() > $event->getLimitRegisterDate()) {
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouvert']);
+            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
         }
 
-
-        if ($now > $event->getStartDatetime() + $event->getDuration()) {
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Passée']);
+        if ($now > $event->getStartDatetime()->modify('+' . $event->getDuration() . ' minutes')) {
+            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::PAST]);
         }
 
         if ($now > $event->getLimitRegisterDate()) {
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Clôturée']);
+            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
         }
 
-        $cancelledState = $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Annulée']);
+        $cancelledState = $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CANCELLED]);
         if ($cancelledState === null) {
             throw new \RuntimeException("L'état 'CANCELLED' n'a pas été trouvé en base de données.");
         }
