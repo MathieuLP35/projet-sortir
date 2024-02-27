@@ -8,6 +8,7 @@ use App\Entity\Etat;
 use App\Entity\Event;
 use App\Entity\User;
 use App\Repository\EventRepository;
+use App\Service\DateService;
 use Faker\Factory;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
@@ -34,14 +35,16 @@ use Zenstruck\Foundry\RepositoryProxy;
  */
 final class EventFactory extends ModelFactory
 {
+
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
      * @todo inject services if required
      */
-    public function __construct()
+    public function __construct(private DateService $dateService)
     {
         parent::__construct();
+        $this->dateService = $dateService;
     }
 
     /**
