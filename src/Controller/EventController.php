@@ -28,7 +28,7 @@ class EventController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/', name: 'app_event_index', methods: ['GET', 'POST'])]
+    #[Route('/', name: 'app_event_index', methods: ['GET'])]
     public function index(Request $request, EventRepository $eventRepository, EntityManagerInterface $entityManager, EventManagerService $eventManagerService): Response
     {
         $data = [];
@@ -37,7 +37,11 @@ class EventController extends AbstractController
         // Appel de la méthode pour mettre à jour les états des événements
         $eventManagerService->updateEventStates($events);
 
-        $form = $this->createForm(EventFilterType::class);
+        $form = $this->createForm(EventFilterType::class, null, [
+            'action' => $this->generateUrl('app_event_index'),
+            'method' => 'GET'
+        ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -51,7 +55,7 @@ class EventController extends AbstractController
                 $data['start_datetime'] = $form->get('startDate')->getData();
             }
             if ($form->get('endDate')->getData()) {
-                $data['limit_register_date'] = $form->get('endDate')->getData();
+                $data['end_date'] = $form->get('endDate')->getData();
             }
             if ($form->get('organiser')->getData()) {
                 $data['organiser'] = $this->getUser()->getId();

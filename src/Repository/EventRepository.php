@@ -30,7 +30,7 @@ class EventRepository extends ServiceEntityRepository
         ->setParameter('date', new \DateTime('-1 month'));
 
         if (isset($data['sites'])) {
-            $query->andWhere('e.sites = :sites')
+            $query->andWhere('e.site = :sites')
                 ->setParameter('sites', $data['sites']);
         }
         if (isset($data['name'])) {
@@ -45,9 +45,9 @@ class EventRepository extends ServiceEntityRepository
             $query->andWhere('e.startDatetime >= :start_datetime')
                 ->setParameter('start_datetime', $data['start_datetime']);
         }
-        if (isset($data['limit_register_date'])) {
-            $query->andWhere('e.limitRegisterDate <= :limit_register_date')
-                ->setParameter('limit_register_date', $data['limit_register_date']);
+        if (isset($data['end_date'])) {
+            $query->andWhere('DATE_ADD(e.startDatetime, e.duration, \'minute\') <= :end_date')
+                ->setParameter('end_date', $data['end_date']);
         }
         if (isset($data['is_registered'])) {
             $query->andWhere(':registered_user MEMBER OF e.registeredUser')

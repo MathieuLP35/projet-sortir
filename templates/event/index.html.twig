@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="bg-filter-eni p-4">
-        {{ form_start(form_event_filter) }}
+        {{ form_start(form_event_filter, {'action': path('app_event_index'), 'method': 'GET'}) }}
         <div class="my-custom-class-for-errors">
             {{ form_errors(form_event_filter) }}
         </div>
@@ -69,7 +69,7 @@
                         {{ event.name }}
                     </td>
                     <td>{{ event.startDatetime ? event.startDatetime|date('d/m/Y H:i:s') : '' }}</td>
-                    <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('d/m/Y H:i:s') : '' }}</td>
+                    <td>{{ event.startDatetime|date_modify('+' ~ event.duration ~ ' min')|date('d/m/Y H:i:s') }}</td>
                     <td><a href="{{path('app_participant_profile', {'id': event.organiser.id})}}">{{ event.organiser.firstname }} {{ event.organiser.name }}</a></td>
                     <td>
                         <small
