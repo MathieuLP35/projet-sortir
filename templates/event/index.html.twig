@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="bg-filter-eni p-4">
-        {{ form_start(form_event_filter) }}
+        {{ form_start(form_event_filter, {'action': path('app_event_index'), 'method': 'GET'}) }}
         <div class="my-custom-class-for-errors">
             {{ form_errors(form_event_filter) }}
         </div>

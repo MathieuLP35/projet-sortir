@@ -30,7 +30,7 @@ class EventRepository extends ServiceEntityRepository
         ->setParameter('date', new \DateTime('-1 month'));
 
         if (isset($data['sites'])) {
-            $query->andWhere('e.sites = :sites')
+            $query->andWhere('e.site = :sites')
                 ->setParameter('sites', $data['sites']);
         }
         if (isset($data['name'])) {
