@@ -31,7 +31,7 @@ class UserCrudController extends AbstractCrudController
         yield NumberField::new('phone', 'Télephone :');
         yield BooleanField::new('isActive', 'Compte actif :');
         yield ImageField::new('profilePicture', 'Avatar')
-            ->setBasePath('uploads/user_profile_pictures')
+        ->setBasePath('uploads/user_profile_pictures')
             ->setUploadDir('public/uploads/user_profile_pictures')
             ;
        
