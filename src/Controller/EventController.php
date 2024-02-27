@@ -31,7 +31,6 @@ class EventController extends AbstractController
     #[Route('/', name: 'app_event_index', methods: ['GET', 'POST'])]
     public function index(Request $request, EventRepository $eventRepository, EntityManagerInterface $entityManager, EventManagerService $eventManagerService): Response
     {
-
         $data = [];
         $events = $eventRepository->findByFilter($data);
 
@@ -58,10 +57,10 @@ class EventController extends AbstractController
                 $data['organiser'] = $this->getUser()->getId();
             }
             if ($form->get('isRegistered')->getData()) {
-                $data['is_registered'] = $this->getUser()->getId();
+                $data['is_registered'] = $this->getUser();
             }
             if ($form->get('isNotRegistered')->getData()) {
-                $data['is_not_registered'] = $this->getUser()->getId();
+                $data['is_not_registered'] = $this->getUser();
             }
             if ($form->get('oldEvent')->getData()) {
                 $data['old_event'] = true;

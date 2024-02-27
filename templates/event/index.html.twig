@@ -144,4 +144,24 @@
         <a class="btn btn-success" href="{{ path('app_event_new') }}">Créer une sortie</a>
     {% endif %}
 
+    <script>
+
+        let isRegistered = document.getElementById('event_filter_isRegistered');
+        let isNotRegistered = document.getElementById('event_filter_isNotRegistered');
+
+        isRegistered.addEventListener('change', function() {
+            if (isRegistered.checked) {
+                isNotRegistered.checked = false;
+            }
+        });
+
+        isNotRegistered.addEventListener('change', function() {
+            if (isNotRegistered.checked) {
+                isRegistered.checked = false;
+            }
+        });
+
+    </script>
+
+
 {% endblock %}
