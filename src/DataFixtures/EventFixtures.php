@@ -15,6 +15,8 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
+        $now = new \DateTime();
+
         $date = new \DateTime();
         $date->modify('+10 day');
 
@@ -23,7 +25,7 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
 
         $etat = $manager->getRepository(Etat::class)->findOneBy(['libelle' => ETAT::CLOSED]);
 
-        EventFactory::createMany(50);
+        EventFactory::createMany(10);
 
         // création d'un event avec 10 participants max et on y inscrit 5 participants
         EventFactory::createOne([
@@ -43,13 +45,24 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             'registeredUser' => UserFactory::new()->createMany(9),
             'etat' => $manager->getRepository(Etat::class)->findOneBy(['libelle' => ETAT::OPEN])
         ]);
-        // Event en cours
+
+        // création d'un event en cours
+        EventFactory::createOne([
+            'name' => 'Randonnée en montagne',
+            'startDateTime' => $now->modify('+1 hour'),
+            'limitRegisterDate' => $limitDate,
+            'duration' => 60,
+            'maxRegisterQty' => 10,
+            'registeredUser' => UserFactory::new()->createMany(9),
+        ]);
+
         $dateDebut = EventFactory::faker()->dateTimeBetween('-1hour', 'now');
         EventFactory::createOne([
             'name' => 'En cours',
             'startDateTime' => $dateDebut,
             'limitRegisterDate' => (clone $dateDebut)->modify('-1month'),
             'duration' => 3000
+
         ]);
     }
     public function getDependencies()
