@@ -8,6 +8,7 @@ use App\Form\CancelEventType;
 use App\Form\EventFilterType;
 use App\Form\EventType;
 use App\Repository\EventRepository;
+use DateInterval;
 use Doctrine\ORM\EntityManagerInterface;
 use MobileDetectBundle\DeviceDetector\MobileDetectorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -41,6 +42,7 @@ class EventController extends AbstractController
                 $event->setEtat($etat);
                 $entityManager->flush();
             }
+
         }
 
 
