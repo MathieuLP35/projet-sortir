@@ -51,7 +51,7 @@ class EventController extends AbstractController
                 $data['start_datetime'] = $form->get('startDate')->getData();
             }
             if ($form->get('endDate')->getData()) {
-                $data['limit_register_date'] = $form->get('endDate')->getData();
+                $data['end_date'] = $form->get('endDate')->getData();
             }
             if ($form->get('organiser')->getData()) {
                 $data['organiser'] = $this->getUser()->getId();
