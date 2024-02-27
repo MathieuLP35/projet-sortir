@@ -48,7 +48,7 @@ class EventManagerService
     }
 
     if ($event->getStartDatetime() > $event->getLimitRegisterDate()) {
-        var_dump('Event is open for registration.');
+        //var_dump('Event is open for registration.');
         return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
     }
 
