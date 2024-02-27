@@ -28,40 +28,47 @@ class EventManagerService
     }
 
     private function calculateEventState(Event $event): Etat
-    {
-        $now = new \DateTime();
+{
+    $now = new \DateTime();
+    var_dump('Current Time: ' . $now->format('Y-m-d H:i:s'));
 
-        if ($event->getStartDatetime() > $now) {
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CREATED]);
-        }
-
-        $startDatetime = $event->getStartDatetime();
-        $duration = $event->getDuration(); // En minutes
-
-        $eventEndTime = (clone $startDatetime)->modify('+' . $duration . ' minutes');
-
-        if ($now > $startDatetime && $now < $eventEndTime) {
-            // var_dump('yeaaah ça marche');
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::IN_PROGRESS]);
-        }
-
-        if ($event->getStartDatetime() > $event->getLimitRegisterDate()) {
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
-        }
-
-        if ($now > $event->getStartDatetime()->modify('+' . $event->getDuration() . ' minutes')) {
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::PAST]);
-        }
-
-        if ($now > $event->getLimitRegisterDate()) {
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
-        }
-
-        $cancelledState = $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CANCELLED]);
-        if ($cancelledState === null) {
-            throw new \RuntimeException("L'état 'CANCELLED' n'a pas été trouvé en base de données.");
-        }
-
-        return $cancelledState;
+    if ($event->getStartDatetime() > $now) {
+        var_dump('Event name: ' . $event->getName());
+        var_dump('Event Start Time: ' . $event->getStartDatetime()->format('Y-m-d H:i:s'));
+        return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CREATED]);
     }
+
+    $startDatetime = $event->getStartDatetime();
+    $duration = $event->getDuration(); // En minutes
+    $eventEndTime = (clone $startDatetime)->modify('+' . $duration . ' minutes');
+
+    if ($now > $startDatetime && $now < $eventEndTime) {
+        var_dump('Event is in progress.');
+        return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::IN_PROGRESS]);
+    }
+
+    if ($event->getStartDatetime() > $event->getLimitRegisterDate()) {
+        var_dump('Event is open for registration.');
+        return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
+    }
+
+    if ($now > $event->getStartDatetime()->modify('+' . $event->getDuration() . ' minutes')) {
+        var_dump('Event is in the past.');
+        return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::PAST]);
+    }
+
+    if ($now > $event->getLimitRegisterDate()) {
+        var_dump('Event is closed.');
+        return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
+    }
+
+    $cancelledState = $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CANCELLED]);
+    if ($cancelledState === null) {
+        throw new \RuntimeException("L'état 'CANCELLED' n'a pas été trouvé en base de données.");
+    }
+
+    var_dump('Event is cancelled.');
+    return $cancelledState;
+}
+
 }
