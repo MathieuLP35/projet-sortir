@@ -14,15 +14,18 @@ class Site
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Assert\Type('integer')]
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
     #[Assert\Length(min:2, max:30, maxMessage: 'Ce champ peut contenir jusqu\'à 30 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Type('string')]
     private ?string $name_site = null;
 
-    #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'sites')]
+    #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'site')]
     private Collection $events;
 
     public function __construct()
@@ -59,7 +62,7 @@ class Site
     {
         if (!$this->events->contains($event)) {
             $this->events->add($event);
-            $event->setSites($this);
+            $event->setSite($this);
         }
 
         return $this;
@@ -69,8 +72,8 @@ class Site
     {
         if ($this->events->removeElement($event)) {
             // set the owning side to null (unless already changed)
-            if ($event->getSites() === $this) {
-                $event->setSites(null);
+            if ($event->getSite() === $this) {
+                $event->setSite(null);
             }
         }
 

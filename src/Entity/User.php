@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity('email')]
@@ -22,16 +23,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-
+    #[Assert\Type('integer')]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ email est obligatoire !')]
     #[Assert\Email(message: 'Un email est attendu ici !')]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Type('string')]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Assert\Type('array')]
     private array $roles = [];
 
     /**
@@ -40,44 +44,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ password est obligatoire !')]
+    #[SecurityAssert\UserPassword(type: "mixed", message: "Mot de passe incorrect !")]
+    #[Assert\NotCompromisedPassword]
+    #[Assert\Type('string')]
     private ?string $password = null;
 
     #[ORM\Column(length: 30)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ nom est obligatoire !')]
     #[Assert\Length(min: 2, max: 30, maxMessage: 'Ce champ peut contenir jusqu\'à 30 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Type('string')]
     private ?string $name = null;
 
     #[ORM\Column(length: 30)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ nom est obligatoire !')]
     #[Assert\Length(min: 2, max: 30, maxMessage: 'Ce champ peut contenir jusqu\'à 30 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
-
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Type('string')]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 15)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ nom est obligatoire !')]
     #[Assert\Length(min: 2, max: 30, maxMessage: 'Ce champ peut contenir jusqu\'à 30 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Type('string')]
     private ?string $phone = null;
 
     #[ORM\Column]
+    #[Assert\Type('boolean')]
     private ?bool $isActive = null;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Type('string')]
     private ?string $profilePicture = null;
 
     /**
      * @Vich\UploadableField(mapping="user_profile_pictures", fileNameProperty="profilePicture")
      */
     #[Assert\File(maxSize:"5M", mimeTypes:"image/jpeg, image/png, image/gif")]
+    #[Assert\Type('file')]
     private ?File $profilePictureFile = null;
 
 
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'isRegister')]
+    #[Assert\Type('array')]
     private Collection $events;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Unique(message: "Ce pseudo est déjà utilisé !")]
+    #[Assert\Type('string')]
     private ?string $username = null;
 
     public function __construct()

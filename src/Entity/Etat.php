@@ -12,12 +12,15 @@ class Etat
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Assert\Type('integer')]
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
     #[Assert\Length(min:2, max:30, maxMessage: 'Ce champ peut contenir jusqu\'à 30 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Type('string')]
     private ?string $libelle = null;
 
     // CONSTANTE

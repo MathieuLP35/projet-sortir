@@ -29,7 +29,8 @@ class EventController extends AbstractController
     }
 
     #[Route('/', name: 'app_event_index', methods: ['GET'])]
-    public function index(Request $request, EventRepository $eventRepository, EntityManagerInterface $entityManager, EventManagerService $eventManagerService): Response
+    public function index(Request $request, EventRepository $eventRepository, EventManagerService $eventManagerService): Response
+
     {
         $data = [];
         $events = $eventRepository->findByFilter($data);

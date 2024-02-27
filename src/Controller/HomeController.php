@@ -10,13 +10,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(Security $security): Response
+    public function index(): Response
     {
-        // Vérifiez si l'utilisateur est connecté
-        if ($security->getUser()) {
-            // Utilisateur connecté, redirigez-le vers la page '/event'
-            return $this->redirectToRoute('app_event_index');
-        }
+
 
         // Utilisateur non connecté, redirigez-le vers la page '/login'
         return $this->redirectToRoute('app_event_index');
