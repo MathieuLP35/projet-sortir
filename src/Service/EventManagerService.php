@@ -33,8 +33,8 @@ class EventManagerService
     var_dump('Current Time: ' . $now->format('Y-m-d H:i:s'));
 
     if ($event->getStartDatetime() > $now) {
-        var_dump('Event name: ' . $event->getName());
-        var_dump('Event Start Time: ' . $event->getStartDatetime()->format('Y-m-d H:i:s'));
+        //var_dump('Event name: ' . $event->getName());
+        //var_dump('Event Start Time: ' . $event->getStartDatetime()->format('Y-m-d H:i:s'));
         return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CREATED]);
     }
 
