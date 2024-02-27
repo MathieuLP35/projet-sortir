@@ -7,8 +7,12 @@ use App\Entity\Event;
 use App\Form\CancelEventType;
 use App\Form\EventFilterType;
 use App\Form\EventType;
+use App\Form\SendEventType;
 use App\Repository\EventRepository;
+
+
 use App\Service\EventManagerService;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use MobileDetectBundle\DeviceDetector\MobileDetectorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,7 +33,7 @@ class EventController extends AbstractController
     }
 
     #[Route('/', name: 'app_event_index', methods: ['GET', 'POST'])]
-    public function index(Request $request, EventRepository $eventRepository, EntityManagerInterface $entityManager, EventManagerService $eventManagerService): Response
+    public function index(Request $request, EventRepository $eventRepository, EventManagerService $eventManagerService): Response
     {
         $data = [];
         $events = $eventRepository->findByFilter($data);
@@ -39,6 +43,7 @@ class EventController extends AbstractController
 
         $form = $this->createForm(EventFilterType::class);
         $form->handleRequest($request);
+
 
         if ($form->isSubmitted()) {
             if ($form->get('sites')->getData()) {
@@ -153,6 +158,32 @@ class EventController extends AbstractController
     }
 
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[Route('/{id}/publish', name: 'app_event_publish', methods: ['GET'])]
+    public function publish(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $event = $entityManager->getRepository(Event::class)->find($request->get('id'));
+        $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
+        $currentUser = $this->getUser();
+
+        if ($event->getOrganiser() !== $currentUser) {
+            $this->addFlash('danger', 'Vous n\'êtes pas autorisé à publier cette sortie.');
+            return $this->redirectToRoute('app_event_index');
+        }
+
+
+        if($event->getEtat()->getLibelle() !== Etat::CREATED){
+            $this->addFlash('danger', 'Impossible de publier une sortie publier');
+            return $this->redirectToRoute('app_event_index');
+        }
+
+        $event->setEtat($etat);
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_event_index');
+    }
+
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/{id}/register', name: 'app_register_for_event', methods: ['GET'])]
     public function registerForEvent(Event $event, EntityManagerInterface $entityManager, UserInterface $user): Response
     {
@@ -252,7 +283,7 @@ class EventController extends AbstractController
             $data = $form->getData();
 
             // Mettez à jour les informations d'annulation de l'événement
-            $event->setEtats($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CANCELLED]));
+            $event->setEtat($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CANCELLED]));
             $event->setEventInfos(sprintf(
                 "Événement annulé par l'organisateur. Motif : %s",
                 $data['cancellationReason']
