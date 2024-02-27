@@ -12,33 +12,41 @@ class Place
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Assert\Type('integer')]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
     #[Assert\Length(min:2, max:50, maxMessage: 'Ce champ peut contenir jusqu\'à 50 caractères !', minMessage: 'Ce champ peut contenir au minimum 2 caractères !')]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Type('string')]
     private ?string $name = null;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
     #[Assert\Length(min:2, max:100, maxMessage: 'Ce champ peut contenir jusqu\'à 100 caractères !', minMessage: 'Ce champ peut contenir au minimum 2 caractères !')]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Type('string')]
     private ?string $address = null;
 
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
     #[Assert\Positive]
+    #[Assert\Type('float')]
     private ?float $latitude = null;
 
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
     #[Assert\Positive]
+    #[Assert\Type('float')]
     private ?float $longitude = null;
 
     #[ORM\ManyToOne(inversedBy: 'place')]
+    #[Assert\Type(City::class)]
     private ?City $city = null;
 
     public function getId(): ?int

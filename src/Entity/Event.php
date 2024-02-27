@@ -18,54 +18,68 @@ class Event
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Assert\Type('integer')]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
     #[Assert\Length(min:2, max:100, maxMessage: 'Ce champ peut contenir jusqu\'à 100 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Type('string')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\Type("\DateTimeInterface")]
     #[Assert\GreaterThanOrEqual('today')]
     #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
+    #[Assert\Type('datetime')]
     private ?\DateTimeInterface $startDatetime = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Positive(message:"Une valeur positive est attendu ici !")]
+    #[Assert\Type('integer')]
     private ?int $duration = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\Type("\DateTimeInterface")]
     #[Assert\LessThanOrEqual(propertyPath: 'startDatetime')]
     #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
+    #[Assert\Type('datetime')]
     private ?\DateTimeInterface $limitRegisterDate = null;
 
     #[ORM\Column]
     #[Assert\Positive]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Ce champ nom est obligatoire !')]
+    #[Assert\Type('integer')]
     private ?int $maxRegisterQty = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Type('string')]
     private ?string $eventInfos = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\Type(Etat::class)]
     private ?Etat $etat = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\Type(Place::class)]
     private ?Place $place = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\Type(Site::class)]
     private ?Site $site = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'events')]
     private Collection $registeredUser;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
+    #[Assert\Type(User::class)]
     private ?User $organiser = null;
 
     public function __construct()
