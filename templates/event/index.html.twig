@@ -1,167 +1,159 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Event index{% endblock %}
+{% block title %}Event index
+{% endblock %}
 
 {% block body %}
 
-    <div class="bg-filter-eni p-4">
-        {{ form_start(form_event_filter) }}
-        <div class="my-custom-class-for-errors">
-            {{ form_errors(form_event_filter) }}
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-md-6">
-                    <h2 class="fs-5">Filtrer les sorties:</h2>
-                    {{ form_row(form_event_filter.sites) }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-md-6">
-                    {{ form_row(form_event_filter.event) }}
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            {{ form_row(form_event_filter.startDate) }}
-                        </div>
-                        <div class="col-12 col-md-6">
-                            {{ form_row(form_event_filter.endDate) }}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-1"></div>
-                <div class="col-12 col-md-5">
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            {{ form_row(form_event_filter.organiser) }}
-                            {{ form_row(form_event_filter.isRegistered) }}
-                            {{ form_row(form_event_filter.isNotRegistered) }}
-                            {{ form_row(form_event_filter.oldEvent) }}
-                        </div>
-                        <div class="col-12 col-md-6 p-2">
-                            {{ form_row(form_event_filter.save) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {{ form_end(form_event_filter) }}
-    </div>
+	<div class="bg-filter-eni p-4">
+		{{ form_start(form_event_filter) }}
+		<div class="my-custom-class-for-errors">
+			{{ form_errors(form_event_filter) }}
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-12 col-md-6">
+					<h2 class="fs-5">Filtrer les sorties:</h2>
+					{{ form_row(form_event_filter.sites) }}
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12 col-md-6">
+					{{ form_row(form_event_filter.event) }}
+					<div class="row">
+						<div class="col-12 col-md-6">
+							{{ form_row(form_event_filter.startDate) }}
+						</div>
+						<div class="col-12 col-md-6">
+							{{ form_row(form_event_filter.endDate) }}
+						</div>
+					</div>
+				</div>
+				<div class="col-md-1"></div>
+				<div class="col-12 col-md-5">
+					<div class="row">
+						<div class="col-12 col-md-6">
+							{{ form_row(form_event_filter.organiser) }}
+							{{ form_row(form_event_filter.isRegistered) }}
+							{{ form_row(form_event_filter.isNotRegistered) }}
+							{{ form_row(form_event_filter.oldEvent) }}
+						</div>
+						<div class="col-12 col-md-6 p-2">
+							{{ form_row(form_event_filter.save) }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{{ form_end(form_event_filter) }}
+	</div>
 
-    <hr>
+	<hr>
 
-    <div class="table-responsive">
-        <table class="table align-middle mt-3">
-            <thead>
-                <tr>
-                    <th>Informations de la sortie</th>
-                    <th>Date de la sortie</th>
-                    <th>Clôture</th>
-                    <th>Etat</th>
-                    <th>Organisateur</th>
-                    <th>Inscrits/Places</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for event in events %}
-                <tr>
-                    <td>
-                        {{ event.name }}
-                    </td>
-                    <td>{{ event.startDatetime ? event.startDatetime|date('d/m/Y H:i:s') : '' }}</td>
-                    <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('d/m/Y H:i:s') : '' }}</td>
-                    <td><a href="{{path('app_participant_profile', {'id': event.organiser.id})}}">{{ event.organiser.firstname }} {{ event.organiser.name }}</a></td>
-                    <td>
-                        <small
-                                {% if event.etat.libelle == constant('App\\Entity\\Etat::OPEN') %}
-                                    class="badge rounded-pill text-bg-success"
-                                {% elseif event.etat.libelle == constant('App\\Entity\\Etat::CLOSED') %}
-                                    class="badge rounded-pill text-bg-secondary"
-                                {% elseif event.etat.libelle == constant('App\\Entity\\Etat::CANCELLED') %}
-                                    class="badge rounded-pill text-bg-danger"
-                                {% elseif event.etat.libelle == constant('App\\Entity\\Etat::IN_PROGRESS') %}
-                                    class="badge rounded-pill text-bg-warning"
-                                {% elseif event.etat.libelle == constant('App\\Entity\\Etat::PAST') %}
-                                    class="badge rounded-pill text-bg-info"
-                                {% elseif event.etat.libelle == constant('App\\Entity\\Etat::CREATED') %}
-                                    class="badge rounded-pill text-bg-primary"
-                                {% endif %}
-                        >
-                            {{ event.etat.libelle }}
-                        </small>
-                    </td>
-                    <td>{{ event.getRegisteredUser() | length }}/{{event.maxRegisterQty}}</td>
-                    <td>
+	<div class="table-responsive">
+		<table class="table align-middle mt-3">
+			<thead>
+				<tr>
+					<th>Informations de la sortie</th>
+					<th>Date de la sortie</th>
+					<th>Clôture</th>
+					<th>Organisateur</th>
+					<th>Etat</th>
+					<th>Inscrits/Places</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for event in events %}
+					<tr>
+						<td>
+							{{ event.name }}
+						</td>
+						<td>{{ event.startDatetime ? event.startDatetime|date('d/m/Y H:i:s') : '' }}</td>
+						<td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('d/m/Y H:i:s') : '' }}</td>
+						<td>
+							<a href="{{path('app_participant_profile', {'id': event.organiser.id})}}">{{ event.organiser.firstname }}
+								{{ event.organiser.name }}</a>
+						</td>
+						<td>
+							<small {% if event.etat.libelle == constant('App\\Entity\\Etat::OPEN') %} class="badge rounded-pill text-bg-success" {% elseif event.etat.libelle == constant('App\\Entity\\Etat::CLOSED') %} class="badge rounded-pill text-bg-secondary" {% elseif event.etat.libelle == constant('App\\Entity\\Etat::CANCELLED') %} class="badge rounded-pill text-bg-danger" {% elseif event.etat.libelle == constant('App\\Entity\\Etat::IN_PROGRESS') %} class="badge rounded-pill text-bg-warning" {% elseif event.etat.libelle == constant('App\\Entity\\Etat::PAST') %} class="badge rounded-pill text-bg-info" {% elseif event.etat.libelle == constant('App\\Entity\\Etat::CREATED') %} class="badge rounded-pill text-bg-primary" {% endif %}>
+								{{ event.etat.libelle }}
+							</small>
+						</td>
+						<td>{{ event.getRegisteredUser() | length }}/{{event.maxRegisterQty}}</td>
+						<td>
 
-                    {% if event.etat.libelle == constant('App\\Entity\\Etat::CLOSED')%}
-                        <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-secondary">Afficher</a>
-                        {% else %}
-                        <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info">Afficher</a>
-                        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+							{% if event.etat.libelle == constant('App\\Entity\\Etat::CLOSED')%}
+								<a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-secondary">Afficher</a>
+							{% else %}
+								<a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info">Afficher</a>
+								{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
 
-                            {% if not event.getRegisteredUser().contains(app.user) and event.etat.libelle != constant('App\\Entity\\Etat::CANCELLED') and event.getRegisteredUser() | length < event.maxRegisterQty %}
-                                <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary">S'inscrire</a>
-                            {% elseif event.getRegisteredUser().contains(app.user) and event.etat.libelle != constant('App\\Entity\\Etat::CANCELLED') %}
-                                <a href="{{ path('app_unregister_for_event', {'id': event.id}) }}" class="btn btn-danger">Se désister</a>
-                            {% endif %}
+									{% if not event.getRegisteredUser().contains(app.user) and event.etat.libelle != constant('App\\Entity\\Etat::CANCELLED') and event.getRegisteredUser() | length < event.maxRegisterQty %}
+										<a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary">S'inscrire</a>
+									{% elseif event.getRegisteredUser().contains(app.user) and event.etat.libelle != constant('App\\Entity\\Etat::CANCELLED') %}
+										<a href="{{ path('app_unregister_for_event', {'id': event.id}) }}" class="btn btn-danger">Se désister</a>
+									{% endif %}
 
 
+									{% if app.user == event.organiser and (event.etat.libelle == constant('App\\Entity\\Etat::CREATED') or event.etat.libelle == constant('App\\Entity\\Etat::OPEN')) %}
+										<div class="btn-group">
+											<button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+												Gérer
+											</button>
+											<ul class="dropdown-menu">
+												{% if event.etat.libelle == constant('App\\Entity\\Etat::CREATED') %}
+													<li>
+														<a href="{{ path('app_event_edit', {'id': event.id}) }}" class="dropdown-item">Modifier</a>
+													</li>
+													<li>
+														<a href="{{ path('app_event_edit', {'id': event.id}) }}" class="dropdown-item">Publier</a>
+													</li>
+												{% endif %}
+												{% if event.etat.libelle == constant('App\\Entity\\Etat::OPEN') or event.etat.libelle == constant('App\\Entity\\Etat::CLOSED') %}
+													<li>
+														<a href="{{ path('app_cancel_event', {'id': event.id}) }}" class="dropdown-item">Annuler l'événement</a>
+													</li>
+												{% endif %}
+											</ul>
+										</div>
+									{% endif %}
 
-                            {% if app.user == event.organiser %}
-                                {% if event.etat.libelle != constant('App\\Entity\\Etat::CANCELLED') %}
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Gérer
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                        {% if event.etat.libelle == constant('App\\Entity\\Etat::CREATED') %}
-                                            <li><a href="{{ path('app_event_edit', {'id': event.id}) }}" class="dropdown-item">Modifier</a></li>
-                                            <li><a href="{{ path('app_event_edit', {'id': event.id}) }}" class="dropdown-item">Publier</a></li>
-                                        {% endif %}
-                                        {% if event.etat.libelle == constant('App\\Entity\\Etat::OPEN') or event.etat.libelle == constant('App\\Entity\\Etat::CLOSED')%}
-                                            <li><a href="{{ path('app_cancel_event', {'id': event.id}) }}" class="dropdown-item">Annuler l'événement</a></li>
-                                        {% endif %}
-                                        </ul>
-                                    </div>
-                                {% endif %}
-                            {% endif %}
+								{% endif %}
+							{% endif %}
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="8">Aucun enregistrement trouvé</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
 
-                        {% endif %}
-                    {% endif %}
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="8">Aucun enregistrement trouvé</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+	{% if not is_mobile() %}
+		<a class="btn btn-success" href="{{ path('app_event_new') }}">Créer une sortie</a>
+	{% endif %}
 
-    {% if not is_mobile() %}
-        <a class="btn btn-success" href="{{ path('app_event_new') }}">Créer une sortie</a>
-    {% endif %}
+	<script>
 
-    <script>
+		let isRegistered = document.getElementById('event_filter_isRegistered');
+let isNotRegistered = document.getElementById('event_filter_isNotRegistered');
 
-        let isRegistered = document.getElementById('event_filter_isRegistered');
-        let isNotRegistered = document.getElementById('event_filter_isNotRegistered');
+isRegistered.addEventListener('change', function () {
+if (isRegistered.checked) {
+isNotRegistered.checked = false;
+}
+});
 
-        isRegistered.addEventListener('change', function() {
-            if (isRegistered.checked) {
-                isNotRegistered.checked = false;
-            }
-        });
-
-        isNotRegistered.addEventListener('change', function() {
-            if (isNotRegistered.checked) {
-                isRegistered.checked = false;
-            }
-        });
-
-    </script>
+isNotRegistered.addEventListener('change', function () {
+if (isNotRegistered.checked) {
+isRegistered.checked = false;
+}
+});
+	</script>
 
 
 {% endblock %}

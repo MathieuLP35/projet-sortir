@@ -46,26 +46,39 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             'limitRegisterDate' => $limitDate,
             'maxRegisterQty' => 10,
             'registeredUser' => UserFactory::new()->createMany(9),
-            'etat' => $manager->getRepository(Etat::class)->findOneBy(['libelle' => ETAT::OPEN])
+            'etat' => $manager->getRepository(Etat::class)->findOneBy(['libelle' => ETAT::OPEN]),
+            'organiser' => $organiserUser,
         ]);
 
-        // création d'un event en cours
+        // création d'un event passé
         EventFactory::createOne([
-            'name' => 'Randonnée en montagne',
-            'startDateTime' => $now,
+            'name' => 'Passé',
+            'startDateTime' => $now->modify('-1hour'),
             'limitRegisterDate' => $limitDate,
             'duration' => 60,
             'maxRegisterQty' => 10,
             'registeredUser' => UserFactory::new()->createMany(9),
             'organiser' => $organiserUser,
         ]);
-
+        // création d'un event en cours
         $dateDebut = EventFactory::faker()->dateTimeBetween('-1hour', 'now');
         EventFactory::createOne([
             'name' => 'En cours',
             'startDateTime' => $dateDebut,
             'limitRegisterDate' => (clone $dateDebut)->modify('-1month'),
-            'duration' => 3000
+            'duration' => 120,
+            'organiser' => $organiserUser,
+        ]);
+        // création d'un event annulé
+        EventFactory::createOne([
+            'name' => 'annulé',
+            'startDateTime' => $now->modify('+10hour'),
+            'limitRegisterDate' => $limitDate,
+            'duration' => 60,
+            'maxRegisterQty' => 10,
+            'registeredUser' => UserFactory::new()->createMany(9),
+            'etat' => $manager->getRepository(Etat::class)->findOneBy(['libelle' => ETAT::CANCELLED]),
+            'organiser' => $organiserUser,
 
         ]);
     }
