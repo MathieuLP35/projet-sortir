@@ -117,7 +117,7 @@
                                         <ul class="dropdown-menu">
                                         {% if event.etat.libelle == constant('App\\Entity\\Etat::CREATED') %}
                                             <li><a href="{{ path('app_event_edit', {'id': event.id}) }}" class="dropdown-item">Modifier</a></li>
-                                           
+                                            <li><a href="{{ path('app_event_edit', {'id': event.id}) }}" class="dropdown-item">Publier</a></li>
                                         {% endif %}
                                         {% if event.etat.libelle == constant('App\\Entity\\Etat::OPEN') or event.etat.libelle == constant('App\\Entity\\Etat::CLOSED')%}
                                             <li><a href="{{ path('app_cancel_event', {'id': event.id}) }}" class="dropdown-item">Annuler l'événement</a></li>
