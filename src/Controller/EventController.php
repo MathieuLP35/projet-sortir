@@ -158,30 +158,27 @@ class EventController extends AbstractController
     }
 
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    #[Route('/{id}/publish', name: 'app_event_publish')]
-    public function send(int $id, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/publish', name: 'app_event_publish', methods: ['GET'])]
+    public function publish(Request $request, EntityManagerInterface $entityManager): Response
     {
-
-        $event = $entityManager->getRepository(Event::class)->find($id);
-      
-        // Vérifier si l'utilisateur connecté est l'organisateur de l'événement
+        $event = $entityManager->getRepository(Event::class)->find($request->get('id'));
+        $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
         $currentUser = $this->getUser();
+
         if ($event->getOrganiser() !== $currentUser) {
-            $this->addFlash('danger', 'Vous n\'êtes pas autorisé à modifier cette sortie.');
+            $this->addFlash('danger', 'Vous n\'êtes pas autorisé à publier cette sortie.');
             return $this->redirectToRoute('app_event_index');
         }
 
 
         if($event->getEtat()->getLibelle() !== Etat::CREATED){
-            $this->addFlash('danger', 'Impossible de modifier une sortie publier');
+            $this->addFlash('danger', 'Impossible de publier une sortie publier');
             return $this->redirectToRoute('app_event_index');
         }
-        
-        $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
+
         $event->setEtat($etat);
-        $entityManager->persist($event);
+
         $entityManager->flush();
-       
 
         return $this->redirectToRoute('app_event_index');
     }
