@@ -7,7 +7,6 @@ use App\Entity\Event;
 use App\Form\CancelEventType;
 use App\Form\EventFilterType;
 use App\Form\EventType;
-use App\Repository\EtatRepository;
 use App\Repository\EventRepository;
 use App\Service\EventManagerService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -42,22 +40,6 @@ class EventController extends AbstractController
 
         $form = $this->createForm(EventFilterType::class);
         $form->handleRequest($request);
-
-        foreach($events as $event){
-            if($event->getStartDatetime() < new \Datetime()){
-                $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::PAST]);
-                $event->setEtat($etat);
-                $entityManager->flush();
-            }
-
-            if($event->getRegisteredUser()->count() >= $event->getMaxRegisterQty()) {
-                $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
-                $event->setEtat($etat);
-                $entityManager->flush();
-            }
-        }
-
-
 
         if ($form->isSubmitted()) {
             if ($form->get('sites')->getData()) {
@@ -112,7 +94,7 @@ class EventController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $event->setOrganiser($this->getUser());
-            $event->setEtat($etats);
+            $event->setEtat($etat);
             $entityManager->persist($event);
             $entityManager->flush();
 
@@ -271,7 +253,7 @@ class EventController extends AbstractController
             $data = $form->getData();
 
             // Mettez à jour les informations d'annulation de l'événement
-            $event->setEtats($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Annulé']));
+            $event->setEtats($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CANCELLED]));
             $event->setEventInfos(sprintf(
                 "Événement annulé par l'organisateur. Motif : %s",
                 $data['cancellationReason']
