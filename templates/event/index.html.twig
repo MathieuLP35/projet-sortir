@@ -109,7 +109,7 @@
 
 
                             {% if app.user == event.organiser %}
-                                {% if event.etat.libelle != constant('App\\Entity\\Etat::CANCELLED') %}
+                                {% if event.etat.libelle == constant('App\\Entity\\Etat::CREATED') or event.etat.libelle == constant('App\\Entity\\Etat::OPEN') %}
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                             Gérer
@@ -119,7 +119,7 @@
                                             <li><a href="{{ path('app_event_edit', {'id': event.id}) }}" class="dropdown-item">Modifier</a></li>
                                             <li><a href="{{ path('app_event_publish', {'id': event.id}) }}" class="dropdown-item">Publier</a></li>
                                         {% endif %}
-                                        {% if event.etat.libelle == constant('App\\Entity\\Etat::OPEN') or event.etat.libelle == constant('App\\Entity\\Etat::CLOSED')%}
+                                        {% if event.etat.libelle == constant('App\\Entity\\Etat::CREATED') or event.etat.libelle == constant('App\\Entity\\Etat::OPEN') or event.etat.libelle == constant('App\\Entity\\Etat::CLOSED')%}
                                             <li><a href="{{ path('app_cancel_event', {'id': event.id}) }}" class="dropdown-item">Annuler l'événement</a></li>
                                         {% endif %}
                                         </ul>
