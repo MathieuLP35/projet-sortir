@@ -8,6 +8,7 @@ use App\Entity\Etat;
 use App\Entity\Event;
 use App\Entity\User;
 use App\Repository\EventRepository;
+use App\Service\DateService;
 use Faker\Factory;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
@@ -34,14 +35,16 @@ use Zenstruck\Foundry\RepositoryProxy;
  */
 final class EventFactory extends ModelFactory
 {
+
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
      * @todo inject services if required
      */
-    public function __construct()
+    public function __construct(private DateService $dateService)
     {
         parent::__construct();
+        $this->dateService = $dateService;
     }
 
     /**
@@ -87,20 +90,28 @@ final class EventFactory extends ModelFactory
         $isClosed = ($limitRegisterDate < $now);
 
         // Définir l'état en fonction de la probabilité
-        $etat = $faker->randomElement([
-            Etat::CREATED,
-            Etat::OPEN,
-            Etat::CLOSED,
-            Etat::IN_PROGRESS,
-            Etat::PAST,
-            Etat::CANCELLED,
-        ]);
+//        $etat = $faker->randomElement([
+//            Etat::CREATED,
+//            Etat::OPEN,
+//            Etat::CLOSED,
+//            Etat::IN_PROGRESS,
+//            Etat::PAST,
+//            Etat::CANCELLED,
+//        ]);
 
         // Générer une durée aléatoire
         $duration = $faker->numberBetween(10, 600);// entre 10 minutes et 10 heures en minutes
 
         // Maximum de participants
         $maxRegisterQty = $faker->numberBetween(1, 21);
+
+        if ($this->dateService->isDatePast($startDatetime)){
+            $etat = Etat::PAST;
+        } elseif ($this->dateService->isDateInProgress($startDatetime, $duration)){
+            $etat = Etat::IN_PROGRESS;
+        } else {
+            $etat = Etat::OPEN or Etat::CREATED or Etat::CANCELLED;
+        }
 
         return [
             'limitRegisterDate' => $limitRegisterDate,
