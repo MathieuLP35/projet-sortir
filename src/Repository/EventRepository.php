@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Event;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -49,18 +50,12 @@ class EventRepository extends ServiceEntityRepository
                 ->setParameter('limit_register_date', $data['limit_register_date']);
         }
         if (isset($data['is_registered'])) {
-            $query->leftJoin('e.registeredUser', 'eu');
-            $query->andWhere('eu.id = :is_registered')
-                ->setParameter('is_registered', $data['is_registered']);
+            $query->andWhere(':registered_user MEMBER OF e.registeredUser')
+                ->setParameter('registered_user', [$data['is_registered']]);
         }
         if (isset($data['is_not_registered'])) {
-            if (!isset($data['is_registered'])) {
-                $query->leftJoin('e.registeredUser', 'eu');
-            }
-            $query->andWhere('eu.id != :is_not_registered')
-                ->orWhere('e.registeredUser IS EMPTY')
-                ->setParameter('is_not_registered', $data['is_not_registered']);
-
+            $query->andWhere(':registered_user NOT MEMBER OF e.registeredUser')
+                ->setParameter('registered_user', [$data['is_not_registered']]);
         }
         if (isset($data['old_event'])) {
             // event is old if the limit register date is passed
