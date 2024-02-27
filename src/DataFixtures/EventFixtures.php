@@ -27,12 +27,21 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
 
         // création d'un event avec 10 participants max et on y inscrit 5 participants
         EventFactory::createOne([
-            'name' => 'Randonnée en montagne',
+            'name' => 'Randonnée dans les bois',
             'startDateTime' => $date,
             'limitRegisterDate' => $limitDate,
             'maxRegisterQty' => 10,
             'registeredUser' => UserFactory::new()->createMany(10),
-            'etat' => $etat
+            'etat' => $manager->getRepository(Etat::class)->findOneBy(['libelle' => ETAT::CLOSED])
+        ]);
+
+        EventFactory::createOne([
+            'name' => 'Randonnée en montagne',
+            'startDateTime' => $date,
+            'limitRegisterDate' => $limitDate,
+            'maxRegisterQty' => 10,
+            'registeredUser' => UserFactory::new()->createMany(9),
+            'etat' => $manager->getRepository(Etat::class)->findOneBy(['libelle' => ETAT::OPEN])
         ]);
         // Event en cours
         $dateDebut = EventFactory::faker()->dateTimeBetween('-1hour', 'now');

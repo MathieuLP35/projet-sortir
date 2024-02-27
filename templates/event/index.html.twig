@@ -56,7 +56,8 @@
                     <th>Informations de la sortie</th>
                     <th>Date de la sortie</th>
                     <th>Clôture</th>
-                    <th>Oganisateur</th>
+                    <th>Etat</th>
+                    <th>Organisateur</th>
                     <th>Inscrits/Places</th>
                     <th>Actions</th>
                 </tr>
@@ -64,6 +65,12 @@
             <tbody>
             {% for event in events %}
                 <tr>
+                    <td>
+                        {{ event.name }}
+                    </td>
+                    <td>{{ event.startDatetime ? event.startDatetime|date('d/m/Y H:i:s') : '' }}</td>
+                    <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('d/m/Y H:i:s') : '' }}</td>
+                    <td><a href="{{path('app_participant_profile', {'id': event.organiser.id})}}">{{ event.organiser.firstname }} {{ event.organiser.name }}</a></td>
                     <td>
                         <small
                                 {% if event.etat.libelle == constant('App\\Entity\\Etat::OPEN') %}
@@ -82,41 +89,39 @@
                         >
                             {{ event.etat.libelle }}
                         </small>
-
-                        {{ event.name }}
                     </td>
-                    <td>{{ event.startDatetime ? event.startDatetime|date('d/m/Y H:i:s') : '' }}</td>
-                    <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('d/m/Y H:i:s') : '' }}</td>
-                    <td><a href="{{path('app_participant_profile', {'id': event.organiser.id})}}">{{ event.organiser.firstname }} {{ event.organiser.name }}</a></td>
                     <td>{{ event.getRegisteredUser() | length }}/{{event.maxRegisterQty}}</td>
-                    <!-- Colonne Actions -->
                     <td>
 
-                    {% if event.etat.libelle == "Fermé"%}
+                    {% if event.etat.libelle == constant('App\\Entity\\Etat::CLOSED')%}
                         <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-secondary">Afficher</a>
                         {% else %}
                         <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info">Afficher</a>
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
 
-                            {% if not event.getRegisteredUser().contains(app.user) and event.etat.libelle != 'Annulé' and event.getRegisteredUser() | length < event.maxRegisterQty %}
+                            {% if not event.getRegisteredUser().contains(app.user) and event.etat.libelle != constant('App\\Entity\\Etat::CANCELLED') and event.getRegisteredUser() | length < event.maxRegisterQty %}
                                 <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary">S'inscrire</a>
-                            {% elseif event.getRegisteredUser().contains(app.user) and event.etat.libelle != 'Annulé' %}
+                            {% elseif event.getRegisteredUser().contains(app.user) and event.etat.libelle != constant('App\\Entity\\Etat::CANCELLED') %}
                                 <a href="{{ path('app_unregister_for_event', {'id': event.id}) }}" class="btn btn-danger">Se désister</a>
                             {% endif %}
 
 
 
                             {% if app.user == event.organiser %}
-                                {% if event.etat.libelle != 'Annulé' %}
+                                {% if event.etat.libelle != constant('App\\Entity\\Etat::CANCELLED') %}
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                             Gérer
                                         </button>
                                         <ul class="dropdown-menu">
+                                        {% if event.etat.libelle == constant('App\\Entity\\Etat::CREATED') %}
                                             <li><a href="{{ path('app_event_edit', {'id': event.id}) }}" class="dropdown-item">Modifier</a></li>
-                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a href="{{ path('app_event_edit', {'id': event.id}) }}" class="dropdown-item">Publier</a></li>
+                                        {% endif %}
+                                        {% if event.etat.libelle == constant('App\\Entity\\Etat::OPEN') or event.etat.libelle == constant('App\\Entity\\Etat::CLOSED')%}
                                             <li><a href="{{ path('app_cancel_event', {'id': event.id}) }}" class="dropdown-item">Annuler l'événement</a></li>
+                                        {% endif %}
                                         </ul>
                                     </div>
                                 {% endif %}

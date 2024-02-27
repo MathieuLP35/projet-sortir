@@ -39,27 +39,27 @@
         <div class="col">
             <div class="mb-3">
                 <label for="eventInfos" class="form-label fw-bold">Ville organisatrice:</label>
-                {{ event.places.city.name }}
+                {{ event.place.city.name }}
             </div>
             <div class="mb-3">
                 <label for="eventInfos" class="form-label fw-bold">Lieu:</label>
-                {{ event.places.name }}
+                {{ event.place.name }}
             </div>
             <div class="mb-3">
                 <label for="eventInfos" class="form-label fw-bold">Adresse:</label>
-                {{ event.places.address }}
+                {{ event.place.address }}
             </div>
             <div class="mb-3">
                 <label for="eventInfos" class="form-label fw-bold">Code Postal:</label>
-                {{ event.places.city.postalCode }}
+                {{ event.place.city.postalCode }}
             </div>
             <div class="mb-3">
                 <label for="eventInfos" class="form-label fw-bold">Latitude:</label>
-                {{ event.places.latitude }}
+                {{ event.place.latitude }}
             </div>
             <div class="mb-3">
                 <label for="eventInfos" class="form-label fw-bold">Longitude:</label>
-                {{ event.places.longitude }}
+                {{ event.place.longitude }}
             </div>
         </div>
     </div>
@@ -69,7 +69,6 @@
         <a class="btn btn-dark" href="{{ path('app_event_index') }}">Retour à la liste</a>
         {% if app.user == event.organiser %}
             <a class="btn btn-primary" href="{{ path('app_event_edit', {'id': event.id}) }}">Modifier</a>
-            {{ include('event/_delete_form.html.twig') }}
         {% endif %}
     </div>
 

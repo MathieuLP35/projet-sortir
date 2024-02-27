@@ -42,10 +42,20 @@ class EventController extends AbstractController
 
         $form = $this->createForm(EventFilterType::class);
         $form->handleRequest($request);
-        // if($event->getStartDatetime() < new \Datetime()){
-        //     $event->setEtats($event->PAST);
-        //     $entityManager->flush();
-        // }
+
+        foreach($events as $event){
+            if($event->getStartDatetime() < new \Datetime()){
+                $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::PAST]);
+                $event->setEtat($etat);
+                $entityManager->flush();
+            }
+
+            if($event->getRegisteredUser()->count() >= $event->getMaxRegisterQty()) {
+                $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
+                $event->setEtat($etat);
+                $entityManager->flush();
+            }
+        }
 
 
 
@@ -76,11 +86,6 @@ class EventController extends AbstractController
             }
 
             $events = $eventRepository->findByFilter($data);
-
-            return $this->render('event/index.html.twig', [
-                'events' => $events,
-                'form_event_filter' => $form->createView(),
-            ]);
         }
 
 
@@ -100,7 +105,7 @@ class EventController extends AbstractController
             return $this->redirectToRoute('app_event_index');
         }
 
-        $etats = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouvert']);
+        $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CREATED]);
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
@@ -144,6 +149,12 @@ class EventController extends AbstractController
             return $this->redirectToRoute('app_event_index');
         }
 
+
+        if($event->getEtat()->getLibelle() !== Etat::CREATED){
+            $this->addFlash('danger', 'Impossible de modifier une sortie publier');
+            return $this->redirectToRoute('app_event_index');
+        }
+
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
 
@@ -152,6 +163,7 @@ class EventController extends AbstractController
 
             return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
         }
+       
 
         return $this->render('event/edit.html.twig', [
             'event' => $event,
@@ -183,9 +195,14 @@ class EventController extends AbstractController
         if (!$event->getRegisteredUser()->contains($user)) {
             // Sinon, l'inscrire à l'événement
             $event->addRegisteredUser($user);
+
+            if ($event->getRegisteredUser()->count() >= $event->getMaxRegisterQty()) {
+                $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
+                $event->setEtat($etat);
+            }
+            $entityManager->flush();
         }
 
-        $entityManager->flush();
 
         // Redirigez l'utilisateur vers la liste des événements
         return $this->redirectToRoute('app_event_index');
@@ -200,7 +217,7 @@ class EventController extends AbstractController
         $now = new \DateTime();
         if ($now > $event->getLimitRegisterDate()) {
             // Rediriger l'utilisateur ou afficher un message d'erreur
-            $this->addFlash('danger', 'La date limite de désinscription est dépassée.');
+            $this->addFlash('danger', 'La date limite de désinscription est passcode.');
             return $this->redirectToRoute('app_event_index');
         }
 
@@ -208,9 +225,13 @@ class EventController extends AbstractController
         if ($event->getRegisteredUser()->contains($user)) {
             // Si l'utilisateur est déjà inscrit, le désinscrire
             $event->removeRegisteredUser($user);
-        }
 
-        $entityManager->flush();
+            if ($event->getRegisteredUser()->count() < $event->getMaxRegisterQty()) {
+                $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
+                $event->setEtat($etat);
+            }
+            $entityManager->flush();
+        }
 
         // Redirigez l'utilisateur vers la liste des événements
         return $this->redirectToRoute('app_event_index');
@@ -223,6 +244,12 @@ class EventController extends AbstractController
         $event = $entityManager->getRepository(Event::class)->find($id);
         if (!$event) {
             $this->addFlash('danger', 'Cette sortie n\'existe pas.');
+            return $this->redirectToRoute('app_event_index');
+        }
+     
+  
+        if($event->getEtat()->getLibelle() != Etat::OPEN && $event->getEtat()->getLibelle() != Etat::CLOSED){
+            $this->addFlash('danger', 'Impossible d\'annulé une sortie ouvert ou clotûré');
             return $this->redirectToRoute('app_event_index');
         }
 
