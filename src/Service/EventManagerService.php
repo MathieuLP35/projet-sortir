@@ -42,6 +42,7 @@ class EventManagerService
     private function calculateEventState(Event $event): Etat
     {
         $now = new \DateTime();
+<<<<<<< HEAD
         //var_dump('Current Time: ' . $now->format('Y-m-d H:i:s'));
 
         if ($event->getStartDatetime() > $now) {
@@ -81,5 +82,24 @@ class EventManagerService
 
         var_dump('Event is cancelled.');
         return $cancelledState;
+=======
+
+        $startDatetime = $event->getStartDatetime();
+        $duration = $event->getDuration(); // En minutes
+
+        $eventEndTime = (clone $startDatetime)->modify('+' . $duration . ' minutes');
+
+        if ($now > $startDatetime && $now < $eventEndTime) {
+            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::IN_PROGRESS]);
+        } else if ($now > $event->getStartDatetime()->modify('+' . $event->getDuration() . ' minutes')){
+            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::PAST]);
+        } else if ($now > $event->getLimitRegisterDate()) {
+            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
+        } else{
+            return $event->getEtat();
+        }
+
+
+>>>>>>> 0c189584f87a5b5bd9f9b401b491d178f9bd80f3
     }
 }

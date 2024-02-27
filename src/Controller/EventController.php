@@ -153,6 +153,32 @@ class EventController extends AbstractController
     }
 
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[Route('/{id}/publish', name: 'app_event_publish', methods: ['GET'])]
+    public function publish(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $event = $entityManager->getRepository(Event::class)->find($request->get('id'));
+        $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
+        $currentUser = $this->getUser();
+
+        if ($event->getOrganiser() !== $currentUser) {
+            $this->addFlash('danger', 'Vous n\'êtes pas autorisé à publier cette sortie.');
+            return $this->redirectToRoute('app_event_index');
+        }
+
+
+        if($event->getEtat()->getLibelle() !== Etat::CREATED){
+            $this->addFlash('danger', 'Impossible de publier une sortie publier');
+            return $this->redirectToRoute('app_event_index');
+        }
+
+        $event->setEtat($etat);
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_event_index');
+    }
+
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/{id}/register', name: 'app_register_for_event', methods: ['GET'])]
     public function registerForEvent(Event $event, EntityManagerInterface $entityManager, UserInterface $user): Response
     {

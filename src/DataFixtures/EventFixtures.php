@@ -24,6 +24,8 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
         $limitDate = new \DateTime();
         $limitDate->modify('+9 day');
 
+        $organiserUser = $manager->getRepository(User::class)->findOneBy(['email' => 'test@test.com']);
+
         $etat = $manager->getRepository(Etat::class)->findOneBy(['libelle' => ETAT::CLOSED]);
 
         EventFactory::createMany(10);
@@ -37,8 +39,6 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             'registeredUser' => UserFactory::new()->createMany(10),
             'etat' => $manager->getRepository(Etat::class)->findOneBy(['libelle' => ETAT::CLOSED])
         ]);
-
-        $organiserUser = $manager->getRepository(User::class)->findOneBy(['email' => 'test@test.com']);
 
         EventFactory::createOne([
             'name' => 'Randonnée en montagne',
@@ -58,7 +58,6 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             'duration' => 60,
             'maxRegisterQty' => 10,
             'registeredUser' => UserFactory::new()->createMany(9),
-            'organiser' => $organiserUser,
         ]);
         // création d'un event en cours
         $dateDebut = EventFactory::faker()->dateTimeBetween('-1hour', 'now');
