@@ -176,12 +176,11 @@ class EventController extends AbstractController
             $this->addFlash('danger', 'Impossible de modifier une sortie publier');
             return $this->redirectToRoute('app_event_index');
         }
-        
+
         $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
-        $event->setEtat($etat);
-        $entityManager->persist($event);
+        $event->setEtat($etat);       
         $entityManager->flush();
-       
+
 
         return $this->redirectToRoute('app_event_index');
     }

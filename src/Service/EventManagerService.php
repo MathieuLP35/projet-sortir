@@ -31,9 +31,7 @@ class EventManagerService
     {
         $now = new \DateTime();
 
-        if ($event->getStartDatetime() > $now) {
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CREATED]);
-        }
+
 
         $startDatetime = $event->getStartDatetime();
         $duration = $event->getDuration(); // En minutes
