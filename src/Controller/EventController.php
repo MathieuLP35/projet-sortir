@@ -255,8 +255,8 @@ class EventController extends AbstractController
         }
      
   
-        if($event->getEtat()->getLibelle() != Etat::OPEN && $event->getEtat()->getLibelle() != Etat::CLOSED){
-            $this->addFlash('danger', 'Impossible d\'annulé une sortie ouvert ou clotûré');
+        if($event->getEtat()->getLibelle() != Etat::OPEN && $event->getEtat()->getLibelle() != Etat::CREATED){
+            $this->addFlash('danger', 'Impossible d\'annulé une sortie ouverte ou créée');
             return $this->redirectToRoute('app_event_index');
         }
 
@@ -278,7 +278,7 @@ class EventController extends AbstractController
             $data = $form->getData();
 
             // Mettez à jour les informations d'annulation de l'événement
-            $event->setEtats($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CANCELLED]));
+            $event->setEtat($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CANCELLED]));
             $event->setEventInfos(sprintf(
                 "Événement annulé par l'organisateur. Motif : %s",
                 $data['cancellationReason']
