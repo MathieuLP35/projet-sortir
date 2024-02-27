@@ -30,7 +30,7 @@ class EventManagerService
     private function calculateEventState(Event $event): Etat
 {
     $now = new \DateTime();
-    var_dump('Current Time: ' . $now->format('Y-m-d H:i:s'));
+    //var_dump('Current Time: ' . $now->format('Y-m-d H:i:s'));
 
     if ($event->getStartDatetime() > $now) {
         //var_dump('Event name: ' . $event->getName());
@@ -43,7 +43,7 @@ class EventManagerService
     $eventEndTime = (clone $startDatetime)->modify('+' . $duration . ' minutes');
 
     if ($now > $startDatetime && $now < $eventEndTime) {
-        var_dump('Event is in progress.');
+        //var_dump('Event is in progress.');
         return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::IN_PROGRESS]);
     }
 
