@@ -3,7 +3,6 @@
 namespace App\DataFixtures;
 
 use App\Entity\Etat;
-use App\Entity\User;
 use App\Factory\EventFactory;
 use App\Factory\UserFactory;
 use App\Repository\EtatRepository;
@@ -38,8 +37,6 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             'etat' => $manager->getRepository(Etat::class)->findOneBy(['libelle' => ETAT::CLOSED])
         ]);
 
-        $organiserUser = $manager->getRepository(User::class)->findOneBy(['email' => 'test@test.com']);
-
         EventFactory::createOne([
             'name' => 'Randonnée en montagne',
             'startDateTime' => $date,
@@ -52,12 +49,11 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
         // création d'un event en cours
         EventFactory::createOne([
             'name' => 'Randonnée en montagne',
-            'startDateTime' => $now,
+            'startDateTime' => $now->modify('+1 hour'),
             'limitRegisterDate' => $limitDate,
             'duration' => 60,
             'maxRegisterQty' => 10,
             'registeredUser' => UserFactory::new()->createMany(9),
-            'organiser' => $organiserUser,
         ]);
 
         $dateDebut = EventFactory::faker()->dateTimeBetween('-1hour', 'now');
