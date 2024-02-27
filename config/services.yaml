@@ -6,6 +6,7 @@
 parameters:
     profile_pictures_directory: '%kernel.project_dir%/public/uploads/user_profile_pictures'
     app.path.user_profile_pictures: /uploads/images/user_profile_pictures
+    timezone: '%env(APP_TIMEZONE)%'
 services:
     # default configuration for services in *this* file
     _defaults:
