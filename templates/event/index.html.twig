@@ -69,8 +69,7 @@
                         {{ event.name }}
                     </td>
                     <td>{{ event.startDatetime ? event.startDatetime|date('d/m/Y H:i:s') : '' }}</td>
-                    <td>{{ event.limitRegisterDate ? event.limitRegisterDate|date('d/m/Y H:i:s') : '' }}</td>
-                    <td>Date de cloture (startDateTime + Duration)
+                    <td>{{ event.startDatetime|date_modify('+' ~ event.duration ~ ' min')|date('d/m/Y H:i:s') }}</td>
                     <td><a href="{{path('app_participant_profile', {'id': event.organiser.id})}}">{{ event.organiser.firstname }} {{ event.organiser.name }}</a></td>
                     <td>
                         <small
