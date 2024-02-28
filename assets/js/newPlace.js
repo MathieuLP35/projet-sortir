@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const savePlaceButton = document.getElementById('savePlaceButton');
+    const addPlaceModal = document.getElementById('addPlaceModal');
+
 
     // Récupérez le chemin de la route à partir de l'attribut data-route
     const savePlaceRoute = savePlaceButton.getAttribute('data-route');
@@ -41,18 +43,22 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify(placeData),
         })
-            .then(response => response.json())
-            .then(data => {
-                // Traitez la réponse du serveur ici
-                console.log(data);
-                // Fermez le modal si l'opération réussit
+        .then(response => response.json())
+        .then(data => {
+            // Traitez la réponse du serveur ici
+            console.log(data['place']);
+            // Fermez le modal si l'opération réussit
+            bootstrapModal.hide();
+            // Ajouter le nouveau lieu dans le select des lieux
+            const placeList = document.getElementById('event_place');
+            const newPlaceOption = document.createElement('option');
+            newPlaceOption.value = data['place'].id;
+            newPlaceOption.text = data['place'].name;
+            placeList.appendChild(newPlaceOption);
 
-                bootstrapModal.hide();
-
-            })
-            .catch(error => {
-                console.error('Erreur lors de l\'enregistrement du lieu:', error);
-                // Gérez les erreurs ici
-            });
+        })
+        .catch(error => {
+            console.error('Erreur lors de l\'enregistrement du lieu:', error);
+        });
     });
 });
