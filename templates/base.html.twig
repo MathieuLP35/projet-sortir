@@ -12,7 +12,11 @@
         {% block stylesheets %}{% endblock %}
 
         {% block javascripts %}
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwA=" crossorigin="anonymous"></script>
+
             {% block importmap %}{{ importmap('app') }}{% endblock %}
+
+            <script src="{{ asset('js/newPlace.js') }}"></script>
         {% endblock %}
     </head>
     <body>

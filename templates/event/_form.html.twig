@@ -1,52 +1,94 @@
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    {{ form_start(form) }}
-    {{ form_errors(form) }}
-    <div class="row mb-3">
-        <div class="col-6">
-            <div class="mb-3">
-                {{ form_label(form.name) }}
-                {{ form_widget(form.name) }}
-                {{ form_errors(form.name)}}
-            </div>
-            <div class="mb-3">
-                {{ form_label(form.startDatetime) }}
-                {{ form_widget(form.startDatetime) }}
-                {{ form_errors(form.startDatetime)}}
-            </div>
-            <div class="mb-3">
-                {{ form_label(form.limitRegisterDate) }}
-                {{ form_widget(form.limitRegisterDate) }}
-                {{ form_errors(form.limitRegisterDate)}}
-            </div>
-            <div class="mb-3">
-                {{ form_label(form.maxRegisterQty) }}
-                {{ form_widget(form.maxRegisterQty) }}
-                {{ form_errors(form.maxRegisterQty)}}
-            </div>
-            <div class="mb-3">
-                {{ form_label(form.duration) }}
-                {{ form_widget(form.duration) }}
-                {{ form_errors(form.duration)}}
-            </div>
-            <div class="mb-3">
-                {{ form_label(form.eventInfos) }}
-                {{ form_widget(form.eventInfos) }}
-                {{ form_errors(form.eventInfos)}}
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="mb-3">
-                {{ form_label(form.site) }}
-                {{ form_widget(form.site) }}
-                {{ form_errors(form.site)}}
-            </div>
-            <div class="mb-3">
-                {{ form_label(form.place) }}
-                {{ form_widget(form.place) }}
-                {{ form_errors(form.place)}}
-            </div>
-        </div>
-    </div>
-    <button class="btn btn-success">{{ button_label|default('Sauvegarder') }}</button>
-    {{ form_end(form) }}
-{% endif %}
+	{{ form_start(form) }}
+	{{ form_errors(form) }}
+	<div class="row mb-3">
+		<div class="col-6">
+			<div class="mb-3">
+				{{ form_label(form.name) }}
+				{{ form_widget(form.name) }}
+				{{ form_errors(form.name)}}
+			</div>
+			<div class="mb-3">
+				{{ form_label(form.startDatetime) }}
+				{{ form_widget(form.startDatetime) }}
+				{{ form_errors(form.startDatetime)}}
+			</div>
+			<div class="mb-3">
+				{{ form_label(form.limitRegisterDate) }}
+				{{ form_widget(form.limitRegisterDate) }}
+				{{ form_errors(form.limitRegisterDate)}}
+			</div>
+			<div class="mb-3">
+				{{ form_label(form.maxRegisterQty) }}
+				{{ form_widget(form.maxRegisterQty) }}
+				{{ form_errors(form.maxRegisterQty)}}
+			</div>
+			<div class="mb-3">
+				{{ form_label(form.duration) }}
+				{{ form_widget(form.duration) }}
+				{{ form_errors(form.duration)}}
+			</div>
+			<div class="mb-3">
+				{{ form_label(form.eventInfos) }}
+				{{ form_widget(form.eventInfos) }}
+				{{ form_errors(form.eventInfos)}}
+			</div>
+		</div>
+		<div class="col-6">
+			<div class="mb-3">
+				{{ form_label(form.site) }}
+				{{ form_widget(form.site) }}
+				{{ form_errors(form.site)}}
+			</div>
+			<div class="mb-3">
+				{{ form_label(form.place) }}
+				{{ form_widget(form.place) }}
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPlaceModal" >
+                    Ajouter un lieu
+                </button>
+				{{ form_errors(form.place)}}
+			</div>
+			<!-- Modal pour ajouter un lieu -->
+			<div class="modal fade" id="addPlaceModal" tabindex="-1" aria-labelledby="addPlaceModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="addPlaceModalLabel">Ajouter un nouveau lieu</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+						</div>
+						<div
+							class="modal-body">
+							<!-- Formulaire pour ajouter un nouveau lieu -->
+							<form id="addPlaceForm">
+								<div class="mb-3">
+									<label for="placeName" class="form-label">Nom du lieu</label>
+									<input type="text" class="form-control" id="placeName" name="placeName" required>
+								</div>
+
+								<div class="mb-3">
+									<label for="placeAddress" class="form-label">Adresse du lieu</label>
+									<input type="text" class="form-control" id="placeAddress" name="placeAddress" required>
+								</div>
+
+								<div class="mb-3">
+									<label for="placeLatitude" class="form-label">Latitude</label>
+									<input type="number" class="form-control" id="placeLatitude" name="placeLatitude" step="0.000001" required>
+								</div>
+
+								<div class="mb-3">
+									<label for="placeLongitude" class="form-label">Longitude</label>
+									<input type="number" class="form-control" id="placeLongitude" name="placeLongitude" step="0.000001" required>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+									<button type="button" class="btn btn-primary" id="savePlaceButton" data-route="{{ path('app_new_place') }}">Enregistrer</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<button class="btn btn-success">{{ button_label|default('Sauvegarder') }}</button>
+		{{ form_end(form) }}
+	{% endif %}
