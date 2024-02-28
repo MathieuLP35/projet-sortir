@@ -94,16 +94,16 @@
                     <td>
 
                     {% if event.etat.libelle == constant('App\\Entity\\Etat::CLOSED')%}
-                        <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-secondary">Afficher</a>
+                        <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-secondary m-1">Afficher</a>
                         {% else %}
-                        <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info">Afficher</a>
+                        <a href="{{ path('app_event_show', {'id': event.id}) }}" class="btn btn-info m-1">Afficher</a>
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
 
                             {% if not event.getRegisteredUser().contains(app.user) and event.etat.libelle != constant('App\\Entity\\Etat::CANCELLED') and event.getRegisteredUser() | length < event.maxRegisterQty %}
-                                <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary">S'inscrire</a>
+                                <a href="{{ path('app_register_for_event', {'id': event.id}) }}" class="btn btn-primary m-1">S'inscrire</a>
                             {% elseif event.getRegisteredUser().contains(app.user) and event.etat.libelle != constant('App\\Entity\\Etat::CANCELLED') %}
-                                <a href="{{ path('app_unregister_for_event', {'id': event.id}) }}" class="btn btn-danger">Se désister</a>
+                                <a href="{{ path('app_unregister_for_event', {'id': event.id}) }}" class="btn btn-danger m-1">Se désister</a>
                             {% endif %}
 
 
@@ -111,7 +111,7 @@
                             {% if app.user == event.organiser %}
                                 {% if event.etat.libelle != constant('App\\Entity\\Etat::CANCELLED') %}
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <button type="button" class="btn btn-warning dropdown-toggle m-1" data-bs-toggle="dropdown" aria-expanded="false">
                                             Gérer
                                         </button>
                                         <ul class="dropdown-menu">
