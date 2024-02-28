@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit City{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN') %}
+        <h1 class="mb-3">Modifier la ville</h1>
+        <div class="bg-filter-eni p-4">
+            {{ include('city/_form.html.twig') }}
+        </div>
+
+        <div class="d-flex justify-content-center gap-2 mt-4">
+            <a class="btn btn-dark" href="{{ path('app_city_index') }}">Retour à la liste</a>
+        </div>
+    {% endif %}
+{% endblock %}
