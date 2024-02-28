@@ -40,7 +40,7 @@ class EventFilterType extends AbstractType
                 'required' => false,
             ])
             ->add('organiser', CheckboxType::class, [
-                'label'    => 'organisateur(trice)',
+                'label'    => 'Organisateur(trice)',
                 'required' => false,
             ])
             ->add('isRegistered', CheckboxType::class, [
