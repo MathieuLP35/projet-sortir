@@ -11,9 +11,11 @@
 
         {% block stylesheets %}{% endblock %}
 
+
         {% block importmap %}{{ importmap('app') }}{% endblock %}
 
-        <script src="{{ asset('js/newPlace.js') }}"></script>
+        {% block javascripts %}
+          <script src="{{ asset('js/newPlace.js') }}"></script>
         {% endblock %}
     </head>
     <body>

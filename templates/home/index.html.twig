@@ -3,18 +3,16 @@
 {% block title %}Hello MainController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>D:/laragon/www/projet-sortir/src/Controller/MainController.php</code></li>
-        <li>Your template at <code>D:/laragon/www/projet-sortir/templates/main/index.html.twig</code></li>
-    </ul>
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <img src="https://media1.tenor.com/m/bmL21Em6rzsAAAAC/ha-ha-point.gif" alt="Les Simson Nelson: 'Ha Ha'">
+        </div>
+        <div class="col-6 bg-filter-eni p-3">
+            <h1>Au revoir {{app.user.username}}</h1>
+            <p class="fs-3">Tes vraiment trop chiant(e) et la communauté a décider de plus voir ta tronche.</p>
+        </div>
+    </div>
 </div>
 {% endblock %}
