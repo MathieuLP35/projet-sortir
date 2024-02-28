@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Etat;
 use App\Entity\Event;
+use App\Entity\Place;
 use App\Form\CancelEventType;
 use App\Form\EventFilterType;
 use App\Form\EventType;
@@ -17,15 +18,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/event')]
 class EventController extends AbstractController
 {
     private $entityManager;
+    private $validator;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, ValidatorInterface $validator)
     {
         $this->entityManager = $entityManager;
+        $this->validator = $validator;
     }
 
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
@@ -312,7 +316,7 @@ class EventController extends AbstractController
             $data = $form->getData();
 
             // Mettez à jour les informations d'annulation de l'événement
-            $event->setEtats($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CANCELLED]));
+            $event->setEtat($entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CANCELLED]));
             $event->setEventInfos(sprintf(
                 "Événement annulé par l'organisateur. Motif : %s",
                 $data['cancellationReason']
@@ -355,5 +359,35 @@ class EventController extends AbstractController
         $this->addFlash('success', 'La sortie a été supprimée avec succès.');
 
         return $this->redirectToRoute('app_event_index');
+    }
+
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[Route('/new-place', name: 'app_new_place', methods: ['GET', 'POST'])]
+    public function newPlace(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        // Créer une nouvelle instance de Place avec les données du formulaire
+        $place = new Place();
+        $place->setName($data['name']);
+        $place->setAddress($data['address']);
+        $place->setLatitude($data['latitude']);
+        $place->setLongitude($data['longitude']);
+
+        // Valider et persister l'entité Place
+        $errors = $this->validator->validate($place);
+
+        if (count($errors) > 0) {
+            // Gérer les erreurs de validation
+            $response = ['success' => false, 'errors' => $errors];
+        } else {
+            $entityManager->persist($place);
+            $entityManager->flush();
+
+            // Envoyer une réponse réussie avec les données du lieu créé
+            $response = ['success' => true, 'place' => $place];
+        }
+
+        return $this->json($response);
     }
 }

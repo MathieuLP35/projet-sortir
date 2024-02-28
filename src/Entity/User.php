@@ -44,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ password est obligatoire !')]
-    #[SecurityAssert\UserPassword(message: "Mot de passe incorrect !")]
+    #[SecurityAssert\UserPassword(message: 'Ce mot de passe est incorrect !')]
     #[Assert\NotCompromisedPassword]
     #[Assert\Type('string')]
     private ?string $password = null;
