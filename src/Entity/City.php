@@ -34,7 +34,6 @@ class City
     private ?string $postalCode = null;
 
     #[ORM\OneToMany(targetEntity: Place::class, mappedBy: 'city')]
-    #[Assert\Type('array')]
     private Collection $place;
 
     public function __construct()

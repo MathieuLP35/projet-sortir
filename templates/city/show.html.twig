@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}City{% endblock %}
+
+{% block body %}
+    <h1 class="mb-3">Ville</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Commune</th>
+                <td>{{ city.name }}</td>
+            </tr>
+            <tr>
+                <th>Code Postal</th>
+                <td>{{ city.postalCode }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-center gap-2 mt-4">
+        <a class="btn btn-dark" href="{{ path('app_city_index') }}">Retour à la liste</a>
+    </div>
+{% endblock %}
