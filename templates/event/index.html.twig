@@ -118,6 +118,7 @@
                                             {% if event.etat.libelle == constant('App\\Entity\\Etat::CREATED') %}
                                                 <li><a href="{{ path('app_event_edit', {'id': event.id}) }}" class="dropdown-item">Modifier</a></li>
                                                 <li><a href="{{ path('app_event_publish', {'id': event.id}) }}" class="dropdown-item">Publier</a></li>
+                                                <li><a href="{{ path('app_delete_event', {'id': event.id}) }}" class="dropdown-item">Supprimer l'événement</a></li>
                                             {% endif %}
                                             {% if event.etat.libelle == constant('App\\Entity\\Etat::CREATED') or event.etat.libelle == constant('App\\Entity\\Etat::OPEN') or event.etat.libelle == constant('App\\Entity\\Etat::CLOSED')%}
                                                 <li><a href="{{ path('app_cancel_event', {'id': event.id}) }}" class="dropdown-item">Annuler l'événement</a></li>
