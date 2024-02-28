@@ -1,16 +1,29 @@
 document.addEventListener('DOMContentLoaded', function () {
     const savePlaceButton = document.getElementById('savePlaceButton');
-    // const addPlaceForm = document.getElementById('addPlaceForm');
 
     // Récupérez le chemin de la route à partir de l'attribut data-route
     const savePlaceRoute = savePlaceButton.getAttribute('data-route');
 
+    const addPlaceModal = document.getElementById('addPlaceModal');
+    const bootstrapModal = new bootstrap.Modal(addPlaceModal);
+
     savePlaceButton.addEventListener('click', function () {
         // Récupérez les données du formulaire
-        const placeName = document.getElementById('placeName').value;
-        const placeAddress = document.getElementById('placeAddress').value;
-        const placeLatitude = document.getElementById('placeLatitude').value;
-        const placeLongitude = document.getElementById('placeLongitude').value;
+        const placeNameInput = document.getElementById('placeName');
+        const placeAddressInput = document.getElementById('placeAddress');
+        const placeLatitudeInput = document.getElementById('placeLatitude');
+        const placeLongitudeInput = document.getElementById('placeLongitude');
+
+        const placeName = placeNameInput.value;
+        const placeAddress = placeAddressInput.value;
+        const placeLatitude = parseFloat(placeLatitudeInput.value);
+        const placeLongitude = parseFloat(placeLongitudeInput.value);
+
+        // Vérifiez la longueur des données
+        if (placeName.length < 2 || placeAddress.length < 2) {
+            alert("Nom du lieu et Adresse du lieu doivent avoir au moins 2 caractères.");
+            return;
+        }
 
         // Créez un objet avec les données
         const placeData = {
@@ -18,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
             address: placeAddress,
             latitude: parseFloat(placeLatitude),
             longitude: parseFloat(placeLongitude)
-            // Ajoutez d'autres propriétés au besoin
         };
 
         // Envoyez une requête Ajax pour enregistrer le nouveau lieu
@@ -29,16 +41,18 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             body: JSON.stringify(placeData),
         })
-        .then(response => response.json())
-        .then(data => {
-            // Traitez la réponse du serveur ici
-            console.log(data);
-            // Fermez le modal si l'opération réussit
-            $('#addPlaceModal').modal('hide');
-        })
-        .catch(error => {
-            console.error('Erreur lors de l\'enregistrement du lieu:', error);
-            // Gérez les erreurs ici
-        });
+            .then(response => response.json())
+            .then(data => {
+                // Traitez la réponse du serveur ici
+                console.log(data);
+                // Fermez le modal si l'opération réussit
+
+                bootstrapModal.hide();
+
+            })
+            .catch(error => {
+                console.error('Erreur lors de l\'enregistrement du lieu:', error);
+                // Gérez les erreurs ici
+            });
     });
 });
