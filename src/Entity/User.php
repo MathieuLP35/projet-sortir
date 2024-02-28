@@ -281,4 +281,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->profilePictureFile = $profilePictureFile;
     }
+
+    public function __toString()
+    {
+        return  $this->isIsActive();
+    }
 }

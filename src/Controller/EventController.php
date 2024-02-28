@@ -32,10 +32,14 @@ class EventController extends AbstractController
         $this->validator = $validator;
     }
 
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/', name: 'app_event_index', methods: ['GET'])]
     public function index(Request $request, EventRepository $eventRepository, EventManagerService $eventManagerService): Response
-
     {
+        if($this->getUser()->isIsActive() === false){
+            return $this->redirectToRoute('app_home');
+        }
+
         $data = [];
         $events = $eventRepository->findByFilter($data);
 
@@ -89,6 +93,9 @@ class EventController extends AbstractController
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, MobileDetectorInterface $mobileDetector): Response
     {
+        if($this->getUser()->isIsActive() === false){
+            return $this->redirectToRoute('app_home');
+        }
 
         if ($mobileDetector->isMobile()) {
             $this->addFlash('danger', 'Vous ne pouvez pas créer une sortie depuis un mobile.');
@@ -119,6 +126,10 @@ class EventController extends AbstractController
     public function show(Event $event): Response
     {
 
+        if($this->getUser()->isIsActive() === false){
+            return $this->redirectToRoute('app_home');
+        }
+
         $participants = $event->getRegisteredUser();
 
         return $this->render('event/show.html.twig', [
@@ -131,6 +142,9 @@ class EventController extends AbstractController
     #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
+        if($this->getUser()->isIsActive() === false){
+            return $this->redirectToRoute('app_home');
+        }
 
         // Vérifier si l'utilisateur connecté est l'organisateur de l'événement
         $currentUser = $this->getUser();
@@ -165,6 +179,10 @@ class EventController extends AbstractController
     #[Route('/{id}/publish', name: 'app_event_publish', methods: ['GET'])]
     public function publish(Request $request, EntityManagerInterface $entityManager): Response
     {
+        if($this->getUser()->isIsActive() === false){
+            return $this->redirectToRoute('app_home');
+        }
+
         $event = $entityManager->getRepository(Event::class)->find($request->get('id'));
         $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
         $currentUser = $this->getUser();
@@ -191,6 +209,9 @@ class EventController extends AbstractController
     #[Route('/{id}/register', name: 'app_register_for_event', methods: ['GET'])]
     public function registerForEvent(Event $event, EntityManagerInterface $entityManager, UserInterface $user): Response
     {
+        if($this->getUser()->isIsActive() === false){
+            return $this->redirectToRoute('app_home');
+        }
 
         // Vérifier si la date de clôture des inscriptions est dépassée
         $now = new \DateTime();
@@ -229,6 +250,10 @@ class EventController extends AbstractController
     public function unregisterForEvent(Event $event, EntityManagerInterface $entityManager, UserInterface $user): Response
     {
 
+        if($this->getUser()->isIsActive() === false){
+            return $this->redirectToRoute('app_home');
+        }
+
         // Vérifier si la date de clôture des inscriptions est dépassée
         $now = new \DateTime();
         if ($now > $event->getLimitRegisterDate()) {
@@ -257,6 +282,10 @@ class EventController extends AbstractController
     #[Route('/{id}/cancel', name: 'app_cancel_event', methods: ['GET', 'POST'])]
     public function cancelEvent(int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
+        if($this->getUser()->isIsActive() === false){
+            return $this->redirectToRoute('app_home');
+        }
+
         $event = $entityManager->getRepository(Event::class)->find($id);
         if (!$event) {
             $this->addFlash('danger', 'Cette sortie n\'existe pas.');
@@ -307,6 +336,9 @@ class EventController extends AbstractController
     #[Route('/{id}/delete', name: 'app_delete_event', methods: ['GET'])]
     public function deleteEvent(Event $event, EntityManagerInterface $entityManager): Response
     {
+        if($this->getUser()->isIsActive() === false){
+            return $this->redirectToRoute('app_home');
+        }
         // Vérifier si l'utilisateur connecté est l'organisateur de l'événement
         $currentUser = $this->getUser();
         if ($event->getOrganiser() !== $currentUser) {
