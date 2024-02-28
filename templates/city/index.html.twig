@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}City index{% endblock %}
+
+{% block body %}
+    <h1 class="mb-3">Ville</h1>
+    <div class="bg-filter-eni p-4">
+        {{ form_start(form_city_filter, {'action': path('app_city_index'), 'method': 'GET'}) }}
+        <div class="my-custom-class-for-errors">
+            {{ form_errors(form_city_filter) }}
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <h2 class="fs-5">Filtrer les communes:</h2>
+                    {{ form_row(form_city_filter.name) }}
+                    {{ form_row(form_city_filter.save) }}
+                </div>
+            </div>
+        </div>
+        {{ form_end(form_city_filter) }}
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Commune</th>
+                <th>Code postal</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for city in cities %}
+            <tr>
+                <td>{{ city.name }}</td>
+                <td>{{ city.postalCode }}</td>
+                <td>
+                    <a class="btn btn-info" href="{{ path('app_city_show', {'id': city.id}) }}">Afficher</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a class="btn btn-warning" href="{{ path('app_city_edit', {'id': city.id}) }}">Modifier</a>
+                        <form method="post" action="{{ path('app_city_delete', {'id': city.id}) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ city.id) }}">
+                            <button class="btn btn-danger">Supprimer</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Aucune ville trouvée</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            {{ form_start(form) }}
+            <div class="my-custom-class-for-errors">
+                {{ form_errors(form) }}
+            </div>
+            <td>{{ form_row(form.name) }}</td>
+            <td>{{ form_row(form.postalCode) }}</td>
+            <td>
+                {{ form_row(form.save, {'label': 'Ajouter'}) }}
+            </td>
+            {{ form_end(form) }}
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}
