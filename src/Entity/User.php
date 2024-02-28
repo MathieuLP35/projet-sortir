@@ -44,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ password est obligatoire !')]
-    #[SecurityAssert\UserPassword(type: "mixed", message: "Mot de passe incorrect !")]
+    #[SecurityAssert\UserPassword(message: "Mot de passe incorrect !")]
     #[Assert\NotCompromisedPassword]
     #[Assert\Type('string')]
     private ?string $password = null;
@@ -280,5 +280,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setProfilePictureFile(?File $profilePictureFile): void
     {
         $this->profilePictureFile = $profilePictureFile;
+    }
+
+    public function __toString()
+    {
+        return  $this->isIsActive();
     }
 }
