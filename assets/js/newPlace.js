@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
     const savePlaceButton = document.getElementById('savePlaceButton');
-    const addPlaceModal = document.getElementById('addPlaceModal');
-
 
     // Récupérez le chemin de la route à partir de l'attribut data-route
     const savePlaceRoute = savePlaceButton.getAttribute('data-route');
