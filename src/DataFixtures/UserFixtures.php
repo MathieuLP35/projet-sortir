@@ -20,6 +20,16 @@ class UserFixtures extends Fixture
             'name' => 'Test',
             'username' => 'testuser',
             'isActive' => 1,
+            
+        ]);
+
+        UserFactory::createOne([
+            'email' => 'testadmin@test.com',
+            'firstname' => 'testAdmin',
+            'name' => 'TestAdmin',
+            'username' => 'testAdmin',
+            'isActive' => 1,
+            'roles' => ["ROLE_ADMIN"]
         ]);
     }
 }
