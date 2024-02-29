@@ -178,13 +178,12 @@ class EventController extends AbstractController
 
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/{id}/publish', name: 'app_event_publish', methods: ['GET'])]
-    public function publish(Request $request, EntityManagerInterface $entityManager): Response
+    public function publish(Event $event, Request $request, EntityManagerInterface $entityManager): Response
     {
         if($this->getUser()->isIsActive() === false){
             return $this->redirectToRoute('app_home');
         }
 
-        $event = $entityManager->getRepository(Event::class)->find($request->get('id'));
         $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
         $currentUser = $this->getUser();
 
@@ -294,14 +293,14 @@ class EventController extends AbstractController
         }
 
 
-        if ($event->getEtat()->getLibelle() != Etat::OPEN && $event->getEtat()->getLibelle() != Etat::CLOSED) {
+        if ($event->getEtat()->getLibelle() == Etat::OPEN && $event->getEtat()->getLibelle() == Etat::CLOSED) {
             $this->addFlash('danger', 'Impossible d\'annulé une sortie ouvert ou clotûré');
             return $this->redirectToRoute('app_event_index');
         }
 
         // Vérifier si l'utilisateur connecté est l'organisateur de l'événement
         $currentUser = $this->getUser();
-        if ($event->getOrganiser() !== $currentUser) {
+        if ($event->getOrganiser() !== $currentUser && !$this->isGranted('ROLE_ADMIN')) {
             $this->addFlash('danger', 'Vous n\'êtes pas autorisé à annuler cette sortie.');
             return $this->redirectToRoute('app_event_index');
         }

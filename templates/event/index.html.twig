@@ -108,7 +108,7 @@
 
 
 
-                            {% if app.user == event.organiser %}
+                            {% if app.user == event.organiser or is_granted('ROLE_ADMIN') %}
                                 {% if event.etat.libelle == constant('App\\Entity\\Etat::CREATED') or event.etat.libelle == constant('App\\Entity\\Etat::OPEN') %}
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-warning dropdown-toggle m-1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -120,7 +120,7 @@
                                                 <li><a href="{{ path('app_event_publish', {'id': event.id}) }}" class="dropdown-item">Publier</a></li>
                                                 <li><a href="{{ path('app_delete_event', {'id': event.id}) }}" class="dropdown-item">Supprimer l'événement</a></li>
                                             {% endif %}
-                                            {% if event.etat.libelle == constant('App\\Entity\\Etat::CREATED') or event.etat.libelle == constant('App\\Entity\\Etat::OPEN') or event.etat.libelle == constant('App\\Entity\\Etat::CLOSED')%}
+                                            {% if event.etat.libelle == constant('App\\Entity\\Etat::CREATED') or event.etat.libelle == constant('App\\Entity\\Etat::OPEN') or event.etat.libelle == constant('App\\Entity\\Etat::CLOSED') %}
                                                 <li><a href="{{ path('app_cancel_event', {'id': event.id}) }}" class="dropdown-item">Annuler l'événement</a></li>
                                             {% endif %}
                                         </ul>
@@ -144,25 +144,5 @@
     {% if not is_mobile() %}
         <a class="btn btn-success" href="{{ path('app_event_new') }}">Créer une sortie</a>
     {% endif %}
-
-    <script>
-
-        let isRegistered = document.getElementById('event_filter_isRegistered');
-        let isNotRegistered = document.getElementById('event_filter_isNotRegistered');
-
-        isRegistered.addEventListener('change', function() {
-            if (isRegistered.checked) {
-                isNotRegistered.checked = false;
-            }
-        });
-
-        isNotRegistered.addEventListener('change', function() {
-            if (isNotRegistered.checked) {
-                isRegistered.checked = false;
-            }
-        });
-
-    </script>
-
 
 {% endblock %}
