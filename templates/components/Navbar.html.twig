@@ -16,7 +16,8 @@
                     <ul class="navbar-nav me-auto text-light">
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                             {% if app.user.isActive == true %}
-                            <li class="nav-item"><a href="{{ path('app_event_index') }}" class="nav-link fs-5">Événement</a></li>
+                                <li class="nav-item"><a href="{{ path('app_event_index') }}" class="nav-link fs-5">Événement</a></li>
+                                <li class="nav-item"><a href="{{ path('app_city_index') }}" class="nav-link fs-5">Ville</a></li>
                             {% endif %}
                             <li class="nav-item"><a href="{{ path('app_user_profile') }}" class="nav-link fs-5">Profil</a></li>
                             <li class="nav-item"><a href="{{ path('app_logout') }}" class="nav-link fs-5">Se déconnecter</a></li>
