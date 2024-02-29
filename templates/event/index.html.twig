@@ -1,8 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Event index{% endblock %}
+{% block title %}Event index
+{% endblock %}
 
 {% block body %}
+
 
     <div class="bg-filter-eni p-4">
         {{ form_start(form_event_filter, {'action': path('app_event_index'), 'method': 'GET'}) }}
