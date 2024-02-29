@@ -35,14 +35,17 @@ class EventManagerService
         $duration = $event->getDuration(); // En minutes
 
         $eventEndTime = (clone $startDatetime)->modify('+' . $duration . ' minutes');
-
-        if ($now > $startDatetime && $now < $eventEndTime) {
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::IN_PROGRESS]);
-        } else if ($now > $event->getStartDatetime()->modify('+' . $event->getDuration() . ' minutes')){
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::PAST]);
-        } else if ($now > $event->getLimitRegisterDate()) {
-            return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
-        } else{
+        if($event->getEtat() != Etat::PAST || $event->getEtat() != Etat::CANCELLED){
+            if ($now > $startDatetime && $now < $eventEndTime) {
+                return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::IN_PROGRESS]);
+            } else if ($now > $event->getStartDatetime()->modify('+' . $event->getDuration() . ' minutes')){
+                return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::PAST]);
+            } else if ($now > $event->getLimitRegisterDate()) {
+                return $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
+            } else{
+                return $event->getEtat();
+            }
+        }else{
             return $event->getEtat();
         }
 
