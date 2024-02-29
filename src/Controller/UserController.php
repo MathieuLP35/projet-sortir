@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\User1Type;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,12 +17,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class UserController extends AbstractController
 {
-
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/profile', name: 'app_user_profile')]
     public function profile(EntityManagerInterface $entityManager, Request $request): Response
     {
-        /** @var $user User */
         $user = $this->getUser();
 
         $form = $this->createForm(UserType::class, $user);
@@ -46,6 +43,7 @@ class UserController extends AbstractController
                     // Mettez à jour le chemin du fichier dans l'entité User
                     $user->setProfilePicture($newFilename);
                 } catch (FileException $e) {
+                    dd($e);
                     $this->addFlash('error', 'Erreur lors du téléchargement de la photo de profil.');
                     return $this->redirectToRoute('app_user_profile');
                 }
@@ -63,7 +61,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/profile.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form,
             'user' => $user,
         ]);
     }
