@@ -42,6 +42,9 @@ class EventController extends AbstractController
         }
 
         $data = [];
+
+        $data['user'] = $this->getUser();
+
         $events = $eventRepository->findByFilter($data);
 
         // Appel de la méthode pour mettre à jour les états des événements

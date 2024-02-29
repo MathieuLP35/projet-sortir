@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Etat;
 use App\Entity\Event;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -26,8 +27,17 @@ class EventRepository extends ServiceEntityRepository
     public function findByFilter($data)
     {
         $query = $this->createQueryBuilder('e');
+
         $query->andWhere('e.startDatetime >= :date')
         ->setParameter('date', new \DateTime('-1 month'));
+
+        // cacher tous les événements sauf si je suis participant ou organisateur et les évènement ouvert
+        $query->leftJoin('e.registeredUser', 'ru')
+            ->leftJoin('e.organiser', 'o')
+            ->andWhere('e.etat = :etat')
+            ->setParameter('etat', Etat::OPEN)
+            ->orWhere('ru = :user OR o = :user')
+            ->setParameter('user', $data['user']);
 
         if (isset($data['sites'])) {
             $query->andWhere('e.site = :sites')
