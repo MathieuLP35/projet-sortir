@@ -210,74 +210,19 @@ class EventController extends AbstractController
 
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/{id}/register', name: 'app_register_for_event', methods: ['GET'])]
-    public function registerForEvent(Event $event, EntityManagerInterface $entityManager, UserInterface $user): Response
+    public function registerForEvent(Event $event, EventManagerService $eventManagerService): Response
     {
-        if($this->getUser()->isIsActive() === false){
-            return $this->redirectToRoute('app_home');
-        }
-
-        // Vérifier si la date de clôture des inscriptions est dépassée
-        $now = new \DateTime();
-        if ($now > $event->getLimitRegisterDate()) {
-            // Rediriger l'utilisateur ou afficher un message d'erreur
-            $this->addFlash('danger', 'La date limite d\'inscription est dépassée.');
-            return $this->redirectToRoute('app_event_index');
-        }
-
-        // Vérifier si le nombre maximum d'inscrits est atteint
-        if ($event->getRegisteredUser()->count() >= $event->getMaxRegisterQty()) {
-            // Maximum atteint, afficher un message d'erreur
-            $this->addFlash('danger', 'Le nombre maximum d\'inscrits est atteint pour cet événement.');
-            return $this->redirectToRoute('app_event_index');
-        }
-
-        // code pour gérer l'inscription de l'utilisateur à l'événement
-        if (!$event->getRegisteredUser()->contains($user)) {
-            // Sinon, l'inscrire à l'événement
-            $event->addRegisteredUser($user);
-
-            if ($event->getRegisteredUser()->count() >= $event->getMaxRegisterQty()) {
-                $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
-                $event->setEtat($etat);
-            }
-            $entityManager->flush();
-        }
-
-
-        // Redirigez l'utilisateur vers la liste des événements
+        $eventCheck = $eventManagerService->registerUserToEvent($event, $this->getUser());
+        $this->addFlash('success', $eventCheck->getContent());
         return $this->redirectToRoute('app_event_index');
     }
 
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/{id}/unregister', name: 'app_unregister_for_event', methods: ['GET'])]
-    public function unregisterForEvent(Event $event, EntityManagerInterface $entityManager, UserInterface $user): Response
+    public function unregisterForEvent(Event $event, EventManagerService $eventManagerService): Response
     {
-
-        if($this->getUser()->isIsActive() === false){
-            return $this->redirectToRoute('app_home');
-        }
-
-        // Vérifier si la date de clôture des inscriptions est dépassée
-        $now = new \DateTime();
-        if ($now > $event->getLimitRegisterDate()) {
-            // Rediriger l'utilisateur ou afficher un message d'erreur
-            $this->addFlash('danger', 'La date limite de désinscription est passcode.');
-            return $this->redirectToRoute('app_event_index');
-        }
-
-        // code pour gérer l'inscription de l'utilisateur à l'événement
-        if ($event->getRegisteredUser()->contains($user)) {
-            // Si l'utilisateur est déjà inscrit, le désinscrire
-            $event->removeRegisteredUser($user);
-
-            if ($event->getRegisteredUser()->count() < $event->getMaxRegisterQty()) {
-                $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
-                $event->setEtat($etat);
-            }
-            $entityManager->flush();
-        }
-
-        // Redirigez l'utilisateur vers la liste des événements
+        $eventCheck = $eventManagerService->registerUserToEvent($event, $this->getUser());
+        $this->addFlash('success', $eventCheck->getContent());
         return $this->redirectToRoute('app_event_index');
     }
 
@@ -363,35 +308,4 @@ class EventController extends AbstractController
 
         return $this->redirectToRoute('app_event_index');
     }
-
-    #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    #[Route('/new-place', name: 'app_new_place', methods: ['GET', 'POST'])]
-    public function newPlace(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $data = json_decode($request->getContent(), true);
-
-        // Créer une nouvelle instance de Place avec les données du formulaire
-        $place = new Place();
-        $place->setName($data['name']);
-        $place->setAddress($data['address']);
-        $place->setLatitude($data['latitude']);
-        $place->setLongitude($data['longitude']);
-
-        // Valider et persister l'entité Place
-        $errors = $this->validator->validate($place);
-
-        if (count($errors) > 0) {
-            // Gérer les erreurs de validation
-            $response = ['success' => false, 'errors' => $errors];
-        } else {
-            $entityManager->persist($place);
-            $entityManager->flush();
-
-            // Envoyer une réponse réussie avec les données du lieu créé
-            $response = ['success' => true, 'place' => $place];
-        }
-
-        return $this->json($response);
-    }
-
 }

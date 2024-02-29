@@ -4,9 +4,14 @@ namespace App\Service;
 
 use App\Entity\Etat;
 use App\Entity\Event;
+use App\Entity\User;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class EventManagerService
 {
@@ -48,7 +53,53 @@ class EventManagerService
         }else{
             return $event->getEtat();
         }
-
-
     }
+
+    // création du méthode permettant de gérer l'inscription d'un utilisateur à un évènement
+
+    /**
+     * @throws \Exception
+     */
+    public function registerUserToEvent(Event $event, UserInterface $user): Response
+    {
+        $now = new \DateTime();
+
+        if ($event->getRegisteredUser()->contains($user)) {
+            if ($now > $event->getLimitRegisterDate()) {
+                // Rediriger l'utilisateur ou afficher un message d'erreur
+                return new Response('La date limite de désinscription est passé.', 400);
+            }
+
+            $event->removeRegisteredUser($user);
+
+            if ($event->getRegisteredUser()->count() < $event->getMaxRegisterQty()) {
+                $etat = $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::OPEN]);
+                $event->setEtat($etat);
+            }
+            $this->entityManager->flush();
+            return new Response('Vous êtes désinscrit de l\'évènement', 200);
+        } else {
+
+            if ($event->getRegisteredUser()->count() >= $event->getMaxRegisterQty()) {
+                // Maximum atteint, afficher un message d'erreur
+                return new Response('Le nombre maximum de participants est atteint.', 400);
+            }
+
+            if ($now > $event->getLimitRegisterDate()) {
+                // Rediriger l'utilisateur ou afficher un message d'erreur
+                return new Response('La date limite de d\'inscription est passé.', 400);
+            }
+
+            $event->addRegisteredUser($user);
+
+            if ($event->getRegisteredUser()->count() >= $event->getMaxRegisterQty()) {
+                $etat = $this->entityManager->getRepository(Etat::class)->findOneBy(['libelle' => Etat::CLOSED]);
+                $event->setEtat($etat);
+            }
+
+            $this->entityManager->flush();
+            return new Response('Vous êtes inscrit à l\'évènement', 200);
+        }
+    }
+
 }

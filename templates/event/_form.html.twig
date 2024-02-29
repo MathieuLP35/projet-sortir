@@ -90,7 +90,7 @@
 							</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-								<button type="button" class="btn btn-primary" id="savePlaceButton" data-route="{{ path('app_new_place') }}">Enregistrer</button>
+								<button type="button" class="btn btn-primary" id="savePlaceButton" data-route="{{ path('app_place_new') }}">Enregistrer</button>
 							</div>
 						</form>
 					</div>
@@ -98,3 +98,4 @@
 			</div>
 		</div>
 	{% endif %}
+		<script src="{{ asset('js/newPlace.js') }}"></script>

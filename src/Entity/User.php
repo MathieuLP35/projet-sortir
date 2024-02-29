@@ -30,7 +30,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ email est obligatoire !')]
     #[Assert\Email(message: 'Un email est attendu ici !')]
-    #[Assert\NoSuspiciousCharacters]
     #[Assert\Type('string')]
     private ?string $email = null;
 
@@ -42,8 +41,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
-    #[Assert\NotBlank]
-    #[Assert\NotNull(message: 'Le champ password est obligatoire !')]
     #[Assert\NotCompromisedPassword]
     #[Assert\Type('string')]
     private ?string $password = null;
@@ -52,7 +49,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ nom est obligatoire !')]
     #[Assert\Length(min: 2, max: 30, maxMessage: 'Ce champ peut contenir jusqu\'à 30 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
-    #[Assert\NoSuspiciousCharacters]
     #[Assert\Type('string')]
     private ?string $name = null;
 
@@ -60,7 +56,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ nom est obligatoire !')]
     #[Assert\Length(min: 2, max: 30, maxMessage: 'Ce champ peut contenir jusqu\'à 30 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
-    #[Assert\NoSuspiciousCharacters]
     #[Assert\Type('string')]
     private ?string $firstname = null;
 
@@ -68,7 +63,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     #[Assert\NotNull(message: 'Le champ nom est obligatoire !')]
     #[Assert\Length(min: 2, max: 30, maxMessage: 'Ce champ peut contenir jusqu\'à 30 caractères !', minMessage: 'Ce champ peut contenir auminimum 2 caractères !')]
-    #[Assert\NoSuspiciousCharacters]
     #[Assert\Type('string')]
     private ?string $phone = null;
 
@@ -77,8 +71,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?bool $isActive = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    #[Assert\NoSuspiciousCharacters]
-    #[Assert\Type('string')]
     private ?string $profilePicture = null;
 
     /**
@@ -90,12 +82,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'isRegister')]
-    #[Assert\Type('array')]
     private Collection $events;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NoSuspiciousCharacters]
-    #[Assert\Unique(message: "Ce pseudo est déjà utilisé !")]
     #[Assert\Type('string')]
     private ?string $username = null;
 
