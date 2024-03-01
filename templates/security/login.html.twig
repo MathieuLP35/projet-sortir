@@ -32,18 +32,18 @@
     </div>
 
     <div class="row justify-content-center">
-        <div class="d-flex justify-content-center col-12 col-md-2">
+        <div class="d-flex justify-content-center col-12 col-lg-2">
             <button class="btn  btn-primary  btn-lg" type="submit">
                 Se connecter
             </button>
         </div>
-        <div class="col-2">
-            <label class="d-block my-3">
+        <div class="row col-6 col-lg-2">
+            <label class="d-block my-3 text-center">
                 <input type="checkbox" name="_remember_me" checked>
                 Se souvenir de moi
             </label>
 
-            <a href="{{path('app_forgot_password_request')}}"> Mot de passe oublier !</a>
+            <a class="text-center" href="{{path('app_forgot_password_request')}}"> Mot de passe oublier !</a>
         </div>
     </div>
 
