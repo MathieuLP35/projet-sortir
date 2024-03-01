@@ -55,8 +55,6 @@ class EventManagerService
         }
     }
 
-    // création du méthode permettant de gérer l'inscription d'un utilisateur à un évènement
-
     /**
      * @throws \Exception
      */
@@ -66,7 +64,6 @@ class EventManagerService
 
         if ($event->getRegisteredUser()->contains($user)) {
             if ($now > $event->getLimitRegisterDate()) {
-                // Rediriger l'utilisateur ou afficher un message d'erreur
                 return new Response('La date limite de désinscription est passé.', 400);
             }
 
@@ -81,12 +78,10 @@ class EventManagerService
         } else {
 
             if ($event->getRegisteredUser()->count() >= $event->getMaxRegisterQty()) {
-                // Maximum atteint, afficher un message d'erreur
                 return new Response('Le nombre maximum de participants est atteint.', 400);
             }
 
             if ($now > $event->getLimitRegisterDate()) {
-                // Rediriger l'utilisateur ou afficher un message d'erreur
                 return new Response('La date limite de d\'inscription est passé.', 400);
             }
 
