@@ -6,15 +6,15 @@
     <h1 class="mb-3">Mon Profil</h1>
 
     <div class="row">
-        <div class="col-12 col-md-6 d-flex justify-content-center">
+        <div class="col-12 col-md-6 d-flex justify-content-center align-items-center align-items-sm-center align-items-md-stretch align-items-lg-stretch">
             {% if user.getProfilePicture() %}
-                <img src="{{ asset('uploads/user_profile_pictures/' ~ user.getProfilePicture()) }}" class="img-fluid" alt="Photo de profil">
+                <img src="{{ asset('uploads/user_profile_pictures/' ~ user.getProfilePicture()) }}" class="img-fluid img-thumbnail min-vw-20 h-50" alt="Photo de profil">
             {% else %}
                 {# Afficher une image par défaut si l'utilisateur n'a pas de photo de profil #}
-                <img src="{{ asset('uploads/user_profile_pictures/default_profile_picture.png') }}" class="img-fluid" alt="Photo de profil par défaut">
+                <img src="{{ asset('uploads/user_profile_pictures/default_profile_picture.png') }}" class="img-fluid img-thumbnail min-vw-20 h-55" alt="Photo de profil par défaut">
             {% endif %}
         </div>
-        <div class="col-12 col-md-4 bg-filter-eni p-4">
+        <div class="col-12 col-md-6 bg-filter-eni p-4">
             {{ form_start(form) }}
 
             <div class="form-row">
