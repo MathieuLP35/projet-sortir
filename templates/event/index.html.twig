@@ -52,7 +52,7 @@
     <hr>
 
     <div class="table-responsive">
-        <table class="table align-middle mt-3">
+        <table class="table table-mobile-responsive table-mobile-sided align-middle mt-3">
             <thead>
                 <tr>
                     <th>Informations de la sortie</th>
@@ -67,13 +67,13 @@
             <tbody>
             {% for event in events %}
                 <tr>
-                    <td>
+                    <td data-content="Information">
                         {{ event.name }}
                     </td>
-                    <td>{{ event.startDatetime ? event.startDatetime|date('d/m/Y H:i:s') : '' }}</td>
-                    <td>{{ event.startDatetime|date_modify('+' ~ event.duration ~ ' min')|date('d/m/Y H:i:s') }}</td>
-                    <td><a href="{{path('app_participant_profile', {'id': event.organiser.id})}}">{{ event.organiser.firstname }} {{ event.organiser.name }}</a></td>
-                    <td>
+                    <td data-content="Débute le">{{ event.startDatetime ? event.startDatetime|date('d/m/Y H:i:s') : '' }}</td>
+                    <td data-content="Clôture le">{{ event.startDatetime|date_modify('+' ~ event.duration ~ ' min')|date('d/m/Y H:i:s') }}</td>
+                    <td data-content="Organisateur"><a href="{{path('app_participant_profile', {'id': event.organiser.id})}}">{{ event.organiser.firstname }} {{ event.organiser.name }}</a></td>
+                    <td data-content="Etat">
                         <small
                                 {% if event.etat.libelle == constant('App\\Entity\\Etat::OPEN') %}
                                     class="badge rounded-pill text-bg-success"
@@ -92,8 +92,8 @@
                             {{ event.etat.libelle }}
                         </small>
                     </td>
-                    <td>{{ event.getRegisteredUser() | length }}/{{event.maxRegisterQty}}</td>
-                    <td>
+                    <td data-content="Inscrits/Places">{{ event.getRegisteredUser() | length }}/{{event.maxRegisterQty}}</td>
+                    <td data-content="Actions">
 
 
 
