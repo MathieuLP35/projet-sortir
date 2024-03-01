@@ -3,7 +3,7 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-<form method="post" class="vh-100">
+<form method="post">
 
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
@@ -37,7 +37,7 @@
                 Se connecter
             </button>
         </div>
-        <div class="row col-6 col-lg-2">
+        <div class="row col-4 col-lg-2">
             <label class="d-block my-3 text-center">
                 <input type="checkbox" name="_remember_me" checked>
                 Se souvenir de moi
