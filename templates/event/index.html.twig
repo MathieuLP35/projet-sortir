@@ -72,7 +72,7 @@
                     </td>
                     <td data-content="Débute le">{{ event.startDatetime ? event.startDatetime|date('d/m/Y H:i:s') : '' }}</td>
                     <td data-content="Clôture le">{{ event.startDatetime|date_modify('+' ~ event.duration ~ ' min')|date('d/m/Y H:i:s') }}</td>
-                    <td data-content="Organisateur"><a href="{{path('app_participant_profile', {'id': event.organiser.id})}}">{{ event.organiser.firstname }} {{ event.organiser.name }}</a></td>
+                    <td data-content="Organisateur"><a class="text-decoration-none table-link" href="{{path('app_participant_profile', {'id': event.organiser.id})}}">{{ event.organiser.firstname }} {{ event.organiser.name }}</a></td>
                     <td data-content="Etat">
                         <small
                                 {% if event.etat.libelle == constant('App\\Entity\\Etat::OPEN') %}

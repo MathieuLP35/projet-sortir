@@ -40,6 +40,16 @@ body{
     --bs-table-bg: rgba(36, 48, 80, 0.08);
 }
 
+.table-link{
+    color: rgba(36, 48, 80, 0.85);
+    transition: color 0.2s;
+}
+
+.table-link:hover{
+    color: #1d5cbf;
+    transition: color 0.2s;
+}
+
 .nav-link{
     color: #F5F5F5;
     transition: color 0.2s;
