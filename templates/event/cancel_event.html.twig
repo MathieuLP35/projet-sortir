@@ -4,6 +4,7 @@
 
 {% block body %}
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <div class="vh-100">
         <h1 class="mb-3">Annuler l'événement</h1>
 
         <div class="bg-filter-eni p-4">
@@ -14,4 +15,5 @@
             {{ form_end(form) }}
         </div>
     {% endif %}
+    </div>
 {% endblock %}
